@@ -1,7 +1,9 @@
 /************************ TABLE OF CONTENTS ********************************
-1. HOME PAGE STYLING
-   a. Small Screens
-2. RESULT STYLING
+-- HOME PAGE STYLING
+---|--Small Screens
+-- RESULT STYLING
+-- DEPARTMENT DELIMS FOR MATCH PAGE
+
 
 ***************************************************************************/
 
@@ -659,4 +661,9 @@ td > .search-button:hover {
 }
 .show {
     display:block;
+}
+/****** DEPARTMENT DELIMITERS FOR MATCH PAGE  ***********/
+#department_delims {
+    height:200px;
+    overflow:auto;
 }
