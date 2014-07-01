@@ -1,4 +1,4 @@
-################ Project Lever #################
+<h2>Project Lever</h2>
 This repo will contain all of the beta-code for
 Project Lever. This code will be placed online 
 at http://projectlever.com/beta-code/

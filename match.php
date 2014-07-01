@@ -21,12 +21,16 @@ include("php/match-page.php");
   <link type="text/css" href="css/pl-main.css" rel="stylesheet"/>
   
   <!-- Le Scripts-->		
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular.min.js"></script>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>
   <script type="text/javascript" src="js/match.js"></script>
+
+  <!-- Le Maps -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
 </head>
 <body class="pl-body" ng-app="plMatch" ng-controller="MatchController as controller">
   <!-- NAVBAR -->
@@ -112,22 +116,23 @@ include("php/match-page.php");
 		<span>{{results.grants.length}}</span>
 	      </li>
 	    </ul>
-	    <ul id="school_delims">
-	      <li ng-repeat="school in schools">
-		<input type="checkbox" name="school_names" id="delim_{{school}}" ng-checked="school.checked" ng-model="school.checked" /><label for="delim_{{school}}">{{school}}</label>
+	    <ul id="department_delims">
+	      <li ng-repeat="(key,department) in departments track by $index">
+		<input type="checkbox" value="{{department}}" ng-click="toggle(department)" check-list="delims.departments" name="department_names" id="delim_{{key}}" department="{{department.replaceAll(' ','_')}}" />
+		<span>{{department}}</span>
 	      </li>
 	    </ul>
 	  </div>
 	  <div class="col-xs-6 col-xs-offset-1 full-height" style="overflow:auto">
 	    <table class="match-parent" style="height:auto">
 	      <tbody ng-repeat="(key,value) in results" id="{{key}}_results" ng-show="display == '{{key}}'">
-		<tr ng-repeat="(index,result) in value">
-		  <td valign="top" school="{{result.school.replace(/\s/g,'_')}}" department="{{result.department.replace(/\s/g,'_')}}">
+		<tr ng-repeat="(index,result) in value" name="{{result.department.replaceAll(' ','_')}}">
+		  <td valign="top">
 		    <div class="result-header">
 		      <table class="match-parent">
 			<tr>
 			  <td align="center" valign="middle">
-			    <span ng-class="{'glyphicon glyphicon-chevron-down': index==0,'glyphicon glyphicon-chevron-right': index!=0}" name="{{index==0?'open':'closed'}}"  onclick="toggle(this)" style="margin-right:0.5em;cursor:pointer"></span>
+			    <span ng-class="{'glyphicon glyphicon-chevron-down': index==0,'glyphicon glyphicon-chevron-right': index!=0}" name="{{index==0?'open':'closed'}}"  data="no" resource-id="{{result.id}}" resource-type="{{key}}" onclick="toggle(this)" style="margin-right:0.5em;cursor:pointer"></span>
 			  </td>
 			  <td align="left" valign="middle" style="width:75%;">			   
 			    <h6 title="{{result.name}}" style="margin-left:0.5em">
@@ -159,8 +164,8 @@ include("php/match-page.php");
 			  <td>
 			    <img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
 			  </td>
-			  <td>
-			    {{result.description}}
+			  <td name="description_box">
+			    
 			    <br/>
 			    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
 			      See Details

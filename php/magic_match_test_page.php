@@ -1,38 +1,40 @@
 <?php
 	
-    session_start();
-    if ($_POST["session"] != session_id() && !isset($_POST["homePage"]) && $_POST["homePage"] != "true" ){
-        echo "Not logged in. " . session_id()." != ".$_POST["session"];
-        exit;
-	}
-    // Helps with encoding
-    header('Content-Type:text/html; charset=UTF-8');
-    
-    // Useful algorithms
-    require("../algorithm.php");
-    
-    // Set up categories
-	$categories = array(
-		"Advisor" => array("Advisor_ID","Tags","Picture","Department","School","Name","Header"),
-		"Course" => array("Course_ID","Tags","School","Department","Name","Description"),
-		"Thesis" => array("Thesis_ID","Tags","School","Department","Name","Author","Abstract"),
-		"Grant" => array("Grant_ID","Tags","Name","Description"),
-    );
+session_start();
+if ($_POST["session"] != session_id() && !isset($_POST["homePage"]) && $_POST["homePage"] != "true" ){
+  echo "Not logged in. " . session_id()." != ".$_POST["session"];
+  exit;
+}
+// Helps with encoding
+header('Content-Type:text/html; charset=UTF-8');
 
-    // Set up json
-    $json = array(
-        "Advisor"=>array(),
-        "Course"=>array(),
-        "Thesis"=>array(),
-        "Grant"=>array(),
-    );
-    
-    $class = $_SESSION['class'];
-    $sessionUniversity = $_SESSION["university"];
-    $sessionDepartment = json_encode($_SESSION["department"],true);
-    $sessionDivision = $_SESSION['division'];
-    
-    //$input = "Russian and American poetry, particularly contemporary poetry; the film and poetry; feminist and psychoanalytic theories; Pushkin; comparative approaches to Russian literature; cultural studies.";
+// Useful algorithms
+require("../../algorithm.php");
+
+// Set up categories
+$categories = array(
+  "Advisor" => array("Advisor_ID","Tags","Picture","Department","School","Name","Header"),
+  "Course" => array("Course_ID","Tags","School","Department","Name","Description"),
+  "Thesis" => array("Thesis_ID","Tags","School","Department","Name","Author","Abstract"),
+  "Grant" => array("Grant_ID","Tags","Name","Description"),
+);
+
+// Set up json
+$json = array(
+  "Advisor"=>array(),
+  "Course"=>array(),
+  "Thesis"=>array(),
+  "Grant"=>array(),
+);
+
+$page = $_POST["page"];
+$display = 10;
+$class = $_SESSION['class'];
+$sessionUniversity = $_SESSION["university"];
+$sessionDepartment = json_encode($_SESSION["department"],true);
+$sessionDivision = $_SESSION['division'];
+
+//$input = "Russian and American poetry, particularly contemporary poetry; the film and poetry; feminist and psychoanalytic theories; Pushkin; comparative approaches to Russian literature; cultural studies.";
     $input = $_POST["input"];
     //$input = "Chemistry";
         
@@ -200,14 +202,22 @@
 				$json[$type][$i]["rank"] = round( ( $json[$type][$i]["rank"] / $rankTotal ) * 100 );
 				if($json[$type][$i]["rank"] == 0)
 					unset($json[$type][$i]);
-			}	
+			}
 		}
 	}
     
     mysqli_close($con);
+// Return only the amount given by $display and $page
+$limitedJSON = array();
+foreach ($json as $type=>$results){
+  for ($i = ($page-1), $n = ($page-1+10); $i < $n; $i++){
+    if ( isset($results[$i]) )
+      $limitedJSON[$type][] = $results[$i];
+  }
+}
 		
 	$_SESSION["data"] = json_encode($json);
-	echo json_encode($json);
+	echo json_encode($limitedJSON);
 
 	//echo (microtime(true)-$startTime);
 ?>
