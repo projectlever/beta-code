@@ -1,8 +1,9 @@
 String.prototype.replaceAll = function(find,replace){
     return this.replace(new RegExp(find,"g"),replace);
 }
-angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window',function($scope, $http, $window){
-    var resultPage = 1;
+var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout',function($scope, $http, $window, $timeout){
+    var resultPage     = 1;
+    var savedResources = {};
     $scope.display = "advisors";
 
     $scope.university = "Harvard_University";
@@ -18,12 +19,20 @@ angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$wi
     $scope.departments = [];
 
     $scope.toggle   = function(department){
+	var attrName = department.replace(/\s/g,"_");
 	if ( _.indexOf($scope.delims.departments,department) > -1 ){
-	    $("[name='"+department+"']").show();
+	    $("[name='"+attrName+"']").show();
 	}
 	else {
-	    $("[name='"+department+"']").hide();
+	    $("[name='"+attrName+"']").hide();
 	}
+    }
+    $scope.getEmail    = function getEmail(email){
+	var json = $window.JSON.parse(email);
+	if ( json == null )
+	    return email;
+	else
+	    return json["0"];
     }
     $scope.search   = function search(){
 	$http({
@@ -32,6 +41,11 @@ angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$wi
 	    data: $.param({"input":$("#search_box").val(),"session":$window.session_id,"page":resultPage}),
 	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	}).then(function(response){
+	    console.log(response);
+	    // THIS LINE IS FOR TESTING PURPOSES ONLY
+	    if ( typeof response.data == "string" && response.data.search("Not logged in") > -1 ){
+		alert("Please log in to test this page. This warning is for test purposes ONLY");
+	    }
 	    // Loop through and find departments
 	    var temp = {out:[]};
 	    for ( var type in response.data ){
@@ -46,18 +60,102 @@ angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$wi
 		}
 	    }
 	    $scope.departments = temp.out;
-	    $scope.results.advisors = response.data.Advisor;
-	    $scope.results.courses  = response.data.Course;
-	    $scope.results.theses   = response.data.Thesis;
-	    $scope.results.grants   = response.data.Grant;	    
+	    $scope.results.advisors = response.data.Advisor || [];
+	    $scope.results.courses  = response.data.Course || [];
+	    $scope.results.theses   = response.data.Thesis || [];
+	    $scope.results.grants   = response.data.Grant || [];	    
 	});
     };
+    $scope.isSavedResource = function isSavedResource(id,type){
+	if ( type == "advisors" )
+	    type = "advisor";
+	else if ( type == "courses" ){
+	    type = "course";
+	}
+	else if ( type == "theses" ){
+	    type = "thesis";
+	}
+	else if ( type == "grants" ){
+	    type = "grant";
+	}
+	if ( savedResources[type] ){
+	    return $window._.indexOf(savedResources[type],id) > -1;
+	}
+	return false;
+    }
     $scope.showResource = function showResource(type){
 	var resources;
 	if ( (resources = $("#"+type+"_results")).length > 0 ){
 	    $scope.display = type;
 	}
     }
+    $scope.toggleFavorite = function toggleFavorite(id,type){
+	if ( type == "advisors" )
+	    type = "advisor";
+	else if ( type == "courses" ){
+	    type = "course";
+	}
+	else if ( type == "theses" ){
+	    type = "thesis";
+	}
+	else if ( type == "grants" ){
+	    type = "grant";
+	}
+	if ( $scope.isSavedResource(id,type) ){
+	    $http({
+		method: 'POST',
+		url: "./php/save_remove_resource.php",
+		data: $.param({"id":id,"type":type,"saved":"Remove"}),
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    }).then(function(response){
+		if ( response.data == "success" ){
+		    savedResources[type] = $window._.reject(savedResources[type],function(testId){
+			return testId == id;
+		    });
+		}
+	    });
+	}
+	else {
+	    $http({
+		method: 'POST',
+		url: "./php/save_remove_resource.php",
+		data: $.param({"id":id,"type":type,"saved":"Save"}),
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    }).then(function(response){
+		console.log(response);
+		if ( response.data == "success" ){
+		    savedResources[type].push(id);
+		}
+	    });
+	}	    
+    }
+    // Initializing code
+    if ( $window.initQuery != undefined ){
+	$(".search-bar").html(initQuery);
+	$scope.search();
+    }
+    // Set the enter key to search
+    $("#search_box").on("keydown",function(){
+	var e = window.event;
+	var u = e.charCode ? e.charCode : e.keyCode;
+	if ( u == 13 ){
+	    var form;
+	    if ( (form = $("#test_drive")).length > 0 )
+		form[0].submit();
+	    else
+		$scope.search();
+	    e.preventDefault ? e.preventDefault() : null;
+	    e.stopPropagation? e.stopPropagation() : e.cancelBubble();
+	    return false;
+	}
+    });
+    // Get the saved resources
+    $http({
+	method: 'POST',
+	url: "./php/get_saved_resources.php",
+    }).then(function(response){
+	savedResources = response.data;
+    });
 }]).directive('autoGrow', function() {
     return function(scope, element, attr){
 	var max       = attr["autoGrow"];

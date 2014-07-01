@@ -14,7 +14,10 @@ if ( $_SESSION["university"]=="UKTI" ){
 $categories = array("Advisor","Course","Thesis","Grant");
 $_SESSION['email']='demodiv';
 
-$con = mysqli_connect("localhost","svetlana","vH8ymo=nhwM6","svetlana_users");
+$session_id = session_id();
+echo "<script>var session_id = '".$session_id."';</script>";
+
+/*$con = mysqli_connect("localhost","svetlana","vH8ymo=nhwM6","svetlana_users");
 if(mysqli_connect_errno($con))
   echo "Failed to connect to MySQL: " . mysqli_connect_error($con);
 
@@ -35,8 +38,7 @@ $university             = $_SESSION['university'];
 $profileImage           = $row["Profile_Image"];
 $outline                = $row["Outlines"];
 $_SESSION["delimiters"] = $row["Delimiters"];
-$session_id = session_id();
-echo "<script>var session_id = '".$session_id."';</script>";
+
 
 $_SESSION['class'] = $row['Class'];
 $_SESSION['school'] = $school;
@@ -55,6 +57,26 @@ if (!$result = mysqli_query($con,$sql))
 else{
   while($row = mysqli_fetch_array($result)){
     $saved[ucfirst($row["Type"])][$row["Item_ID"]] = "";
+  }
+  // Get saved resources
+  foreach($saved as $type=>$ids){
+    if ( $type != "" ){
+      $sql = "SELECT `".$type."_ID`,`Name`
+				FROM `".$type."`
+				WHERE `University` = '".$university."'";	
+      if(!$result = mysqli_query($con,$sql))
+	echo mysqli_error($con);
+      else {
+	while($row = mysqli_fetch_array($result)){
+	  if($saved[$type]){
+	    if(array_key_exists($row[$type."_ID"],$saved[$type])){
+	      $saved[$type][$row[$type."_ID"]] = $row["Name"];
+	    }
+	  }
+	}
+	echo json_encode($saved);
+      }
+    }
   }					
 }
 mysqli_close($con);
@@ -87,28 +109,6 @@ for($i = 0, $n = count($categories); $i < $n; $i++){
   elseif(mysqli_num_rows($result)==0)
   $categories[$i] = false;
 }
-
-// Get saved resources
-foreach($saved as $type=>$ids){
-  if ( $type != "" ){								
-		     $sql = "SELECT `".$type."_ID`,`Name`
-				FROM `".$type."`
-				WHERE `University` = '".$university."'";	
-		     
-		     if(!$result = mysqli_query($con,$sql))
-		       echo mysqli_error($con);
-		     else{
-    while($row = mysqli_fetch_array($result)){
-      if($saved[$type]){
-	if(array_key_exists($row[$type."_ID"],$saved[$type])){
-	  $saved[$type][$row[$type."_ID"]] = $row["Name"];
-	}
-      }
-    }
-  }
-		     }
-}
-
 // Get Browse and Crest
 	$sql = "SELECT `Browse`,`Crest`
 			FROM `Browse`
@@ -123,5 +123,5 @@ foreach($saved as $type=>$ids){
 		$browse = "http://infomous.com/embed?nid=47789&interface=viewer&onsite=true&width=100%&height=100%";
 	}
 
-    mysqli_close($con);
+    mysqli_close($con);*/
 ?>

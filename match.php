@@ -1,5 +1,13 @@
 <?php  
+// Session is started in the include file
 include("php/match-page.php");
+if ( isset($_GET["test-drive"]) )
+  echo "<script>var testDrive = true;</script>";
+else
+  echo "<script>var testDrive = false;</script>";
+
+if ( isset($_POST["search-query"]) )
+  echo "<script>var initQuery = '".$_POST["search-query"]."';</script>";
 ?>
 <!DOCTYPE html>
 <head>
@@ -24,6 +32,7 @@ include("php/match-page.php");
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>
@@ -76,7 +85,7 @@ include("php/match-page.php");
 	  <table class="match-parent">
 	    <tr>
 	      <td valign="middle" style="vertical-align:middle">
-		<textarea class="search-bar search-bar-td" id="search_box" placeholder="Tell us about your interests!" auto-grow="2"></textarea>		
+		<textarea class="search-bar" id="search_box" placeholder="Tell us about your interests!" auto-grow="2"></textarea>		
 	      </td>
 	      <td>
 		<span class="glyphicon glyphicon-search search-button" ng-click="search()"></span>
@@ -140,20 +149,34 @@ include("php/match-page.php");
 			    </h6>
 			  </td>
 			  <td align="right" valign="middle" style="width:20%;padding-right:2%;">
-			    <span class="glyphicon glyphicon-star pl-hover" title="Save this result"></span>
-			    <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor" ng-show="'{{key}}' == 'advisors'"></span>	    
-			    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
-			      <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
-			    </a>
-			    <a href="../../single_course_display.php?id={{result.id}}" ng-show="'{{key}}' == 'courses'" target="_blank">
-			      <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
-			    </a>
-			    <a href="../../single_thesis_display.php?id={{result.id}}" ng-show="'{{key}}' == 'theses'" target="_blank">
-			      <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
-			    </a>
-			    <a href="../../single_grant_display.php?id={{result.id}}" ng-show="'{{key}}' == 'grants'" target="_blank">
-			      <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
-			    </a>
+			    <table>
+			      <tr>
+				<td>
+				  <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>
+				</td>
+				<td>
+				  <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
+				    <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
+				  </a>
+				</td>
+				<td>
+				  <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
+				    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+				  </a>
+				  <a href="../../single_course_display.php?id={{result.id}}" ng-show="'{{key}}' == 'courses'" target="_blank">
+				    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+				  </a>				  
+				  <a href="../../single_thesis_display.php?id={{result.id}}" ng-show="'{{key}}' == 'theses'" target="_blank">
+				    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+				  </a>
+				</td>
+				<td>
+				  <a href="../../single_grant_display.php?id={{result.id}}" ng-show="'{{key}}' == 'grants'" target="_blank">
+				    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+				  </a>
+				</td>
+			      </tr>
+			    </table>
 			  </td>
 			</tr>
 		      </table>
