@@ -2,8 +2,9 @@ String.prototype.replaceAll = function(find,replace){
     return this.replace(new RegExp(find,"g"),replace);
 }
 var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce',function($scope, $http, $window, $timeout, $sce){
-    var resultPage     = 1;
     var savedResources = {};
+    var limitResultsTo = 10;
+    $scope.resultsPage = 1;
     $scope.display = "advisors";
 
     $scope.university = "Harvard_University";
@@ -22,6 +23,16 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     $scope.displayHTML = function displayHTML(html){
 	return $sce.trustAsHtml(html);
     }
+    $scope.getNumResults = function(type){
+	return $scope.results[type+"NumResults"];
+    }
+    $scope.getPages = function(){
+	var out = [];
+	var pages = Math.ceil($scope.results[$scope.display+"NumResults"]/limitResultsTo);
+	for ( var i = 1, n = pages+1; i < n; i++ )
+	    out.push(i);
+	return out;
+    }
     $scope.toggle   = function(department){
 	var attrName = department.replace(/\s/g,"_");
 	if ( _.indexOf($scope.delims.departments,department) > -1 ){
@@ -30,6 +41,26 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	else {
 	    $("[name='"+attrName+"']").hide();
 	}
+    }
+    $scope.changePage  = function(n){
+	$scope.resultsPage = n;
+	$http({
+	    method: 'GET',
+	    url: "./php/get_result_page.php?limit="+limitResultsTo+"&page="+n+"&type="+$scope.display+"&sid="+Math.random(),
+	}).then(function(response){
+	    console.log(response);
+	    if ( $scope.display == "advisors" )
+		$scope.results.Advisor = response;
+	    else if ( $scope.display == "courses" ){
+		$scope.results.Course = response;
+	    }
+	    else if ( $scope.display == "theses" ){
+		$scope.results.Thesis = response;
+	    }
+	    else if ( $scope.display == "grants" ){
+		$scope.results.Grant = response;
+	    }
+	});
     }
     $scope.getEmail    = function getEmail(email){
 	var json = $window.JSON.parse(email);
@@ -42,7 +73,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	$http({
 	    method: 'POST',
 	    url: "./php/magic_match_test_page.php",
-	    data: $.param({"input":$("#search_box").val(),"session":$window.session_id,"page":resultPage}),
+	    data: $.param({"input":$("#search_box").val(),"session":$window.session_id,"page":$scope.resultPage}),
 	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	}).then(function(response){
 	    console.log(response);
@@ -95,6 +126,11 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    }
 	    $scope.resultsLength = tempList;
 	    $scope.departments = temp.out;
+	    $scope.results.advisorsNumResults = response.data.AdvisorNumResults;
+	    $scope.results.coursesNumResults = response.data.CourseNumResults;
+	    $scope.results.thesesNumResults = response.data.ThesisNumResults;
+	    $scope.results.grantsNumResults = response.data.GrantNumResults;
+
 	    $scope.results.advisors = response.data.Advisor || [];
 	    $scope.results.courses  = response.data.Course || [];
 	    $scope.results.theses   = response.data.Thesis || [];

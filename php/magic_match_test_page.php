@@ -216,15 +216,28 @@ $desc = array("Advisor"=>"`Block`","Course"=>"`Description`","Grant"=>"`Descript
 // Return only the amount given by $display and $page
 $limitedJSON = array();
 foreach ($json as $type=>$results){
-  for ($i = ($page-1), $n = ($page-1+10); $i < $n; $i++){
-    if ( isset($results[$i]) )
-      $limitedJSON[$type][] = $results[$i];
+  $limitedJSON[$type."NumResults"] = count($results);
+  for ($i = 0, $n = 10; $i < $n; $i++){
+    if ( isset($results[$i]) ){
+      if ( !$limitedJSON[$type] )
+	$limitedJSON[$type] = array();
+      $limitedJSON[$type][$i] = $results[$i];
+      $sql = "SELECT " . $desc[$type] . " FROM `$type` WHERE `".$type."_ID`=".$results[$i]["id"];
+      $res = mysqli_query($con,$sql);
+      if ( !$res )
+	$limitedJSON[$type][$i]["block"] = mysqli_error($con);
+      else {
+	while ( $row = mysqli_fetch_array($res) ){
+	  $limitedJSON[$type][$i]["block"] = $row[str_replace("`","",$desc[$type])];
+	}
+      }
+    }
   }
 }
 
 mysqli_close($con);
 		
-$_SESSION["data"] = json_encode($json);
+$_SESSION["data"] = $json;
 echo json_encode($limitedJSON);
 
 //echo (microtime(true)-$startTime);
