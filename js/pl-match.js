@@ -1,7 +1,7 @@
 String.prototype.replaceAll = function(find,replace){
     return this.replace(new RegExp(find,"g"),replace);
 }
-var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout',function($scope, $http, $window, $timeout){
+var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce',function($scope, $http, $window, $timeout, $sce){
     var resultPage     = 1;
     var savedResources = {};
     $scope.display = "advisors";
@@ -17,7 +17,11 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	departments : []
     };
     $scope.departments = [];
+    $scope.resultsLength = {};
 
+    $scope.displayHTML = function displayHTML(html){
+	return $sce.trustAsHtml(html);
+    }
     $scope.toggle   = function(department){
 	var attrName = department.replace(/\s/g,"_");
 	if ( _.indexOf($scope.delims.departments,department) > -1 ){
@@ -48,10 +52,40 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    }
 	    // Loop through and find departments
 	    var temp = {out:[]};
+	    var tempList = {};
 	    for ( var type in response.data ){
 		var data = response.data[type];
+		
 		for ( var i = 0, n = data.length; i < n; i++ ){
 		    var deptName = data[i].department;
+		    // Get the correct type name
+		    switch (type){
+			case "Advisor":{
+			    var typeName = "advisors";
+			    break;
+			}
+			case "Course":{
+			    var typeName = "courses";
+			    break;
+			}
+			case "Thesis":{
+			    var typeName = "theses";
+			    break;
+			}
+			case "Grant":{
+			    var typeName = "grants";
+			}
+		    }
+		    // Add to the resultsLength variable so we can display how many results in that department exist
+		    if ( !tempList[typeName] )
+			tempList[typeName] = {};
+		    if ( !tempList[typeName][deptName] )
+			tempList[typeName][deptName] = 1;
+		    else
+			tempList[typeName][deptName]++;
+
+		    // Push the department to the temporary department list. It's temporary so that Angular doesn't try to
+		    // update as it's building
 		    if ( deptName !== null && temp[deptName] !== true ){
 			temp.out.push(deptName);
 			temp[deptName]=true;
@@ -59,6 +93,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 		    }
 		}
 	    }
+	    $scope.resultsLength = tempList;
 	    $scope.departments = temp.out;
 	    $scope.results.advisors = response.data.Advisor || [];
 	    $scope.results.courses  = response.data.Course || [];
@@ -85,6 +120,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     }
     $scope.showResource = function showResource(type){
 	var resources;
+	$scope.display = type;
 	if ( (resources = $("#"+type+"_results")).length > 0 ){
 	    $scope.display = type;
 	}
@@ -128,6 +164,19 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 		}
 	    });
 	}	    
+    }
+    $scope.alphaExists = function alphaExists(desc){
+	if ( desc != undefined && desc != null )
+	    return (desc.match(/[a-z]/i)!=null);
+	else
+	    return false;
+    }
+    $scope.snippet = function snippet(desc){
+	desc.replace(/^\s*Description\s*|/,"").replace(/|/g," ");
+	if ( desc.length > 70 )
+	    return desc.substring(0,67)+"...";
+	else
+	    return desc;
     }
     // Initializing code
     if ( $window.initQuery != undefined ){

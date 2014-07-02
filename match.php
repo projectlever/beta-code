@@ -78,14 +78,14 @@ if ( isset($_POST["search-query"]) )
     </div>
   </div>
   <!-- END NAVBAR, START BODY -->
-  <div class="pl-content pl-zebra" style="height:100px;">
+  <div class="pl-content pl-zebra" id="search_bar_container">
     <div class="container full-width full-height">
       <div class="row full-height">
 	<div class="col-xs-10 col-xs-offset-1 full-height">
 	  <table class="match-parent">
 	    <tr>
-	      <td valign="middle" style="vertical-align:middle">
-		<textarea class="search-bar" id="search_box" placeholder="Tell us about your interests!" auto-grow="2"></textarea>		
+	      <td>
+		<textarea class="search-bar" id="search_box" placeholder="Tell us about your interests!" auto-grow="5"></textarea>		
 	      </td>
 	      <td>
 		<span class="glyphicon glyphicon-search search-button" ng-click="search()"></span>
@@ -105,50 +105,91 @@ if ( isset($_POST["search-query"]) )
   <div class="pl-content pl-zebra" id="results_container">
     <div class="layer" id="results_layer">
       <div class="container full-width full-height">
-	<div class="row full-height" style="padding-top:4em">
-	  <div class="col-xs-2 col-xs-offset-1 full-height">
+	<div class="row full-height" style="padding-top:2em">
+	  <div class="col-xs-2 col-xs-offset-1 full-height" style="padding-top:4em">
 	    <ul id="results_counter">
 	      <li id="advisors_results_count" class="selected-result-type" ng-click="showResource('advisors')" ng-class="{'selected-result-type':display=='advisors','result-type':display!='advisors'}">
+		<img src="/images/LittleAdvisorRed.png" width="25">
 		Advisors
 		<span>{{results.advisors.length}}</span>
 	      </li>
 	      <li id="courses_results_count" class="result-type" ng-click="showResource('courses')" ng-class="{'selected-result-type':display=='courses','result-type':display!='courses'}">
+		<img src="/images/LittleCourseRed.png" width="25">
 		Courses
 		<span>{{results.courses.length}}</span>
 	      </li>
 	      <li id="theses_results_count" class="result-type" ng-click="showResource('theses')" ng-class="{'selected-result-type':display=='theses','result-type':display!='theses'}">
+		<img src="/images/LittleThesisRed.png" width="25">
 		Theses
 		<span>{{results.theses.length}}</span>
 	      </li>
 	      <li id="grants_results_count" class="result-type" ng-click="showResource('grants')" ng-class="{'selected-result-type':display=='grants','result-type':display!='grants'}">
+		<img src="/images/LittleGrantRed.png" width="25">
 		Grants
 		<span>{{results.grants.length}}</span>
 	      </li>
 	    </ul>
-	    <ul id="department_delims">
-	      <li ng-repeat="(key,department) in departments track by $index">
-		<input type="checkbox" value="{{department}}" ng-click="toggle(department)" check-list="delims.departments" name="department_names" id="delim_{{key}}" department="{{department.replaceAll(' ','_')}}" />
-		<span>{{department}}</span>
-	      </li>
-	    </ul>
+	    <table id="department_delims">
+	      <tbody>
+		<tr>
+		  <td colspan="3">
+		    <h5> Departments </h5>
+		  </td>
+		</tr>
+		<tr ng-repeat="(key,department) in departments track by $index" ng-if="alphaExists(department)">
+		  <td valign="top">
+		    <input type="checkbox" value="{{department}}" ng-click="toggle(department)" check-list="delims.departments" name="department_names" id="delim_{{key}}" department="{{department.replaceAll(' ','_')}}" />
+		  </td>
+		  <td valign="top" style="padding-left:0.35em">
+		    <label for="delim_{{key}}">{{department}}</label>
+		  </td>
+		  <td align="right" valign="middle">
+		    {{resultsLength[display][department]}}
+		  </td>
+		</tr>
+	      </tbody>
+	    </table>
 	  </div>
-	  <div class="col-xs-6 col-xs-offset-1 full-height" style="overflow:auto">
+	  <div class="col-xs-7 col-xs-offset-1 full-height">
 	    <table class="match-parent" style="height:auto">
 	      <tbody ng-repeat="(key,value) in results" id="{{key}}_results" ng-show="display == '{{key}}'">
+		<tr>
+		  <td>
+		    <h3 style="text-transform: capitalize;"> We've matched you to {{results[key].length}} {{key}} </h3>
+		  </td>
+		</tr>
 		<tr ng-repeat="(index,result) in value" name="{{result.department.replaceAll(' ','_')}}">
-		  <td valign="top">
+		  <td valign="top" style="max-height:400px;overflow:hidden">
 		    <div class="result-header">
 		      <table class="match-parent">
 			<tr>
-			  <td align="center" valign="middle">
-			    <span ng-class="{'glyphicon glyphicon-chevron-down': index==0,'glyphicon glyphicon-chevron-right': index!=0}" name="{{index==0?'open':'closed'}}"  data="no" resource-id="{{result.id}}" resource-type="{{key}}" onclick="toggle(this)" style="margin-right:0.5em;cursor:pointer"></span>
+			  <td align="center" valign="middle" name="opener" onclick="toggle($(this).find('span'))">
+			    <span class="glyphicon glyphicon-chevron-right" name="closed"  data="no" resource-id="{{result.id}}" resource-type="{{key}}" onclick="toggle(this)" style="margin-right:0.5em;cursor:pointer"></span>
 			  </td>
-			  <td align="left" valign="middle" style="width:75%;">			   
-			    <h6 title="{{result.name}}" style="margin-left:0.5em">
-			      {{result.name}}
-			    </h6>
+			  <td align="left" valign="middle" style="width:75%" onclick="toggle(this)" class="result-name">
+			    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
+			      <h4 title="{{result.name}}" class="ng-binding">
+				{{result.name}}
+			      </h4>
+			    </a>
+			    <a href="../../single_course_display.php?id={{result.id}}" ng-show="'{{key}}' == 'courses'" target="_blank">
+			      <h4 title="{{result.name}}" class="ng-binding">
+				{{result.name}}
+			      </h4>
+			    </a>
+			    <a href="../../single_thesis_display.php?id={{result.id}}" ng-show="'{{key}}' == 'theses'" target="_blank">
+			      <h4 title="{{result.name}}" class="ng-binding">
+				{{result.name}}
+			      </h4>
+			    </a>
+			    <a href="../../single_grant_display.php?id={{result.id}}" ng-show="'{{key}}' == 'grants'" target="_blank">
+			      <h4 title="{{result.name}}" class="ng-binding">
+				{{result.name}}
+			      </h4>
+			    </a>
+			    <h6><span ng-if="alphaExists(result.description)">{{snippet(result.description)}},</span> {{result.department}}</h6>
 			  </td>
-			  <td align="right" valign="middle" style="width:20%;padding-right:2%;">
+			  <td align="right" valign="middle" style="width:20%;padding-right:2%;" onclick="toggle(this)">
 			    <table>
 			      <tr>
 				<td>
@@ -158,6 +199,7 @@ if ( isset($_POST["search-query"]) )
 				  <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
 				    <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
 				  </a>
+				  <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#f5f5f5" ng-if="key != 'advisors' || !alphaExists(result.email)"></span>
 				</td>
 				<td>
 				  <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
@@ -181,14 +223,13 @@ if ( isset($_POST["search-query"]) )
 			</tr>
 		      </table>
 		    </div>
-		    <div ng-class="{'show result-body': index==0,'hide result-body': index!=0}">
+		    <div class="hide result-body">
 		      <table class="match-parent">
 			<tr>
-			  <td>
+			  <td valign="top">
 			    <img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
 			  </td>
 			  <td name="description_box">
-			    
 			    <br/>
 			    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
 			      See Details

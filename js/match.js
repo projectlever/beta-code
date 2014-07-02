@@ -1,9 +1,8 @@
 var win = $(win,document);
-$(window,document).on("resize",function(){
-    $("#results_container").css("height",win.height()-150+"px");
-});
 function toggle(result){
     var el = $(result);
+    if ( el.prop("tagName") == "TD" )
+	el = el.parent().find("[name='opener']").find("span");    
     var openResult = null;
     var status = el.attr("name");
     var retrievedData = el.attr("data");
@@ -21,7 +20,7 @@ function toggle(result){
 	    if ( (openResult = el.parents("tbody").find("[name='open']")).length > 0 ){
 		toggle(openResult[0]);
 	    }
-	    $(result).removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down").parents(".result-header").next()
+	    el.removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down").parents(".result-header").next()
 		.removeClass('hide').addClass('show');
 	    el.attr("name","open");
 	}
@@ -43,8 +42,7 @@ function toggle(result){
 	    break;
 	}
 	$.post("./php/getResourceBlock.php",{"resource":resource,"id":id}).done(function(data){
-	    window.play = el.parents("tbody");
-	    el.parents("tbody").find("[name='description_box']").html(data);
+	    el.parents(".result-header").next().find("[name='description_box']").html(data);
 	    showData();
 	    el.attr("data","yes");
 	});

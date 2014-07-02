@@ -211,8 +211,8 @@ foreach($categories as $type => $value){
     }
   }
 }
-    
-mysqli_close($con);
+
+$desc = array("Advisor"=>"`Block`","Course"=>"`Description`","Grant"=>"`Description`","Thesis"=>"`Abstract`");
 // Return only the amount given by $display and $page
 $limitedJSON = array();
 foreach ($json as $type=>$results){
@@ -221,6 +221,8 @@ foreach ($json as $type=>$results){
       $limitedJSON[$type][] = $results[$i];
   }
 }
+
+mysqli_close($con);
 		
 $_SESSION["data"] = json_encode($json);
 echo json_encode($limitedJSON);
