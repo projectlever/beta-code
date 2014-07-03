@@ -26,7 +26,7 @@ if ( isset($_POST["search-query"]) )
   <link type="text/css" href="http://projectlever.com/templates/goodkarma/css/bootstrap_extend.css" rel="stylesheet"/>
   <link type="text/css" href="http://projectlever.com/templates/goodkarma/css/style.css" rel="stylesheet"/>
   <link type="text/css" href="http://projectlever.com/templates/goodkarma/css/flexslider.css" rel="stylesheet"/>    
-  <link type="text/css" href="css/pl-main.css" rel="stylesheet"/>
+  <link type="text/css" href="css/match_page.css" rel="stylesheet"/>
   
   <!-- Le Scripts-->		
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>

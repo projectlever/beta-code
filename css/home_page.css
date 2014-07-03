@@ -1,10 +1,8 @@
 /************************ TABLE OF CONTENTS ********************************
--- HOME PAGE STYLING
----|--Small Screens
----|--Search bar styling
--- RESULT STYLING
--- DEPARTMENT DELIMS FOR MATCH PAGE
-
+1. HOME PAGE STYLING
+   a. Small Screens
+   b. Search bar styling
+2. RESULT STYLING
 
 ***************************************************************************/
 
@@ -16,9 +14,9 @@
 /*@import url(http://fonts.googleapis.com/css?family=Voltaire)'*/
 
 html,body {
+  height: 100%;
   width: 100%;
   font-family: 'Raleway', sans-serif;
-  background-color:#fff;
 }
 body * {
     max-height:100%;
@@ -266,7 +264,8 @@ footer {
 
 .alt {
   background-color: rgb(50,50,50);
-  box-shadow:inset 0px 40px 40px rgba(255,255,255,.1);
+  background-color: rgba(0,0,0,0.8);
+  box-shadow:inset 0px 40px 40px rgba(255,255,255,.15);
 }
 .alt .lead {
   color: #fff;
@@ -323,6 +322,16 @@ footer {
 }
 .pl-frame:first-child {
     padding-top:60px;
+}
+.pl-home .row td {
+    padding:15px;
+    text-align:justify;
+    vertical-align:top;
+    font-size:15px;
+    width:25%;
+}
+.pl-home .row tr:first-child td {
+    text-align:center;
 }
 /*** Down arrow ***/
 .pl-home .down_arrow {
@@ -506,14 +515,9 @@ footer {
 /**************************** END HOME PAGE STYLING **********************************/
 
 /*************** RESULT STYLING *****************/
-#results_container {
-    margin-top:100px;
-}
 .result-header {
     position:relative;
-    background-color: #fff;
-    border-top: 1px solid #7D0000;
-    padding: 10px 0;
+    background-color:#d3d3d3;
 }
 .result-header > span {
     position:absolute;
@@ -523,10 +527,8 @@ footer {
     line-height:1em;
 }
 .result-body {
-    max-height: 350px;
-    background-color: #F0F0FB;
-    margin-left: 25px; (roughly - we want the edge of the box to line up with where the names start above)
-    margin-bottom: 10px;
+    max-height:400px;
+    background-color:#f5f5f5;
 }
 .half {
     display:inline-block;
@@ -585,10 +587,10 @@ footer {
     border:none;
 }
 .pl-zebra:nth-child(even) {
-    background-color: #d3d3d3;
+    background-color:#f5f5f5;
 }
 .pl-zebra:nth-child(odd){
-    background-color: #fff;
+    background-color:#222345;
 }
 .match-parent {
     height:100%;
@@ -596,6 +598,24 @@ footer {
     padding:0;
     margin:0;
     border:none;
+}
+.pl-body {
+    overflow:hidden;
+}
+td > .search-button {
+    border:1px solid #aaa;
+    border-left:0px;
+    padding:5px;
+    top:0;
+}
+td > .search-button:hover {
+    background-color:#800000;
+    opacity:0.7;
+}
+.search-bar-td {
+    box-shadow:none;
+    border-radius:0;
+    border:1px solid #aaa;
 }
 .layer {
     position:absolute;
@@ -619,15 +639,8 @@ footer {
     cursor:pointer;
 }
 #results_counter > li > span {
-    float: right;
-    padding-right: 1em;
-    background-color: #DADAF7;
-    border-radius: 10px;
-    padding: 1px 5px;
-    margin-right: 5px;
-}
-#results_counter img {
-    margin-right:1em;
+    float:right;
+    padding-right:1em;
 }
 #results_counter > li:hover {
     font-weight:600;
@@ -643,56 +656,4 @@ footer {
 }
 .show {
     display:block;
-}
-.starred {
-    color:#ff0;
-}
-[name="description_box"] {
-    max-height:10em;
-}
-[name="description_box"] * {
-    font-size:1em;
-}
-.result-name {
-    padding-top:10px;
-}
-.result-name > a > h4 {
-    display:inline;
-}
-.result-name > h6:first-child {
-    margin-top:10px;
-}
-.result-name > a {
-    text-decoration: underline;
-    color:#000;
-}
-.result-name > a:hover {
-    color:#000;
-    text-decoration: underline;
-}
-.button-selected {
-    background-color:#888;
-    color:#fff;
-}
-.page-button {
-    border:1px solid #000;
-    cursor:pointer;
-}
-/****** DEPARTMENT DELIMITERS FOR MATCH PAGE  ***********/
-#department_delims {
-    margin-top: 25px;
-    padding-left: 0;
-    width:100%;
-}
-#department_delims label {
-    font-weight:300;
-    cursor:pointer;
-    font-size:0.8em;
-    line-height:1.6em;
-}
-#department_delims td {
-    vertical-align:top;
-}
-#department_delims > span {
-    padding-left:5px;
 }

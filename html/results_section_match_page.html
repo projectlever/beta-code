@@ -45,7 +45,6 @@
 		</tr>
 		<tr>
 		  <td colspan="3">
-		    curpage: {{resultsPage[display]}}<br/>
 		    <span ng-repeat="n in getPages()" class="page-button" ng-class="{'button-selected':n==resultsPage[display]}" ng-click="changePage(n)">
 		      {{n}}
 		    </span>
@@ -102,7 +101,7 @@
 				  <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
 				    <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
 				  </a>
-				  <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#f5f5f5" ng-if="key != 'advisors' || !alphaExists(result.email)"></span>
+				  <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || !alphaExists(result.email)"></span>
 				</td>
 				<td>
 				  <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">

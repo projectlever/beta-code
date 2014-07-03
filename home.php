@@ -15,7 +15,7 @@
   <link type="text/css" href="templates/goodkarma/css/bootstrap_extend.css" rel="stylesheet"/>
   <link type="text/css" href="templates/goodkarma/css/style.css" rel="stylesheet"/>
   <link type="text/css" href="templates/goodkarma/css/flexslider.css" rel="stylesheet"/>    
-  <link type="text/css" href="css/pl-main.css" rel="stylesheet"/>
+  <link type="text/css" href="css/home_page.css" rel="stylesheet"/>
   
   <!-- Le Scripts-->		
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -65,16 +65,16 @@
 	    <p class="lead">matching students to advisors</p>
 	    <div>&nbsp;</div>
 	    <div class="row text-center" class="match_container">
-	      <div class="col-sm-6 col-sm-offset-3" style="margin-right:0;padding-right:0;">
+	      <div class="col-sm-6 col-xs-offset-3" style="margin-right:0;padding-right:0;">
 		<table class="match-parent">
 		  <tr>
-		    <td valign="middle" style="vertical-align:middle">
+		    <td valign="middle" align="right" style="width:100%;padding-right:0;padding-left:0;">
 		      <form action="match.php?test_drive" method="post" id="test_drive">
-			<textarea class="search-bar" id="search_box" name="search-query" placeholder="Tell us about your interests!" auto-grow="5"></textarea>		
+			<textarea class="search-bar" name="search-query" id="search_box" placeholder="Tell us about your interests!" auto-grow="5"></textarea>		
 		      </form>
 		    </td>
-		    <td align="left">
-		      <span class="glyphicon glyphicon-search search-button" onclick="$('#test_drive')[0].submit()"></span>
+		    <td align="left" valign="middle" style="padding-left:0;">
+		      <span class="glyphicon glyphicon-search search-button" ng-click="search()"></span>
 		      <script type="text/javascript">
 		       $(".search-button").css({
 			 "font-size":$(".search-bar").outerHeight()-12+"px", /* 12 = 2px for both padding-top(bottom) + 1px for both border-top(bottom) + 1px for image border + 5px padding */
