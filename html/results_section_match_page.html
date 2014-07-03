@@ -43,6 +43,13 @@
 		    {{resultsLength[display][department]}}
 		  </td>
 		</tr>
+		<tr>
+		  <td colspan="3">
+		    curpage: {{resultsPage[display]}}<br/>
+		    <span ng-repeat="n in getPages()" class="page-button" ng-class="{'button-selected':n==resultsPage[display]}" ng-click="changePage(n)">
+		      {{n}}
+		    </span>
+		  </td>
 	      </tbody>
 	    </table>
 	  </div>
@@ -60,7 +67,7 @@
 		      <table class="match-parent">
 			<tr>
 			  <td align="center" valign="middle" name="opener" onclick="toggle($(this).find('span'))">
-			    <span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" onclick="toggle(this)" style="margin-right:0.5em;cursor:pointer"></span>
+			    <span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" style="margin-right:0.5em;cursor:pointer"></span>
 			  </td>
 			  <td align="left" valign="middle" style="width:75%" onclick="toggle(this)" class="result-name">
 			    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">

@@ -4,7 +4,12 @@ String.prototype.replaceAll = function(find,replace){
 var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce',function($scope, $http, $window, $timeout, $sce){
     var savedResources = {};
     var limitResultsTo = 10;
-    $scope.resultsPage = 1;
+    $scope.resultsPage = {
+	advisors : 1,
+	courses : 1,
+	theses : 1,
+	grants : 1
+    };
     $scope.display = "advisors";
 
     $scope.university = "Harvard_University";
@@ -43,23 +48,12 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	}
     }
     $scope.changePage  = function(n){
-	$scope.resultsPage = n;
+	$scope.resultsPage[$scope.display] = n;
 	$http({
 	    method: 'GET',
 	    url: "./php/get_result_page.php?limit="+limitResultsTo+"&page="+n+"&type="+$scope.display+"&sid="+Math.random(),
 	}).then(function(response){
-	    console.log(response);
-	    if ( $scope.display == "advisors" )
-		$scope.results.Advisor = response;
-	    else if ( $scope.display == "courses" ){
-		$scope.results.Course = response;
-	    }
-	    else if ( $scope.display == "theses" ){
-		$scope.results.Thesis = response;
-	    }
-	    else if ( $scope.display == "grants" ){
-		$scope.results.Grant = response;
-	    }
+	    $scope.results[$scope.display] = response.data;
 	});
     }
     $scope.getEmail    = function getEmail(email){
