@@ -71,6 +71,7 @@ $sessionDivision = $_SESSION['division'];
     		break;
     }
     
+$dept_counter = array();
 foreach($categories as $type => $value){
     	
   $columns = implode(",",$value);
@@ -173,7 +174,8 @@ foreach($categories as $type => $value){
 	}
 	else
 	  $pi = "";
-	
+
+	// Count the department results!
 	$dataArray = array(
 	  "id" => $id,
 	  "name" => $name,
