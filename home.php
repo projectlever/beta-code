@@ -29,8 +29,14 @@
 <body class="pl-home" ng-app="plMatch" ng-controller="MatchController as controller">
   <img src="images/resources/infographics/down_arrow.png" class="down_arrow"></div>
   <div class="navbar navbar-fixed-top alt pl-navbar" data-spy="affix" data-offset-top="1000">
-    <img src="images/thumbnails/logo/Project_Lever_Thumbnail.png" class="logo-bar" />
-    <div class="container full-width">
+   <div class="container full-width" style="padding-left:0">
+      <div class="navbar-collapse collapse pl-logo">
+	<ul class="nav navbar-nav">
+	  <li>
+	    <a>Project Lever</a>
+	  </li>
+	</ul>
+      </div>
       <div class="navbar-header"> 
 	<a href="javascript:void(0)" class="navbar-brand">
           <span class="icon-bar"></span>
@@ -74,12 +80,7 @@
 		      </form>
 		    </td>
 		    <td align="left" valign="middle" style="padding-left:0;">
-		      <span class="glyphicon glyphicon-search search-button" ng-click="search()"></span>
-		      <script type="text/javascript">
-		       $(".search-button").css({
-			 "font-size":$(".search-bar").outerHeight()-12+"px", /* 12 = 2px for both padding-top(bottom) + 1px for both border-top(bottom) + 1px for image border + 5px padding */
-		       }).parent().css("width",$(".search-button").width());
-		      </script>
+		      <span class="glyphicon glyphicon-search search-button" id="search_button" ng-click="search()"></span>
 		    </td>
 		  </tr>
 		</table>
@@ -264,7 +265,7 @@
       </div>
     </div>
   </div>
-  <div class="footer">
+  <div class="footer featurette">
     <div class="container">
       <div class="row">
 	<div class="col-xs-1 text-center">

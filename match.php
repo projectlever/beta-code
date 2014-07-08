@@ -42,6 +42,9 @@ if ( isset($_POST["search-query"]) )
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
 </head>
 <body class="pl-body" ng-app="plMatch" ng-controller="MatchController as controller">
+  <!-- Loading gif -->
+  <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
+  <h3 id="match_page_intro">Let Us Match You to Advisors!</h3>
   <!-- NAVBAR -->
   <div class="navbar navbar-fixed-top alt pl-navbar" data-spy="affix" data-offset-top="1000">
     <div class="container full-width" style="padding-left:0">

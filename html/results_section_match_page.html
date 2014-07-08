@@ -32,6 +32,14 @@
 		    <h5> Departments </h5>
 		  </td>
 		</tr>
+		<tr>
+		  <td>
+		    <input type="checkbox" id="select_all" ng-click="checkAll()" />
+		  </td>
+		  <td colspan="2" style="padding-left:0.35em">
+		    <label for="select_all" id="select_all_label">{{selectAll}}</label>
+		  </td>
+		</tr>
 		<tr ng-repeat="(key,department) in departments track by $index" ng-if="alphaExists(department)">
 		  <td valign="top">
 		    <input type="checkbox" value="{{department}}" ng-click="toggle(department)" check-list="delims.departments" name="department_names" id="delim_{{key}}" department="{{department.replaceAll(' ','_')}}" />
@@ -43,12 +51,6 @@
 		    {{resultsLength[display][department]}}
 		  </td>
 		</tr>
-		<tr>
-		  <td colspan="3">
-		    <span ng-repeat="n in getPages()" class="page-button" ng-class="{'button-selected':n==resultsPage[display]}" ng-click="changePage(n)">
-		      {{n}}
-		    </span>
-		  </td>
 	      </tbody>
 	    </table>
 	  </div>
@@ -154,6 +156,13 @@
 		</tr>
 	      </tbody>
 	    </table>
+	    <div id="pagination_buttons">
+	      <span class="page-button" ng-show="resultsPage[display] > 6" style="font-weight:900;letter-spacing:3px" ng-click="changePage(resultsPage[display]-10>0?resultsPage[display]-10:5)">...</span>
+	      <span ng-repeat="n in getPages()" class="page-button" ng-class="{'button-selected':n==resultsPage[display]}" ng-click="changePage(n)">
+		{{n}}
+	      </span>
+	      <span class="page-button" ng-show="resultsPage[display]+6 < maxPages" style="font-weight:900;letter-spacing:3px" ng-click="changePage(resultsPage[display]+10<maxPages?resultsPage[display]+10:maxPages-5)">...</span>
+	    </div>
 	  </div>
 	</div>
       </div>

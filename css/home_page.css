@@ -503,14 +503,14 @@ footer {
     font-size:1.5em;
     border:1px solid #888;
     border-right:none;
-    background-color:#f5f5f5;
+    background-color:#fff;
 }
 .search-button {
     background-color: #222334;
-    border-color: 1px solid #222334;
-    padding:6px;
+    padding:5px;
     color:#f5f5f5;
     top:0;
+    cursor:pointer;
 }
 /**************************** END HOME PAGE STYLING **********************************/
 
@@ -601,21 +601,6 @@ footer {
 }
 .pl-body {
     overflow:hidden;
-}
-td > .search-button {
-    border:1px solid #aaa;
-    border-left:0px;
-    padding:5px;
-    top:0;
-}
-td > .search-button:hover {
-    background-color:#800000;
-    opacity:0.7;
-}
-.search-bar-td {
-    box-shadow:none;
-    border-radius:0;
-    border:1px solid #aaa;
 }
 .layer {
     position:absolute;

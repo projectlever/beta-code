@@ -4,21 +4,24 @@ String.prototype.replaceAll = function(find,replace){
 var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce',function($scope, $http, $window, $timeout, $sce){
     var savedResources = {};
     var limitResultsTo = 10;
+    var delimLength    = 0;
     $scope.resultsPage = {
 	advisors : 1,
 	courses : 1,
 	theses : 1,
 	grants : 1
     };
+    $scope.selectAll = "Unselect All"; // All delimiters are checked by default
     $scope.display = "advisors";
 
-    $scope.university = "Harvard_University";
     $scope.results = {
 	advisors : [],
 	courses  : [],
 	theses   : [],
 	grants   : []
     };
+    $scope.maxPages = 0;
+
     $scope.delims = {
 	departments : []
     };
@@ -33,8 +36,9 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     }
     $scope.getPages = function(){
 	var out = [];
-	var pages = Math.ceil($scope.results[$scope.display+"NumResults"]/limitResultsTo);
-	for ( var i = 1, n = pages+1; i < n; i++ )
+	var curPage = $scope.resultsPage[$scope.display];
+	$scope.maxPages = Math.ceil($scope.results[$scope.display+"NumResults"]/limitResultsTo);
+	for ( var i = ( curPage-5 > 0 ? curPage-5 : 1 ), n = (curPage+6 >= 10 ? curPage+6 : (11 > $scope.maxPages ? $scope.maxPages : 11)); i < n && i < $scope.maxPages; i++ )
 	    out.push(i);
 	return out;
     }
@@ -42,19 +46,50 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	var attrName = department.replace(/\s/g,"_");
 	if ( _.indexOf($scope.delims.departments,department) > -1 ){
 	    $("[name='"+attrName+"']").show();
+	    // Check to see if all of the checkboxes are checked
+	    if ( $("[name='department_names']:checked").length == delimLength ){
+		$scope.selectAll = "Unselect All";
+		$("#select_all").prop("checked",false);
+	    }
 	}
 	else {
 	    $("[name='"+attrName+"']").hide();
+	    $scope.selectAll = "Select All";
+	    $("#select_all").prop("checked",false);
 	}
     }
+    $scope.checkAll    = function(){
+	if ( $scope.selectAll == "Select All" ){
+	    var selector = "[name='department_names']:not(:checked)";
+	}
+	else if ( $scope.selectAll == "Unselect All" ){
+	    var selector = "[name='department_names']:checked";
+	}
+	else
+	    return;
+	angular.forEach($(selector),function(cb,index){
+	    $timeout(function(){
+		$(cb).trigger("click");
+	    },50);
+	});	
+    }
     $scope.changePage  = function(n){
-	$scope.resultsPage[$scope.display] = n;
-	$http({
-	    method: 'GET',
-	    url: "./php/get_result_page.php?limit="+limitResultsTo+"&page="+n+"&type="+$scope.display+"&sid="+Math.random(),
-	}).then(function(response){
-	    $scope.results[$scope.display] = response.data;
-	});
+	$("#"+$scope.display+"_results,#pagination_buttons").hide();
+	$(".loading-gif").show();
+	$("body").scrollTop(0);
+	$timeout(function(){
+	    $scope.resultsPage[$scope.display] = n;
+	    $http({
+		method: 'GET',
+		url: "./php/get_result_page.php?limit="+limitResultsTo+"&page="+n+"&type="+$scope.display+"&sid="+Math.random(),
+	    }).then(function(response){
+		$scope.results[$scope.display] = response.data;
+		$timeout(function(){
+		    $("#"+$scope.display+"_results,#pagination_buttons").show();
+		    $(".loading-gif").hide();
+		},500);
+	    });
+	},200);
     }
     $scope.getEmail    = function getEmail(email){
 	var json = $window.JSON.parse(email);
@@ -64,6 +99,14 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    return json["0"];
     }
     $scope.search   = function search(){
+	$("#results_container,#pagination_buttons").hide();
+	$(".loading-gif").show();
+	$scope.resultsPage =  {
+	    advisors : 1,
+	    courses  : 1,
+	    theses   : 1,
+	    grants   : 1
+	}
 	$http({
 	    method: 'POST',
 	    url: "./php/magic_match_test_page.php",
@@ -120,6 +163,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    }
 	    $scope.resultsLength = tempList;
 	    $scope.departments = temp.out;
+	    delimLength = temp.out.length;
 	    $scope.results.advisorsNumResults = response.data.AdvisorNumResults;
 	    $scope.results.coursesNumResults = response.data.CourseNumResults;
 	    $scope.results.thesesNumResults = response.data.ThesisNumResults;
@@ -129,6 +173,10 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    $scope.results.courses  = response.data.Course || [];
 	    $scope.results.theses   = response.data.Thesis || [];
 	    $scope.results.grants   = response.data.Grant || [];	    
+	    $timeout(function(){
+		$("#results_container,#pagination_buttons").show();
+		$(".loading-gif,#match_page_intro").hide();
+	    },500);
 	});
     };
     $scope.isSavedResource = function isSavedResource(id,type){
@@ -245,7 +293,10 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	paddingLeft   = element.css('paddingLeft'),
 	paddingRight  = element.css('paddingRight');
 	element.css("min-height",element.outerHeight());
-	$("#search_button").css("max-height",element.css("min-height"));
+	$("#search_button,.search-button").css({
+	    "max-height":element.css("min-height"),
+	    "font-size":element.css("min-height").replace("px","")*1-10+"px"
+	});
 
 	var $shadow = angular.element('<div id="auto_grow_shadow"></div>').css({
 	    position: 'absolute',
