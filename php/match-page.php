@@ -2,17 +2,18 @@
 include("../algorithm.php");
 session_start();
 
-/*if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true))
-  header("Location: http://www.projectlever.com/webfiles/login/login/");
+if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true))
+  echo "<script>var testDrive = true;</script>";
+else
+  echo "<script>var testDrive = false;</script>";
 if($_SESSION['university']=="EdX")
   header("Location: http://www.projectlever.com/EdX/profile.php");
 if ( $_SESSION["university"]=="UKTI" ){
   header("Location: http://www.projectlever.com/UKTI/profile.php");
-}*/
+}
 
 // Define some variables
 $categories = array("Advisor","Course","Thesis","Grant");
-$_SESSION['email']='demodiv';
 
 $session_id = session_id();
 echo "<script>var session_id = '".$session_id."';</script>";

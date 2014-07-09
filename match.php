@@ -1,10 +1,6 @@
 <?php  
 // Session is started in the include file
 include("php/match-page.php");
-if ( isset($_GET["test-drive"]) )
-  echo "<script>var testDrive = true;</script>";
-else
-  echo "<script>var testDrive = false;</script>";
 
 if ( isset($_POST["search-query"]) )
   echo "<script>var initQuery = '".$_POST["search-query"]."';</script>";
@@ -46,40 +42,28 @@ if ( isset($_POST["search-query"]) )
   <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
   <h3 id="match_page_intro">Let Us Match You to Advisors!</h3>
   <!-- NAVBAR -->
-  <div class="navbar navbar-fixed-top alt pl-navbar" data-spy="affix" data-offset-top="1000">
-    <div class="container full-width" style="padding-left:0">
-      <div class="navbar-collapse collapse pl-logo">
-	<ul class="nav navbar-nav">
-	  <li>
-	    <a>Project Lever</a>
-	  </li>
-	</ul>
-      </div>
-      <div class="navbar-header"> 
-	<a href="javascript:void(0)" class="navbar-brand">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-	</a>
-      </div>
-      <div class="navbar-collapse collapse navbar-right" id="navbar">
-        <ul class="nav navbar-nav">
-          <li>
-	    <a href="http://projectlever.com/about.html">About</a>
-          </li>
-          <li>
-	    <a href="http://projectlever.com/magazine">Magazine</a>
-          </li>
-	  <li>
-	    <a href="explore.php">Explore</a>
-	  </li>
-	  <li>
-	    <a href="profile.php">Profile</a>
-	  </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <?php 
+  $navbar_li = '
+        <li>
+	  <a href="http://projectlever.com/about.html">About</a>
+        </li>
+        <li>
+	  <a href="http://projectlever.com/magazine">Magazine</a>
+        </li>
+	<li>
+	  <a href="explore.php" ng-if="testDrive == false">Explore</a>
+          <!-- RESTRICT EXPLORE USE IF NOT SIGNED UP -->
+	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'reg_form\')">Explore</a>
+	</li>
+	<li ng-if="testDrive == true">
+	  <a href="javascript:void(0)" onclick="showForm(\'reg_form\')">Sign Up</a>
+	</li>
+	<li>
+	  <a href="profile.php" ng-if="testDrive == false">Profile</a>
+	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'sign_in_form\')">Sign In</a>
+	</li>';
+  include("php/templates/navbar.php");
+  ?>
   <!-- END NAVBAR, START BODY -->
   <div class="pl-content pl-zebra" id="search_bar_container">
     <div class="container full-width full-height">
@@ -106,7 +90,11 @@ if ( isset($_POST["search-query"]) )
   </div>
   <!-- RESULTS SECTION -->
   <?php 
-  echo file_get_contents("html/results_section_match_page.html");
+  include("html/results_section_match_page.php");
+  ?>
+  <!-- LOG IN OVERLAY -->
+  <?php 
+  include("html/login_overlay.php");
   ?>
   <script type="text/javascript">
    <!--

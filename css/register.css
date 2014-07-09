@@ -1,0 +1,108 @@
+#reg_form, #sign_in_form {
+    position:fixed;
+    top:50px;
+    left:0;
+    z-index:2;
+    display:none;
+}
+#reg_form, #sign_in_form {
+    background-color:rgba(0,0,0,0.6);
+    z-index:3;
+}
+#login_form {
+    background-color:#fff;
+}
+#sign_up_form h5 {
+    font-size:25px;
+}
+#form_elements {
+    width:76%;
+    margin-left:14%;
+    margin-top:1em;
+}
+#social_list {
+    list-style:none;
+    padding:0;
+    margin:0;
+    margin-top:1em;
+    width:100%;
+    text-align:center;
+}
+.pop_up_form {
+    background-color:rgba(0,0,0,0.35);	 
+    z-index: 20;	
+}
+#university_dropdown{
+    position: relative;
+    visibility:hidden;
+    padding-left:0px;
+    width:100%;
+    border:none;
+    outline:none;
+    color:#aaa;
+    display:none;
+}
+#u_drop {
+    position: relative;
+    padding-left:0px;
+    width:100%;
+    border:none;
+    outline:none;
+    color:#aaa;
+}
+.reg_form {
+    /*	box-shadow:inset 0px 40px 40px rgba(255,255,255,.55), 6px 12px 12px rgba(0,0,0,.6);*/
+    border:3px solid #fff;
+    background-color:#fff;
+    font-family: sans-serif;
+}
+.pl_button {
+    background-color:#800000;	
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;	
+    transition:opacity 0.5s linear;
+    -webkit-transition:opacity 0.5s linear;
+    -o-transition:opacity 0.5s linear;
+    -ms-transition:opacity 0.5s linear;
+    -moz-transition:opacity 0.5s linear;
+    padding:0.25em 0.5em;
+    border:none;
+}
+.or_circle {
+    width:3em;
+    height:3em;
+    line-height:2.75em;
+    border-radius:6em;
+    border:2px solid #aaa;
+    background-color:#fff;
+    position: absolute;
+    text-align: center;
+    font-weight: 700;
+    left: -1.5em;
+    color: #aaa;
+    top:35%;
+}
+[name="float-form"] input, .reg_select {
+    font-size:1em;
+    height:1.75em;
+    display:table-cell;
+    vertical-align: middle;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+    width:80%;
+    color:#aaa;
+    border:none;
+    background-color:#fff;
+    outline:none;
+    text-align: left;
+}
+.reg_select {
+    font-size: 1em;
+    border: 0;
+    -webkit-appearance: none;
+    color: #aaa;
+    background: url("http://projectlever.com/images/dropdown.png") no-repeat right;
+    background-size: 15px 15px;
+    width:100%;
+}

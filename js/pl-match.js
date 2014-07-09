@@ -27,6 +27,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     };
     $scope.departments = [];
     $scope.resultsLength = {};
+    $scope.testDrive = $window.testDrive;
 
     $scope.displayHTML = function displayHTML(html){
 	return $sce.trustAsHtml(html);
@@ -110,22 +111,20 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	$http({
 	    method: 'POST',
 	    url: "./php/magic_match_test_page.php",
-	    data: $.param({"input":$("#search_box").val(),"session":$window.session_id,"page":$scope.resultPage}),
+	    data: $.param({"input":$("#search_box").val(),"session":$window.session_id,"page":$scope.resultPage,"test_drive":$scope.testDrive}),
 	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	}).then(function(response){
 	    console.log(response);
-	    // THIS LINE IS FOR TESTING PURPOSES ONLY
-	    if ( typeof response.data == "string" && response.data.search("Not logged in") > -1 ){
-		alert("Please log in to test this page. This warning is for test purposes ONLY");
-	    }
 	    // Loop through and find departments
 	    var temp = {out:[]};
 	    var tempList = {};
-	    for ( var type in response.data ){
-		var data = response.data[type];
-		
+	    for ( var type in response.data.results ){
+		var data = response.data.results[type];		
 		for ( var i = 0, n = data.length; i < n; i++ ){
-		    var deptName = data[i].department;
+		    if ( $scope.testDrive == false )
+			var deptName = data[i].department;
+		    else
+			var deptName = data[i].university;
 		    // Get the correct type name
 		    switch (type){
 			case "Advisor":{
@@ -144,13 +143,6 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 			    var typeName = "grants";
 			}
 		    }
-		    // Add to the resultsLength variable so we can display how many results in that department exist
-		    if ( !tempList[typeName] )
-			tempList[typeName] = {};
-		    if ( !tempList[typeName][deptName] )
-			tempList[typeName][deptName] = 1;
-		    else
-			tempList[typeName][deptName]++;
 
 		    // Push the department to the temporary department list. It's temporary so that Angular doesn't try to
 		    // update as it's building
@@ -161,18 +153,18 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 		    }
 		}
 	    }
-	    $scope.resultsLength = tempList;
+	    $scope.resultsLength = response.data.result_count;
 	    $scope.departments = temp.out;
 	    delimLength = temp.out.length;
-	    $scope.results.advisorsNumResults = response.data.AdvisorNumResults;
-	    $scope.results.coursesNumResults = response.data.CourseNumResults;
-	    $scope.results.thesesNumResults = response.data.ThesisNumResults;
-	    $scope.results.grantsNumResults = response.data.GrantNumResults;
+	    $scope.results.advisorsNumResults = response.data.result_count.Advisor.total;
+	    $scope.results.coursesNumResults = response.data.result_count.Course.total;
+	    $scope.results.thesesNumResults = response.data.result_count.Thesis.total;
+	    $scope.results.grantsNumResults = response.data.result_count.Grant.total;
 
-	    $scope.results.advisors = response.data.Advisor || [];
-	    $scope.results.courses  = response.data.Course || [];
-	    $scope.results.theses   = response.data.Thesis || [];
-	    $scope.results.grants   = response.data.Grant || [];	    
+	    $scope.results.advisors = response.data.results.Advisor || [];
+	    $scope.results.courses  = response.data.results.Course || [];
+	    $scope.results.theses   = response.data.results.Thesis || [];
+	    $scope.results.grants   = response.data.results.Grant || [];	    
 	    $timeout(function(){
 		$("#results_container,#pagination_buttons").show();
 		$(".loading-gif,#match_page_intro").hide();

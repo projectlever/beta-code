@@ -1,5 +1,9 @@
 var win = $(win,document);
 function toggle(result){
+    if ( testDrive == false ){
+	showForm('reg_form');
+	return;
+    }
     var el = $(result);
     if ( el.prop("tagName") == "TD" )
 	el = el.parent().find("[name='opener']").find("span");    
