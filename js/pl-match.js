@@ -5,6 +5,23 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     var savedResources = {};
     var limitResultsTo = 10;
     var delimLength    = 0;
+    $scope.emailError = false;
+    $scope.passError = false;
+    $scope.signUp = signUp = {
+	emailError : false,
+	passError : false,
+	univError : false,
+	confError : false,
+	errorMessage : "",
+	reset : function(){
+	    signUp.emailError = false;
+	    signUp.passError = false;
+	    signUp.univError = false;
+	    signUp.confError = false;
+	    signUp.errorMessage = "";
+	}
+    }
+    $scope.errorMessage = "";
     $scope.resultsPage = {
 	advisors : 1,
 	courses : 1,
@@ -34,6 +51,119 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     }
     $scope.getNumResults = function(type){
 	return $scope.results[type+"NumResults"];
+    }
+    $scope.register = function(){
+	var email = $("#user_email").val();
+	var pass  = $("#user_pass").val();
+	var conf  = $("#user_pass_confirm").val();
+	var univ  = $("[name='university_value']")[0].options[$("[name='university_value']")[0].selectedIndex].innerHTML;
+	signUp.reset();
+	// Check for empty fields
+	if ( email.match(/\S/) == null ){
+	    signUp.emailError = true;
+	    $("#user_email").focus();
+	    return;
+	}
+	if ( pass.match(/\S/) == null ){
+	    signUp.passError = true;
+	    $("#user_pass").focus();
+	    return;
+	}
+	if ( conf.match(/\S/) == null ){
+	    signUp.passError = true;
+	    return;
+	}
+	if ( univ == "Your University" ){
+	    signUp.univError = true;
+	    $("[name='university_value']").focus();
+	    return;
+	}
+	// Check to see if email is valid
+	if ( email.search("@") == -1 || email.search(/\./) == -1 ){
+	    signUp.emailError = true;
+	    signUp.errorMessage = "Please enter a valid '.edu' address";	    
+	    $("#user_email").focus();
+	    return;
+	}
+	// Check to see if the email is a .edu email
+	if ( email.match(/\.edu$/) == null ){
+	    signUp.emailError = true;
+	    signUp.errorMessage = "Please enter a '.edu' email address";
+	    $("#user_email").focus();
+	    return;
+	}
+	// Check to see if pass == confirm_pass
+	if ( pass != conf ){
+	    signUp.confError = true;
+	    signUp.errorMessage = "Password and confirm password fields do not match";
+	    $("#user_pass,#user_pass_confirm").val("");
+	    $("#user_pass").focus();
+	    return;
+	}
+	$http({
+	    method: 'POST',
+	    url: "../../webfiles/login/register/register.php",
+	    data: $.param({"email":email,"password":pass,"university":univ,"ajax":true}),
+	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	}).then(function(response){
+	    console.log(response);
+	    signUp.reset();
+	    if ( response.data == "complete" ){		
+		$scope.testDrive = false;
+		if ( $("#search_box").val().match(/\S/) != null )
+		    $scope.search();		
+	    }
+	    else if ( response.data == "no school" ){
+		window.location = "http://www.projectlever.com/webfiles/login/register/school.html";
+	    }
+	    else if ( response.data == "registered" ){
+		$timeout(function(){
+		    $("#user_email_login").val(email);
+		    $scope.errorMessage = "You've already registered!";
+		    angular.element($("#login_button")[0]).triggerHandler("click");
+		},0);
+	    }
+	});
+    }
+    $scope.login = function(emailSelector,passSelector){
+	// Set defaults
+	$scope.emailError = false;
+	$scope.passError = false;
+
+	var email = $(emailSelector).val();
+	var pass = $(passSelector).val();
+	if ( email.match(/\S/) == null ){
+	    $scope.emailError = true;
+	    return;
+	}
+	if ( pass.match(/\S/) == null ){
+	    $scope.passError = true;
+	    return;
+	}
+	$http({
+	    method: 'POST',
+	    url: "../../webfiles/login/login/login.php",
+	    data: $.param({"email":email,"password":pass,"landingPage":true}),
+	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	}).then(function(response){
+	    console.log(response);
+	    if ( response.data.search("login successful") > -1 ){
+		$scope.testDrive = false;
+		if ( $("#search_box").val().match(/\S/) != null )
+		    $scope.search();
+	    }
+	    else if ( response.data.search("register") > -1 || response.data.search("\/login\/register") > -1 ){
+		// Tell them to register
+		$scope.emailError = true;
+		$scope.errorMessage = "We could not locate a user with that email."
+		$(passSelector).val("");
+	    } 
+	    else if ( response.data.search("Incorrect password") > -1 ){
+		$scope.passError = true;
+		$scope.errorMessage = "Email/password combination is incorrect.";
+		$(passSelector).val("");
+	    }
+	});
     }
     $scope.getPages = function(){
 	var out = [];

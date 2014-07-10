@@ -106,3 +106,6 @@
     background-size: 15px 15px;
     width:100%;
 }
+.border-error {
+    border:1px solid #f00 !important;
+}

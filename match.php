@@ -60,7 +60,7 @@ if ( isset($_POST["search-query"]) )
 	</li>
 	<li>
 	  <a href="profile.php" ng-if="testDrive == false">Profile</a>
-	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'sign_in_form\')">Sign In</a>
+	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'sign_in_form\')" id="login_button">Log In</a>
 	</li>';
   include("php/templates/navbar.php");
   ?>
