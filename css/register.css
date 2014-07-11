@@ -109,3 +109,10 @@
 .border-error {
     border:1px solid #f00 !important;
 }
+#social_list .btn {
+    text-transform:none;
+    letter-spacing:inherit;
+}
+.navbar-brand {
+    display:none;
+}

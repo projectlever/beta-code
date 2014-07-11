@@ -19,6 +19,7 @@ else {
   $sessionDepartment = json_encode($_SESSION["department"],true);
   $sessionDivision = $_SESSION['division'];
 }
+
 // Helps with encoding
 header('Content-Type:text/html; charset=UTF-8');
 
@@ -94,7 +95,7 @@ foreach($categories as $type => $value){
   
   if(!$result = mysqli_query($con,$sql))
     echo mysqli_error($con);
-  else{    
+  else{
     while ($row = mysqli_fetch_array($result)){
       $rank = 0;
       $prof_weights = array();

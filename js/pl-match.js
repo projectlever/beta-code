@@ -52,58 +52,64 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     $scope.getNumResults = function(type){
 	return $scope.results[type+"NumResults"];
     }
-    $scope.register = function(){
-	var email = $("#user_email").val();
-	var pass  = $("#user_pass").val();
-	var conf  = $("#user_pass_confirm").val();
-	var univ  = $("[name='university_value']")[0].options[$("[name='university_value']")[0].selectedIndex].innerHTML;
-	signUp.reset();
-	// Check for empty fields
-	if ( email.match(/\S/) == null ){
-	    signUp.emailError = true;
-	    $("#user_email").focus();
-	    return;
-	}
-	if ( pass.match(/\S/) == null ){
-	    signUp.passError = true;
-	    $("#user_pass").focus();
-	    return;
-	}
-	if ( conf.match(/\S/) == null ){
-	    signUp.passError = true;
-	    return;
-	}
-	if ( univ == "Your University" ){
-	    signUp.univError = true;
+    $scope.register = function(social,info){
+	if ( !social || social == false ){
+	    var email = $("#user_email").val();
+	    var pass  = $("#user_pass").val();
+	    var conf  = $("#user_pass_confirm").val();
+	    var univ  = $("[name='university_value']")[0].options[$("[name='university_value']")[0].selectedIndex].innerHTML;
+	    signUp.reset();
+	    // Check for empty fields
+	    if ( email.match(/\S/) == null ){
+		signUp.emailError = true;
+		$("#user_email").focus();
+		return;
+	    }
+	    if ( pass.match(/\S/) == null ){
+		signUp.passError = true;
+		$("#user_pass").focus();
+		return;
+	    }
+	    if ( conf.match(/\S/) == null ){
+		signUp.passError = true;
+		return;
+	    }
+	    if ( univ == "Your University" ){
+		signUp.univError = true;
 	    $("[name='university_value']").focus();
-	    return;
+		return;
+	    }
+	    // Check to see if email is valid
+	    if ( email.search("@") == -1 || email.search(/\./) == -1 ){
+		signUp.emailError = true;
+		signUp.errorMessage = "Please enter a valid '.edu' address";	    
+		$("#user_email").focus();
+		return;
+	    }
+	    // Check to see if the email is a .edu email
+	    if ( email.match(/\.edu$/) == null ){
+		signUp.emailError = true;
+		signUp.errorMessage = "Please enter a '.edu' email address";
+		$("#user_email").focus();
+		return;
+	    }
+	    // Check to see if pass == confirm_pass
+	    if ( pass != conf ){
+		signUp.confError = true;
+		signUp.errorMessage = "Password and confirm password fields do not match";
+		$("#user_pass,#user_pass_confirm").val("");
+		$("#user_pass").focus();
+		return;
+	    }
+	    var post = {"email":email,"password":pass,"university":univ,"ajax":true};
 	}
-	// Check to see if email is valid
-	if ( email.search("@") == -1 || email.search(/\./) == -1 ){
-	    signUp.emailError = true;
-	    signUp.errorMessage = "Please enter a valid '.edu' address";	    
-	    $("#user_email").focus();
-	    return;
-	}
-	// Check to see if the email is a .edu email
-	if ( email.match(/\.edu$/) == null ){
-	    signUp.emailError = true;
-	    signUp.errorMessage = "Please enter a '.edu' email address";
-	    $("#user_email").focus();
-	    return;
-	}
-	// Check to see if pass == confirm_pass
-	if ( pass != conf ){
-	    signUp.confError = true;
-	    signUp.errorMessage = "Password and confirm password fields do not match";
-	    $("#user_pass,#user_pass_confirm").val("");
-	    $("#user_pass").focus();
-	    return;
+	else {
+	    var post = {"email":info.email,"university":info.university,"ajax":true};
 	}
 	$http({
 	    method: 'POST',
-	    url: "../../webfiles/login/register/register.php",
-	    data: $.param({"email":email,"password":pass,"university":univ,"ajax":true}),
+	    url: "./php/register.php",
+	    data: $.param(post),
 	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	}).then(function(response){
 	    console.log(response);
@@ -378,6 +384,112 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	else
 	    return desc;
     }
+    $scope.fbSignUp = function(p){
+	if ( !p ){
+	    $window.hello.login("facebook",{"scope":"email","display":"popup"},function(r){
+		if ( r.error ){
+		    $scope.$apply(function(){
+			$scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+		    });
+		    angular.element($("#login_button")[0]).triggerHandler("click");
+		    return;
+		}
+		$window.hello(r.network).api("/me").success(function(p){
+		    $scope.fbSignUp(p);
+		});
+	    });
+	    return;
+	}
+	// Register the user
+	if ( p.education ){
+	    // Find the college(s) that they go to. If it's one we have in our database, sign them up with that college!
+	    var colleges = [];
+	    for ( var i = p.education.length-1; i > -1; i-- ){
+		if ( p.education[i].type == "College" ){
+		    colleges.push(p.education[i].school.name);
+		}
+	    }
+	    if ( colleges.length == 0 ){
+		$scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
+		$("#user_email").val(p.email);
+		angular.element($("#sign_up_button")[0]).triggerHandler("click");
+	    }
+	    else {
+		// Verify that we have that college in the database
+		$http({
+		    method: 'POST',
+		    url: "./backend/checkForCollege.php",
+		    data: $.param({"colleges":JSON.stringify(colleges)}),
+		    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		}).then(function(response){
+		    if ( response.data.length == 0 ){
+			$scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
+			$("#user_email").val(p.email);
+			angular.element($("#sign_up_button")[0]).triggerHandler("click");
+		    }
+		    else if ( response.data.length == 1 ){
+			$scope.register(true,{"email":p.email,"university":response.data[0]});
+		    }
+		    else if ( response.data.length > 1 ){
+			// Have the user select a university
+			var selected = false;
+			var index = 0;
+			while ( selected == false && response.data[index] != null ){
+			    if ( confirm("Would you like to sign up to Project Lever as attending " + response.data[index]+"?") ){
+						    $scope.register(true,{"email":p.email,"university":response.data[index]});
+				selected = true;
+				break;
+			    }
+			    else {
+				index++;
+			    }
+			}
+			if ( selected == false ){
+			    $scope.signUp.errorMessage = "You must select a university that you are attending to use Project Lever. Please use the form below.";
+			    $("#user_email").val(p.email);
+			    angular.element($("#sign_up_button")[0]).triggerHandler("click");
+			}
+		    }
+		});
+	    }
+	}
+    }
+    $scope.fbLogin = function(){
+	$window.hello.login("facebook",{"scope":"email","display":"popup"},function(r){
+	    if ( r.error ){
+		$scope.$apply(function(){
+		    $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+		});
+		angular.element($("#login_button")[0]).triggerHandler("click");
+		return;
+	    }
+	    $window.hello(r.network).api("/me").success(function(p){
+		if ( !p.email ){
+		    $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+		    $("#user_email_login").val(p.email);
+		    angular.element($("#login_button")[0]).triggerHandler("click");
+		}
+		else {
+		    $http({
+			method: 'POST',
+			url: "./php/verifyUser.php",
+			data: $.param({"email":p.email}),
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		    }).then(function(response){
+			if ( response.data == "registered" ){
+			    // GREAT! Let's let them continue using the site
+			    $scope.testDrive = false;
+			    if ( $("#search_box").val().match(/\S/) != null )
+				$scope.search();
+			}
+			else if ( response.data == "new user" ){
+			    $scope.fbSignUp(p);
+			}
+		    });
+		}
+	    });
+	});
+    }
     // Initializing code
     if ( $window.initQuery != undefined ){
 	$(".search-bar").html(initQuery);
@@ -397,6 +509,10 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    e.stopPropagation? e.stopPropagation() : e.cancelBubble();
 	    return false;
 	}
+    });
+    // Initialize hello.js
+    $window.hello.init({
+	"facebook":"164434750353945"
     });
     // Get the saved resources
     $http({

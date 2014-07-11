@@ -22,6 +22,7 @@ if ( isset($_POST["search-query"]) )
   <link type="text/css" href="http://projectlever.com/templates/goodkarma/css/bootstrap_extend.css" rel="stylesheet"/>
   <link type="text/css" href="http://projectlever.com/templates/goodkarma/css/style.css" rel="stylesheet"/>
   <link type="text/css" href="http://projectlever.com/templates/goodkarma/css/flexslider.css" rel="stylesheet"/>    
+  <link type="text/css" href="css/socialicious/css/socialicious.css" rel="stylesheet"/>
   <link type="text/css" href="css/match_page.css" rel="stylesheet"/>
   
   <!-- Le Scripts-->		
@@ -29,7 +30,7 @@ if ( isset($_POST["search-query"]) )
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
-  <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
+  <script type="text/javascript" src="js/hello.min.js"></script>
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>
   <script type="text/javascript" src="js/match.js"></script>
@@ -56,7 +57,7 @@ if ( isset($_POST["search-query"]) )
 	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'reg_form\')">Explore</a>
 	</li>
 	<li ng-if="testDrive == true">
-	  <a href="javascript:void(0)" onclick="showForm(\'reg_form\')">Sign Up</a>
+	  <a href="javascript:void(0)" onclick="showForm(\'reg_form\')" id="sign_up_button">Sign Up</a>
 	</li>
 	<li>
 	  <a href="profile.php" ng-if="testDrive == false">Profile</a>
