@@ -129,6 +129,10 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 		    angular.element($("#login_button")[0]).triggerHandler("click");
 		},0);
 	    }
+	    else if ( response.data == "invalid email" ){
+		signUp.emailError = true;
+		signUp.errorMessage = "Invalid email address";
+	    }
 	});
     }
     $scope.login = function(emailSelector,passSelector){
