@@ -26,6 +26,7 @@ $log_file = "./logs/".date("m_d_y_H_i_s")."_autocrawl_log.json";
 $backup_file = "./backups/".date("m_d_y_H_i_s")."_entry_backup.json";
 $manual_file = "manual_imports.json";
 $results_file = "./results/".date("m_d_y_H_i_s")."_autocrawl_results.json";
+$progress_file = "./progress/".date("m_d_y_H_i_s")."_autocrawl_progress.txt";
 
 // Include the Import.IO API
 include('rest.php');
@@ -68,55 +69,81 @@ $incomplete = 0;
 for ( $s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++ ){
   $parser->get_sheet_with_header_row($s,1);
   $sheetName = $parser->get_sheet_name($s);
+  progress($progress_file,"Starting with sheet " . $sheetName."\r\n");
   if ( $sheetName === FALSE )
     continue;
   for ( $i = 0, $n = count($parser->matrix); $i < $n; $i++ ){
     $row = $parser->matrix[$i];
+    if ( $row["Department"]["text"] != "Music" ){
+      continue;
+    }    
+    $temp = array();
+    foreach ($row as $col=>$data){
+      $temp[$col] = array($data["text"],"simple dom");
+    }
+    progress($progress_file,"Retrieved row " . $i . " which contains " .($temp)."\r\n");
     $code = get_extractor_code($row,$sheetName,$i);
     if ( $code !== FALSE && substr_count($code,"-") == 4 ){
       // An extractor link is here, meaning that we need to get the advisor's links from the Direct Link column and then run the Import.IO Link with those pages
       // Get the direct link
       $dir_links = get_direct_link($row,$sheetName,$i);
+      progress($progress_file,"Got direct link(s): ".($temp=print_r($dir_links,true))."\r\n");
       if ( $dir_links !== FALSE ){
 	$links = array();
 	foreach ($dir_links as $index=>$link){
+	  progress($progress_file,"Getting data from $link \r\n");
 	  $result = query($code, array(
 	  "webpage/url"=>$link
 	  ), $userGuid, $apiKey);
 	  if ( gettype($result) == "object" ){
+	    progress($progress_file,"Got object:\r\n".($temp = print_r($result,true))."\r\n");
 	    if ( isset($result->{'results'}) ){
 	      if ( count($result->{'results'}) == 0 ){
+		progress($progress_file,"No 'results' in Import.IO object");
 		report("incomplete",$sheetName,($i+2),array("message"=>"Empty result returned from Import.IO!","result"=>$result,"extractor_code"=>$code,"webpage"=>$link));
 	      }
+	      progress($progress_file,"Results in Import.IO found \r\n");
 	      foreach ($result->{'results'} as $indexx=>$data){
+		progress($progress_file,"Analyzing object:".($temp=print_r($data,true))."\r\n");
 		if ( isset($data->{'link'}) ){
 		  if ( gettype($data->{'link'}) == "array" )
 		    $links = array_merge($links,$data->{'link'});
 	          else
 	            $links[] = $data->{'link'};
+		  progress($progress_file,"Appended links to \$links array.\r\n");
 		}
-		else
+		else {
+		  progress($progress_file,"No 'link' property...manually import.\r\n");
 		  add_manual_import(array("webpage"=>$link,"extractor_code"=>$code,"data"=>$data));
+		}
 	      }
 	    }
 	    else {
-	      if ( stripos($result->{'errorType'},"found") !== FALSE )
+	      if ( stripos($result->{'errorType'},"found") !== FALSE ){
+		progress($progress_file,"Error object returned! : ".($temp=print_r($result,true))."\r\n");
 		report("incomplete",$sheetName,($i+2),array("code_name"=>"incorrect GUID","result"=>$result,"extractor_code"=>$code,"webpage"=>$dir_links,"note"=>"Please ensure that correct code is being used. The code in the provided URL may NOT be correct. The absolutely correct code is in the extractor's details page under the GUID label on the right side of the screen. To get to the details page, click the name of the extractor next to the 'eye' icon on the left side of the extractor page."));
-	      else
+	      }
+	      else {
+		progress($progress_file,"Unknown error occurred. \r\n");
 		report("incomplete",$sheetName,($i+2),array("result"=>$result,"extractor_code"=>$code,"webpage"=>$dir_links));
+	      }
 	    }
 	  }
 	  else {
+	    progress($progress_file,"Non-object returned from Import.IO: ".($temp=print_r($result,true))."\r\n");
 	    report("incomplete",$sheetName,($row+2),array("message"=>"Result from Import.IO is not an object!","result"=>$result));
 	  }
 	}
       }
+      progress($progress_file,"Got all of the links to crawl. Next: Get crawler code.\r\n");
       // Now that we have all of the links, we're going to crawl each one individually and grab the data. Let's figure out the type of resource we're dealing with first
       $code = get_crawl_code($row,$sheetName,$i);
       if ( $code !== FALSE ){
+	progress($progress_file,"Got crawler code.\r\n");
 	$type = trim(strtolower($row["Resource Type"]["text"]));
 	$info = get_info($row,$sheetName,$i);
 	foreach ($links as $index=>$link){
+	  progress($progress_file,"Getting web page data: ".$link);
 	  get_web_page($link,$userGuid,$apiKey,$type,array("row"=>$i,"sheet-name"=>$sheetName,"results_file"=>$results_file),$code,$info);
 	}
       }
@@ -124,23 +151,28 @@ for ( $s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++ ){
     else {
       // Check for a crawler code 
       // This section is usually used for courses, theses, and funding that have all of the information on one page
+      progress($progress_file,"Check for crawl code.\r\n");
       $code = get_crawl_code($row,$sheetName,$i);
       if ( $code !== FALSE ){
+	progress($progress_file,"Got crawler code.\r\n");
 	$type = trim(strtolower($row["Resource Type"]["text"]));
 	$info = get_info($row,$sheetName,$i);
 	$links = explode(",",$row["Direct Links"]["text"]);
 	// Get link to crawl
 	foreach ($links as $index=>$link){
+	  progress($progress_file,"Getting web page data: ".$link);
 	  get_web_page($link,$userGuid,$apiKey,$type,array("row"=>$i,"sheet-name"=>$sheetName,"results_file"=>$results_file),$code,$info);
 	}
       }
       // No extractor code! Which is necessary!!
+      progress($progress_file,"No code was provided...Is it a PDF?\r\n");
       report("incomplete",$sheetName,($i+2),array("message"=>"No extractor link provided for scraper. Trying crawler link...","code"=>$code));
     }
+    progress($progress_file,"Finished row. Sleeping for 5 then starting next row.\r\n");
     sleep(5);
     echo implode(", ",$mem->get_usage())."<br/>";
   }
-  echo "finished inner loop<br/>";
+  progress($progress_file,"Finished sheet. Sleeping for 5 then starting next sheet.\r\n");
   sleep(5);
   echo implode(", ",$mem->get_usage())."<br/>";
 }
@@ -207,6 +239,7 @@ function get_crawl_code($row,$sheet_name,$i){
       return trim($crawl_code[0]);
   }
   else {
+    progress($progress_file,"No crawl code provided...Next row.\r\n");
     report("incomplete",$sheet_name,($i+2),"No crawler or extractor links provided. Assume it's a manual import on row " . $i . " for sheet " . $sheet_name);
     add_manual_import(array("message"=>"No crawler or extractor links provided.","sheet_name"=>$sheet_name,"row"=>$i));
   }
@@ -217,6 +250,7 @@ function get_direct_link($row,$sheet_name,$i){
   $dir_link = $row["Direct Links"]["text"];
   if ( stripos($dir_link,"http") === FALSE ){
     // This resource could not be scraped. Log it
+    progress($progress_file,"A non link (or one without 'http') was provided. Skipping. \r\n");
     report("incomplete",$sheet_name,($i+2),"No direct link was provided.");
     $incomplete++;
     return FALSE;
@@ -228,6 +262,7 @@ function add_manual_import($arr_data){
   global $manual,$manual_file;
   $manual[] = $arr_data;
   file_put_contents($manual_file,json_encode($manual));
+  progress($progress_file,"Added manual import\r\n");
 }
 function report($status,$sheet_name,$row,$msg){
   global $log, $log_file, $log_count;
@@ -238,6 +273,10 @@ function report($status,$sheet_name,$row,$msg){
   );
   file_put_contents($log_file,json_encode($log));
   $log_count++;
+}
+function progress($fname,$message){
+  echo $message."<br/>";
+  file_put_contents($fname,$message,FILE_APPEND);
 }
 //disp($parser->get_columns_with_header("Import.IO Links","all"));
 

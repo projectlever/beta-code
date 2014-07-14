@@ -34,6 +34,7 @@ if ( isset($_POST["search-query"]) )
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>
   <script type="text/javascript" src="js/match.js"></script>
+  <script type="text/javascript" src="js/directives/navbar.js"></script>
 
   <!-- Le Maps -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
@@ -43,28 +44,7 @@ if ( isset($_POST["search-query"]) )
   <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
   <h3 id="match_page_intro">Let Us Match You to Advisors!</h3>
   <!-- NAVBAR -->
-  <?php 
-  $navbar_li = '
-        <li>
-	  <a href="http://projectlever.com/about.html">About</a>
-        </li>
-        <li>
-	  <a href="http://projectlever.com/magazine">Magazine</a>
-        </li>
-	<li>
-	  <a href="explore.php" ng-if="testDrive == false">Explore</a>
-          <!-- RESTRICT EXPLORE USE IF NOT SIGNED UP -->
-	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'reg_form\')">Explore</a>
-	</li>
-	<li ng-if="testDrive == true">
-	  <a href="javascript:void(0)" onclick="showForm(\'reg_form\')" id="sign_up_button">Sign Up</a>
-	</li>
-	<li>
-	  <a href="profile.php" ng-if="testDrive == false">Profile</a>
-	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'sign_in_form\')" id="login_button">Log In</a>
-	</li>';
-  include("php/templates/navbar.php");
-  ?>
+  <lever-navbar></lever-navbar>
   <!-- END NAVBAR, START BODY -->
   <div class="pl-content pl-zebra" id="search_bar_container">
     <div class="container full-width full-height">

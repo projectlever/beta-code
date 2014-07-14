@@ -1,0 +1,54 @@
+.avatar {
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.userEdit{
+    margin-top:15px
+}
+
+#profile-header{
+    background:#eee;
+    padding-bottom:20px;
+}
+
+#profile-match{
+    background:#fff;
+}
+
+#profile-match-nav{
+    background:#eee;
+    border-bottom: 1px solid #7D0000;
+}
+
+.tabnav-tabs { 
+    list-style:none;
+    padding:0;
+    display: block;
+}
+.tabnav-tabs li { 
+    float: left;
+    padding:5px 10px;
+    cursor:pointer;
+}
+.selected { 
+    background:white;
+    border: 1px solid #7D0000;
+    border-bottom: 1px solid #ffffff;
+    margin-bottom: -1px;
+    padding-top:6px;
+}
+
+.stat-count{
+  font-size:28px;
+  font-weight:bold;
+}
+
+
+#results_counter{
+    margin-top:40px;
+}
+
+.bio{
+    margin:40px 0px;
+}

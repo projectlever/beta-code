@@ -1,4 +1,5 @@
 <? 
+require("/home/svetlana/www/beta-code/backend/sqlSearch/sqlNameSearch.php");
     session_start();
 	if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true))
 		header("Location: http://www.projectlever.com/webfiles/login/login/");
@@ -57,8 +58,12 @@
 	}
 	mysqli_close($con);
 	if ($_SESSION["data"]){
-		$json = $_SESSION['data'];
-		$data = $json['Advisor'];
+		$json = json_decode($_SESSION['data'],true);
+  if ( $json == null )
+    $json = $_SESSION["data"];
+		$data = json_decode($json['Advisor']);
+  if ( $data == null )
+    $data = $json["Advisor"];
 		for($i = 0; $i < count($data); $i++){
 			if($data[$i]["id"] == $_GET["id"]){
 				$weights = $data[$i]['weights'];
@@ -366,14 +371,34 @@
 									<div class="module-content">
 										<div class="custom"  >  
 											<?
-												echo $row["Block"] != "" ? str_ireplace("<img","<img onerror='$(this).remove()'",$row["Block"]) : "<div id='prelim'>This advisor's profile is under construction.</div>";
-												if($weights){	
-													echo "<div id='tags'>Tags:";
-													foreach($weights as $x=>$x_value){
-														echo "<span style='opacity:".$x_value."'>".$x."</span>";
-													}
-													echo "</div>";
-												}
+											echo $row["Block"] != "" ? str_ireplace("<img","<img onerror='$(this).remove()'",$row["Block"]) : "<div></div>";
+									
+											echo "<div><h3>Federal Funding for Ongoing Projects</h3>
+<br/>This professor has federal funding for ongoing research projects. This means that he may have open research positions for undergarduates through a program called REU. Read more at the REU's website: http://www.nsf.gov/crssprgm/reu/</div>";
+											// Get all funding sources for this advisor, display the source information along with the Co-PI names
+											$fun_matches = name_search($row["Name"],"Funding",array("Email"=>$row["Email"],"University"=>$row["University"]),'FirstNamePI');
+											// Loop through all of the funding IDs and get the information
+											for ($it = 0, $no = count($fun_matches); $it < $no; $it++ ){
+											  $fun_res = mysqli_query($con,"SELECT * FROM `Funding` WHERE `Funding_ID`=".$fun_matches[$it]);
+											  if ( $fun_res ){
+											    echo "<table><tbody>";
+											    while ( $fun_row = mysqli_fetch_array($fun_res) ){
+											      echo "<tr>";
+											      echo "<td><h4>".$fun_row["Name"]."</h4></td></tr>";
+											      echo "<tr><td>".$fun_row["Abstract"]."</td></tr>";
+											      if ( $fun_row["Co-PINames"] != "" )
+												echo "<tr><td style='padding-top:2em'><b>Co-PI:</b>&nbsp;&nbsp;".$fun_row["Co-PINames"]."</td></tr>";
+											      echo "</tbody></table>";
+											    }
+											  }
+											}
+											if ( $weights ){	
+											   echo "<div id='tags'>Tags:";
+											   foreach($weights as $x=>$x_value){
+											     echo "<span style='opacity:".$x_value."'>".$x."</span>";
+											   }
+											   echo "</div>";
+											}
 											?>
 											<div id="viz">
 											</div>	

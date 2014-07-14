@@ -18,7 +18,8 @@ function sql_connect(){
   return $con;
 }
 function backup_information($data,$type){
-  global $backup_file;
+  global $backup_file, $progress_file;
+  progress($progress_file,"");
   if ( file_exists($backup_file) ){
     $json = json_decode(file_get_contents($backup_file),true);
     if ( $json == null )
