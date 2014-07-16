@@ -1,0 +1,98 @@
+<div ng-if="pageType == 'Thesis'">
+  <div class="pl-content pl-zebra" id="profile-header">
+    <div class="container full-width full-height">
+      <div class="row full-height">
+	<div class="col-xs-2 col-xs-offset-1 full-height">
+	  <img class="avatar" src="/images/LittleThesisRed.png" alt="Thesis Icon" width="150px" border-radius="15px" border-color="#000" />	
+	</div>
+	<div class="col-xs-8 col-xs-offset-0 full-height">
+	  <h3>{{data.Thesis.Name}}</h3>
+	  <h4>{{data.Thesis.Author}}</h4>
+	  <h5> 
+	    <span ng-if="common.alphaExists(data.Thesis.Department) == true">{{data.Thesis.Department}} |</span>
+	    <span ng-if="common.alphaExists(data.Thesis.School)">{{data.Thesis.School}} |</span>
+	    <span ng-if="common.alphaExists(data.Thesis.University) == true">{{common.replaceAll("_"," ",data.Thesis.University)}}</span>
+	  </h5>
+	  <span ng-if="common.alphaExists(data.Thesis.Advisor1) == true"> 
+	    <img src="/images/LittleAdvisorRed.png" width="25px" /> 
+	    <span>{{data.Thesis.Advisor1}}</span>
+	    <br/>
+	  </span> 
+	</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- NAV HERE -->
+  <div class="pl-content pl-zebra" id="profile-match-nav">
+    <div class="container full-width full-height">      
+      <div class="row full-height">
+	<div class="col-xs-6 col-xs-offset-3 full-height">	
+	  <ul class="tabnav-tabs">
+            <li class="tabnav-tab" ng-click="selected = 'bio'" ng-class="{'selected':selected=='bio'}">
+              <a href="">
+		<span class="octicon octicon-diff-added"><img src="http://www.patong.fr/images/icon-people.png" width="25px"/></span>
+		Bio
+              </a>
+            </li>
+            <li class="tabnav-tab " ng-if="vizDataExists == true" ng-click="selected = 'viz'" ng-class="{'selected':selected=='viz'}">
+              <a>
+		<span class="octicon octicon-repo"><img src='https://camo.githubusercontent.com/48ebb6c0a04a056696bfe77658e890dd5284e4be/68747470733a2f2f7261772e6769746875622e636f6d2f466f64792f56697375616c697a652f6d61737465722f49636f6e732f7061636b6167655f69636f6e2e706e67' width="25px"/></span>
+		Visualization
+              </a>
+            </li>
+            <li class="tabnav-tab " ng-click="selected = 'network'" ng-class="{'selected':selected=='network'}">
+              <a>
+		<span class="octicon octicon-repo"><img src="/images/LittleThesisRed.png" width="25px"/></span>
+		Similar Theses
+              </a>
+            </li>
+          </ul>        
+	</div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- BIO DETAILS HERE -->
+  <div class="pl-content pl-zebra" id="profile-details">
+    <div class="container full-width full-height" id="profile-details" ng-show="selected == 'bio'">
+      <div class="row full-height">
+	<div class="col-xs-10 col-xs-offset-1 full-height">
+	  <div class="bio">
+	    <p data-ng-bind-html="getHTML(data.Thesis.Abstract)"></p>
+	  </div>
+	  
+	  <div ng-repeat="(key,value) in data" ng-if="key != 'Thesis' && value.length > 0 && key != 'weights'" class="{{key.toLowerCase().replace(' ','-')}}">
+	    <h5>{{key}}</h5>
+	    <ul>
+	      <li ng-repeat="(infoKey, infoValue) in value">
+		<a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
+		<br/>
+		<div ng-if="common.alphaExists(infoValue.Description) == true">	
+		  <strong>Description:</strong>
+		  <br/>
+		  <div data-ng-bind-html="getHTML(infoValue.Description)"></div>
+		  <br/>
+		  <div ng-if="key == 'Funding'">
+		    Co-PI: {{infoValue.coPiNames}}
+		  </div>
+		</div>
+	      </li>
+	    </ul>
+	  </div>
+	</div>
+      </div>	
+    </div>
+    <div class="container full-width full-height" id="visualization" ng-if="pageType == 'Advisor' && vizDataExists == true" ng-show="selected == 'viz'">
+      <div class="row full-height">
+	<div class="col-xs-10 col-xs-offset-1 full-height text-center">
+	  <div class="bio" id="viz">
+	    
+	  </div>
+	  </div>
+      </div>
+    </div>
+  </div>
+    <!-- ##################################################### END HERE ##################################################### -->
+</div>
