@@ -21,7 +21,7 @@
 	      </li>
 	      <li id="grants_results_count" class="result-type" ng-click="showResource('grants')" ng-class="{'selected-result-type':display=='grants','result-type':display!='grants'}">
 		<img src="/images/LittleGrantRed.png" width="25">
-		Grants
+		Funding
 		<span>{{results.grantsNumResults}}</span>
 	      </li>
 	    </ul>

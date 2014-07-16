@@ -21,14 +21,14 @@
 	<li>
 	  <a href="explore.php" ng-if="testDrive == false || !testDrive">Explore</a>
           <!-- RESTRICT EXPLORE USE IF NOT SIGNED UP -->
-	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'reg_form\')">Explore</a>
+	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm('reg_form')">Explore</a>
 	</li>
 	<li ng-if="testDrive == true">
-	  <a href="javascript:void(0)" onclick="showForm(\'reg_form\')" id="sign_up_button">Sign Up</a>
+	  <a href="javascript:void(0)" onclick="showForm('reg_form')" id="sign_up_button">Sign Up</a>
 	</li>
 	<li>
 	  <a href="profile.php" ng-if="testDrive == false || !testDrive">Profile</a>
-	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm(\'sign_in_form\')" id="login_button">Log In</a>
+	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm('sign_in_form')" id="login_button">Log In</a>
 	</li>
       </ul>
     </div>

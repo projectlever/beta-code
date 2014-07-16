@@ -7,6 +7,10 @@ app.factory('common',function(){
 	    catch (e){
 		return false;
 	    }
+	},
+	replaceAll : function(find,replace,string){
+	    var reg = new RegExp(find,"g");
+	    return string.replace(reg,replace);
 	}
     }
 });

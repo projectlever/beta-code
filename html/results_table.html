@@ -79,22 +79,22 @@
 	    <span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" style="margin-right:0.5em;cursor:pointer"></span>
 	  </td>
 	  <td align="left" valign="middle" style="width:75%" onclick="toggle(this)" class="result-name">
-	    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
 	      <h4 title="{{result.name}}" class="ng-binding">
 		{{result.name}}
 	      </h4>
 	    </a>
-	    <a href="../../single_course_display.php?id={{result.id}}" ng-show="'{{key}}' == 'courses'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
 	      <h4 title="{{result.name}}" class="ng-binding">
 		{{result.name}}
 	      </h4>
 	    </a>
-	    <a href="../../single_thesis_display.php?id={{result.id}}" ng-show="'{{key}}' == 'theses'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 	      <h4 title="{{result.name}}" class="ng-binding">
 		{{result.name}}
 	      </h4>
 	    </a>
-	    <a href="../../single_grant_display.php?id={{result.id}}" ng-show="'{{key}}' == 'grants'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
 	      <h4 title="{{result.name}}" class="ng-binding">
 		{{result.name}}
 	      </h4>
@@ -115,16 +115,16 @@
 		  <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || !alphaExists(result.email)"></span>
 		</td>
 		<td>
-		  <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
+		  <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>
-		  <a href="../../single_course_display.php?id={{result.id}}" ng-show="'{{key}}' == 'courses'" target="_blank">
+		  <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>				  
-		  <a href="../../single_thesis_display.php?id={{result.id}}" ng-show="'{{key}}' == 'theses'" target="_blank">
+		  <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>
-		  <a href="../../single_grant_display.php?id={{result.id}}" ng-show="'{{key}}' == 'grants'" target="_blank">
+		  <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>
 		</td>
@@ -143,16 +143,16 @@
 	  <td name="description_box">
 	    <div data-ng-bind-html="displayHTML(result.block)"></div>
 	    <br/>
-	    <a href="../../single_advisor_display.php?id={{result.id}}" ng-show="'{{key}}' == 'advisors'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
 	      See Details
 	    </a>
-	    <a href="../../single_course_display.php?id={{result.id}}" ng-show="'{{key}}' == 'courses'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
 	      See Details
 	    </a>
-	    <a href="../../single_thesis_display.php?id={{result.id}}" ng-show="'{{key}}' == 'theses'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 	      See Details
 	    </a>
-	    <a href="../../single_grant_display.php?id={{result.id}}" ng-show="'{{key}}' == 'grants'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
 	      See Details
 	    </a>
 	  </td>
