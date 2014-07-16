@@ -26,9 +26,12 @@
 	<li ng-if="testDrive == true">
 	  <a href="javascript:void(0)" onclick="showForm('reg_form')" id="sign_up_button">Sign Up</a>
 	</li>
-	<li>
+	<li ng-if="profilePage != true">
 	  <a href="profile.php" ng-if="testDrive == false || !testDrive">Profile</a>
 	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm('sign_in_form')" id="login_button">Log In</a>
+	</li>
+	<li ng-if="profilePage == true">
+	  <a href="php/logout.php">Log Out</a>
 	</li>
       </ul>
     </div>
