@@ -106,13 +106,13 @@
 		  <tr style="text-align:center">
 		    <td>
 		      <h5>
-			Sign in with
+			Log in with
 		      </h5>
 		    </td>
 		    <td style="border:1px solid #aaa"><!-- This is here merely for the "OR" circle XD --></td>
 		    <td>
 		      <h5>
-			Sign in with email
+			Log in with email
 		      </h5>
 		    </td>
 		  </tr>

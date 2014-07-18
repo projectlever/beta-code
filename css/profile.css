@@ -30,7 +30,6 @@
     padding:5px 10px;
     cursor:pointer;
 }
-
 .selected { 
     background:white;
     border: 1px solid #7D0000;
@@ -42,8 +41,13 @@
     font-size:28px;
     font-weight:bold;
 }
-  
-
-  #results_counter{
-  margin-top:40px;
-  }
+/* Reset results_counter margin-top and top values. These were initially specified in match.css which messes with the styling of this element on this page */
+#results_counter{
+    margin-top:0;
+}
+/* Reset the result_container's margin and top properties */
+#results_container {
+    display:block;
+    margin-top:0;
+    top:0;
+}

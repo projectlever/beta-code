@@ -1,6 +1,6 @@
 var win = $(win,document);
 function toggle(result){
-    if ( testDrive == false ){
+    if ( testDrive == true ){
 	showForm('reg_form');
 	return;
     }

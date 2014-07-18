@@ -8,6 +8,19 @@ define("profile_images","../user-profile-images/");
 define("default_profile_image","../images/LittleAdvisorRed.png");
 define("full_path","/home/svetlana/www/");
 
+$descField = array(
+  "Advisor"=>"Block",
+  "Course" =>"Description",
+  "Thesis" =>"Description",
+  "Funding"=>"Abstract"
+);
+$header = array(
+  "Advisor"=>"Header",
+  "Funding"=>"FirstNamePI",
+  "Course"=>"Description",
+  "Thesis"=>"Abstract"
+);
+
 if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
   $id = $_SESSION["user_id"];
   $con = sql_connect("svetlana_users");
@@ -44,8 +57,61 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
     }
     else 
       	$out["picture"] = default_profile_image;
-    echo json_encode($out);
   }
+  // Get saved resources
+  $out["saved"] = array(
+    "Advisor"=>array(),
+    "Course" =>array(),
+    "Thesis" =>array(),
+    "Funding"=>array()
+  );
+  $res = sql_query($con,"SELECT * FROM `Saved` WHERE `Email`='".$out["email"]."'");
+  $saveCon = sql_connect("svetlana_Total");
+  while ( $row = mysqli_fetch_array($res) ){
+    $type = ucfirst($row["Type"]);
+    $id   = $row["Item_ID"];
+    if ( $id == "" )
+      continue;
+
+    // Get the saved resource information
+    $savedRes = sql_query($saveCon,"SELECT * FROM `$type` WHERE `".$type."_ID`=".$id);
+    $_row = mysqli_fetch_array($savedRes);
+    
+    // Is the department a JSON string?
+    $dept = json_decode($_row["Department"],true);
+    if ( $dept == null )
+      $dept = $_row["Department"];
+    else
+      $dept = implode(" - ",$dept);
+
+    // Is the school a JSON string?
+    $school = json_decode($_row["School"],true);
+    if ( $school == null )
+      $school = $_row["School"];
+    else
+      $school = implode(" - ",$school);
+    
+    // Is the email a JSON string?
+    $email = json_decode($_row["Email"],true);
+    if ( $email == null )
+      $email = $_row["Email"];
+    else
+      $email = $email[0];
+
+    // Push all of the resource information to the saved variable
+    $out["saved"][$type][] = array(
+      "id"         => $_row[$type."_ID"],
+      "name"       => $_row["Name"],
+      "university" => str_replace("_"," ",$_row["University"]),
+      "department" => $dept,
+      "school"     => $school,
+      "block"      => $_row[$descField[$type]],
+      "email"      => $email,
+      "description"=> strip_tags($_row[$header[$type]]),
+      "picture"    => $_row["Picture"]
+    );
+  }
+  echo json_encode($out);
 }
 else {
   echo "Not logged in";

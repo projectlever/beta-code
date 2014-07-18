@@ -157,7 +157,7 @@ if ( isset($fields[$type]) ){
 	while ( $_row = mysqli_fetch_array($res) ){
 	  $out["Funding"][$iii]["Name"] = $_row["Name"];
 	  $out["Funding"][$iii]["Description"] = $_row["Abstract"];
-	  $out["Funding"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Grant";
+	  $out["Funding"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Funding";
 	  $out["Funding"][$iii]["coPiNames"] = $_row["Co-PINames"];
 	}
       }

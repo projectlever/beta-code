@@ -70,8 +70,7 @@ function d3load(id, weights, width){
 
 	// Load data here from json and initialize viz
 	d3.json('http://projectlever.com/advisor_viz/'+id+'.json', function(err, data) {
-		
-		for(var i = 0, n = data.Nodes.length; i < n; i++){
+		for (var i = 0, n = data.Nodes.length; i < n; i++){
 			if(weights[data.Nodes[i].name])
 				data.Nodes[i].group = 1;
 		}
