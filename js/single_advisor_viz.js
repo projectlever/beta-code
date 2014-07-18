@@ -1,4 +1,4 @@
-function d3load(id, weights, width){
+function d3load(id,weights,width){
 	
 	function name(d) { return d.name; }
 	function group(d) { return d.group; }
@@ -7,13 +7,11 @@ function d3load(id, weights, width){
 	function colorByGroup(d) { return color(group(d)); }
 
 	var width = 700,
-	height = 450;
+	height = 500;
 
-	var svg = d3.select('#viz')
-		.append('svg')
+	var svg = d3.select("#viz").append("svg")
 		.attr('width', width)
 		.attr('height', height);
-
 	var node, link;
 
 	var voronoi = d3.geom.voronoi()
@@ -70,7 +68,8 @@ function d3load(id, weights, width){
 
 	// Load data here from json and initialize viz
 	d3.json('http://projectlever.com/advisor_viz/'+id+'.json', function(err, data) {
-		for (var i = 0, n = data.Nodes.length; i < n; i++){
+		
+		for(var i = 0, n = data.Nodes.length; i < n; i++){
 			if(weights[data.Nodes[i].name])
 				data.Nodes[i].group = 1;
 		}
