@@ -50,60 +50,93 @@ if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) )
   <!-- NAVBAR -->
   <lever-navbar></lever-navbar>
   <!-- END NAVBAR, START BODY -->
-  
   <div class="pl-content pl-zebra" id="profile-header">
     <div class="container full-width full-height">
       <div class="row full-height">
 	<div class="col-xs-2 col-xs-offset-1 full-height">
-	  <img class="avatar" src="{{user.picture}}" width="150px" border-radius="15px" border-color="#000" />	
-	</div>
-	<div class="col-xs-6 col-xs-offset-0 full-height">
-	  <form id="save_form" action="../change_profile2.php" method="post" enctype="multipart/form-data">
-	  <h2 style="margin-top:1em" ng-if="editMode == false">{{user.name}}</h2>
-	  <input type="text" id="user_name" name="Name" style="margin-top:1em" ng-if="editMode == true" value="{{user.name}}" />
+	  <img class="avatar" src="{{user.picture}}" width="150px" border-radius="15px" border-color="#000" />
 	  <br/>
-	  <h4 ng-if="editMode == false"> 
+	  <div ng-show="editMode == true">
+	    <span style="font-weight:700">Profile Image</span>
+	    <br/>
+	    <form id="save_form" class="container" action="php/save_profile.php" method="post" enctype="multipart/form-data">
+	    <input type="file" style="width:100px" name="profile_image" />
+	  </div>
+	</div>
+	<div class="col-xs-6 col-xs-offset-0 full-height" style="padding-left:0" ng-show="editMode == true">
+	    <div class="row" style="margin-top:0;padding-top:0;">
+	      <div class="col-xs-12" style="margin-top:0;">
+		<input type="text" id="user_name" name="Name" placeholder="Name" style="margin-top:1em" value="{{user.name}}" />
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="col-xs-6">
+		<select id="school_select" name="School">
+		  <option>
+		    Select School
+		  </option>
+		  <option ng-repeat="school in schools" ng-selected="school == user.school">
+		    {{school}}
+		  </option>
+		</select>
+	      </div>
+	      <div class="col-xs-6">
+		<select id="department_select" name="Department">
+		  <option>
+		    Select Department
+		  </option>
+		  <option ng-repeat="(dept,sch) in departments" ng-selected="dept == user.department" ng-show="show({{sch}})">	
+		    {{dept}}
+		  </option>
+		</select>
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="col-xs-2">
+		CV:
+	      </div>
+	      <div class="col-xs-10">
+		<span ng-if="user.cvLink != null">
+		  <a href="{{user.cvLink}}">{{user.cvName}}</a>
+		  <button style="margin-left:0.25em">Remove</button>
+		</span>
+		<span ng-if="user.cvLink == null">
+		  No CV uploaded
+		</span>
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="col-xs-12">
+		<input type="file" id="cv_display" name="cv" /> 
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="col-xs-12">
+		<input type="text" name="linkedIn" value="{{user.linkedIn}}" placeholder="LinkedIn Profile" />
+	      </div>
+	    </div>
+	</div>
+	<div class="col-xs-6 col-xs-offset-0 full-height" ng-show="editMode == false">
+	  <h2 style="margin-top:1em">{{user.name}}</h2>
+	  <h4> 
 	    <span ng-if="user.department != null && user.department != 'empty'">{{user.department}} |</span>
 	    <span ng-if="user.school != null">{{user.school}} |</span>
 	    <span ng-if="user.university != null">{{common.replaceAll("_"," ",user.university)}}</span>
-	    <br/>	  
-	  </h4>
-	  <h4 ng-if="editMode == true">
-	    <select id="department_select" name="Department">
-	      <option ng-repeat="dept in departments" ng-selected="dept == user.department">
-		{{dept}}
-	      </option>
-	    </select>
-	    <br/>
-	    <select id="school_select" name="School">
-	      <option ng-repeat="school in schools" ng-selected="school == user.school">
-		{{school}}
-	      </option>
-	    </select>
-	    <br/>
-	    <span ng-if="user.university != null">{{common.replaceAll("_"," ",user.university)}}</span>
-	    <br/>	  
 	  </h4>
 	  <span id="cv_display" ng-if="user.cvLink != null"> 
 	    Current Topic Outline - 
 	    <a href='{{user.cvLink}}' target='_blank'>{{user.cvName}}</a> 
 	    <br/>
 	  </span> 
-	  <input type="file" id="cv_display" ng-if="editMode == true" name="cv" /> 
-	  <br/>
-	  <span ng-if="user.email != null && editMode == false"> 
+	  <span ng-if="user.email != null"> 
 	    <a href='mailto:{{user.email}}' target='_blank'>
 	      <img src="http://www.icon2s.com/wp-content/uploads/2013/07/ios7-message-icon.png" width="25px" />
 	    </a> 
 	  </span>
-	  <span ng-if="user.linkedIn != null && editMode == false"> 
+	  <span ng-if="user.linkedIn != null"> 
 	    <a href='{{user.linkedIn}}' target='_blank'>
 	      <img src="http://artstarcustompaintworks.com/wp-content/uploads/2012/05/Linked_in.png" width="30px" />
 	    </a> 
-	  </span>
-	  <span ng-if="editMode == true"> 
-	    <br/>
-	    <input type="text" name="linkedIn" value="{{user.linkedIn}}" />
 	  </span>
 	</div>
 	<div class="col-xs-2 col-xs-offset-0 full-height">
@@ -111,15 +144,14 @@ if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) )
 	    <button ng-click="setEditMode(true)" ng-if="editMode == false"> 
 	      <span> Edit Profile </span> 
 	    </button> 
-	    <button ng-click="editMode = false" ng-if="editMode == true"> 
-	      <span> Edit Profile </span> 
+	    <button ng-if="editMode == true" ng-click="validate()"> 
+	      <span>Save Profile</span>
 	    </button> 
 	  </div>
 	</div>
       </div>
     </div>
-  </div>
-  
+  </div>  
   <!-- NAV HERE -->
   <div class="pl-content pl-zebra" id="profile-match-nav">
     <div class="container full-width full-height">    
@@ -166,7 +198,8 @@ if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) )
     <div class="container full-width full-height" ng-show="selected == 'researchProfile'">
       <div class="row">
 	<div class="col-xs-8 col-xs-offset-2" style="padding-top:2em;">
-	  <textarea auto-grow="hide:false;maxLines:1000;" class="search-bar" style="border:1px solid #aaa;padding-right:0.5em;" ng-keyup="matchTextEdited = true">{{user.block}}</textarea>
+	  <textarea auto-grow="hide:false;maxLines:1000;" name="research" class="search-bar" style="border:1px solid #aaa;padding-right:0.5em;" ng-keyup="matchTextEdited = true">{{user.block}}</textarea>
+	  </form>
 	</div>
       </div>
     </div>

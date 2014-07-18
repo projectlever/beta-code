@@ -19,11 +19,37 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
     $scope.editMode = false;
     $scope.departments = [];
     $scope.schools = [];
+    $scope.selectedSchool = "";
 
     $scope.common = common;
 
     $scope.setEditMode = function(bool){
 	$scope.editMode = bool;
+    }
+    $scope.show = function(school){
+	return true;
+    }
+    $scope.validate = function(){
+	var name = $("#user_name").val();
+	var dept = $("#department_select option:selected").text();
+	var sch  = $("#school_select option:selected").text();
+	if ( name == "" ){
+	    alert("Please enter your name");
+	    $("#user_name").focus();
+	    return;
+	}
+	if ( dept.search("Select Department") > -1 ){
+	    alert("Please select your department");
+	    $("#department_select").focus();
+	    return;
+	}
+	if ( sch.search("Select School") > -1 ){
+	    alert("Please select your school");
+	    $("#school_select").focus();
+	    return;
+	}
+	// If all is good, send the form!
+	$("#save_form").submit();
     }
     $scope.saveMatchText = function(){
 	if ( $scope.matchTextEdited == false )

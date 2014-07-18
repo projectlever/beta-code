@@ -42,7 +42,20 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
     if ( hasAlpha($row["Outlines"]) ){
       $out["cvLink"] = json_decode($row["Outlines"],true);
       if ( $out["cvLink"] == null || !file_exists(full_path.outline_folder.$out["cvLink"]["file"]) ){
-	unset($out["cvLink"]);
+	if ( file_exists($row["Outlines"]) ){
+	  $names = json_decode(file_get_contents(full_path."user-outlines/names.json"),true);
+	  preg_match("/[a-zA-Z0-9]{0,}\.pdf/",$row["Outlines"],$fname);
+	  if ( count($fname) == 0 )
+	    unset($out["cvLink"]);
+	  else {
+	    if ( $names[$fname[0]] ){
+	      $out["cvName"] = $names[$fname];
+	      $out["cvLink"] = $row["Outlines"];
+	    }
+	    else
+	      unset($out["cvLink"]);
+	  }
+	}
       }
       else {
 	$out["cvName"] = $out["cvLink"]["fname"];
@@ -52,8 +65,12 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
     if ( hasAlpha($row["Profile_Image"]) ){
       if ( file_exists(profile_images.$row["Profile_Image"]) )
 	$out["picture"] = profile_images.$row["Profile_Image"];
-      else
-	$out["picture"] = default_profile_image;
+      else {
+	if ( file_exists($row["Profile_Image"]) )
+	  $out["picture"] = $row["Profile_Image"];
+	else
+	  $out["picture"] = default_profile_image;
+      }
     }
     else 
       	$out["picture"] = default_profile_image;

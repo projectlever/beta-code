@@ -6,6 +6,12 @@
 	  <img class="avatar" src="/images/LittleCourseRed.png" alt="Advisor's Profile Picture" width="150px" border-radius="15px" border-color="#000" />	
 	</div>
 	<div class="col-xs-8 col-xs-offset-0 full-height">
+	  <div class="starResource" style="float: right;margin-top: 15px;"> 
+	    <button>
+	      <span class="glyphicon glyphicon-star pl-hover" style="margin-left: 0;"></span>  
+	      <span> Star </span> 
+	    </button> 
+	  </div>
 	  <h3 style="margin-top:1em">{{data.Course.Name}}</h3>
 	  <h4> 
 	    <span ng-if="common.alphaExists(data.Course.Department) == true">{{data.Course.Department}} |</span>
