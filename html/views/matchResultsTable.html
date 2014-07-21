@@ -1,0 +1,163 @@
+<tr ng-if="testDrive == true" ng-repeat="(index,result) in value" name="{{result.university}}">
+  <td valign="top" style="max-height:400px;overflow:hidden">
+    <div class="result-header">
+      <table class="match-parent">
+	<tr>
+	  <td align="center" valign="middle" name="opener" onclick="showForm('reg_form')">
+	    <span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" style="margin-right:0.5em;cursor:pointer"></span>
+	  </td>
+	  <td align="left" valign="middle" style="width:75%" onclick="showForm('reg_form')" class="result-name">
+	    <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'courses'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'theses'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'grants'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <h6><span ng-if="alphaExists(result.description)">{{snippet(result.description)}},</span> {{result.department}}</h6>
+	  </td>
+	  <td align="right" valign="middle" style="width:20%;padding-right:2%;" onclick="showForm('reg_form')">
+	    <table>
+	      <tr>
+		<td>
+		  <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="showForm('reg_form')"></span>
+		</td>
+		<td>
+		  <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
+		    <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
+		  </a>
+		  <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || !alphaExists(result.email)"></span>
+		</td>
+		<td>
+		  <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
+		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+		  </a>
+		</td>
+	      </tr>
+	    </table>
+	  </td>
+	</tr>
+      </table>
+    </div>
+    <div class="hide result-body">
+      <table class="match-parent">
+	<tr>
+	  <td valign="top">
+	    <img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
+	  </td>
+	  <td name="description_box">
+	    <div data-ng-bind-html="displayHTML(result.block)"></div>
+	    <br/>
+	    <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
+	      See Details
+	    </a>
+	  </td>
+	</tr>
+      </table>
+    </div>
+  </td>
+</tr>
+<tr ng-if="testDrive == false" ng-repeat="(index,result) in value" name="{{result.department.replaceAll(' ','_')}}">
+  <td valign="top" style="max-height:400px;overflow:hidden">
+    <div class="result-header">
+      <table class="match-parent">
+	<tr>
+	  <td align="center" valign="middle" name="opener" onclick="toggle($(this).find('span'))">
+	    <span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" style="margin-right:0.5em;cursor:pointer"></span>
+	  </td>
+	  <td align="left" valign="middle" style="width:75%" onclick="toggle(this)" class="result-name">
+	    <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+	      <h4 title="{{result.name}}" class="ng-binding">
+		{{result.name}}
+	      </h4>
+	    </a>
+	    <h6><span ng-if="alphaExists(result.description)">{{snippet(result.description)}},</span> {{result.department}}</h6>
+	  </td>
+	  <td align="right" valign="middle" style="width:20%;padding-right:2%;" onclick="toggle(this)">
+	    <table>
+	      <tr>
+		<td>
+		  <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>		 
+		</td>
+		<td>
+		  <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
+		    <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
+		  </a>
+		  <!-- This takes up space so that everything is in nice columns -->
+		  <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || !alphaExists(result.email)"></span>
+		</td>
+		<td>
+		  <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
+		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+		  </a>
+		  <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
+		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+		  </a>				  
+		  <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
+		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+		  </a>
+		  <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+		  </a>
+		</td>
+	      </tr>
+	    </table>
+	  </td>
+	</tr>
+      </table>
+    </div>
+    <div class="hide result-body">
+      <table class="match-parent">
+	<tr>
+	  <td valign="top">
+	    <img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
+	  </td>
+	  <td name="description_box">
+	    <div data-ng-bind-html="displayHTML(result.block)"></div>
+	    <br/>
+	    <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
+	      See Details
+	    </a>
+	    <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
+	      See Details
+	    </a>
+	    <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
+	      See Details
+	    </a>
+	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+	      See Details
+	    </a>
+	  </td>
+	</tr>
+      </table>
+    </div>
+  </td>
+</tr>

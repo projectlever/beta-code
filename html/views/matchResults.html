@@ -1,0 +1,269 @@
+<div class="pl-content pl-zebra" id="results_container">
+  <div class="container full-width full-height">
+    <div class="row full-height" style="padding-top:2em">
+      <div class="col-xs-2 col-xs-offset-1 full-height" style="padding-top:4em">
+	<!-- RESULT COUNTER -->
+	<ul id="results_counter" ng-if="singleDisplay != true">
+	  <li id="advisors_results_count" class="selected-result-type" ng-click="showResource('advisors')" ng-class="{'selected-result-type':display=='advisors','result-type':display!='advisors'}">
+	    <img src="/images/LittleAdvisorRed.png" width="25">
+	    Advisors
+	    <span>{{results.advisors.length}}</span>
+	  </li>
+	  <li id="courses_results_count" class="result-type" ng-click="showResource('courses')" ng-class="{'selected-result-type':display=='courses','result-type':display!='courses'}">
+	    <img src="/images/LittleCourseRed.png" width="25">
+	    Courses
+	    <span>{{results.courses.length}}</span>
+	  </li>
+	  <li id="theses_results_count" class="result-type" ng-click="showResource('theses')" ng-class="{'selected-result-type':display=='theses','result-type':display!='theses'}">
+	    <img src="/images/LittleThesisRed.png" width="25">
+	    Theses
+	    <span>{{results.theses.length}}</span>
+	  </li>
+	  <li id="grants_results_count" class="result-type" ng-click="showResource('grants')" ng-class="{'selected-result-type':display=='grants','result-type':display!='grants'}">
+	    <img src="/images/LittleGrantRed.png" width="25">
+	    Funding
+	    <span>{{results.grants.length}}</span>
+	  </li>
+	</ul>
+	<!-- DELIMITERS -->
+	<table id="department_delims" ng-if="displayDelimiters == true">
+	  <tbody>
+	    <tr>
+	      <td colspan="3">
+		<h5 ng-if="testDrive == false"> Departments </h5>
+		<h5 ng-if="testDrive == true"> Universities </h5>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		<input type="checkbox" id="select_all" ng-click="checkAll()" />
+	      </td>
+	      <td colspan="2" style="padding-left:0.35em">
+		<label for="select_all" id="select_all_label">{{selectAll}}</label>
+	      </td>
+	    </tr>
+	    <tr ng-if="testDrive == true" ng-repeat="(key,university) in departments track by $index" ng-if="common.alphaExists(university) == true">
+	      <td valign="top">
+		<input type="checkbox" value="{{university}}" ng-click="toggle(university)" check-list="delims.departments" name="department_names" id="delim_{{key}}" department="{{university}}" />
+	      </td>
+	      <td valign="top" style="padding-left:0.35em">
+		    <label for="delim_{{key}}">{{university.replaceAll('_',' ')}}</label>
+	      </td>
+	      <td align="right" valign="middle">
+		{{resultsLength[display][university]}}
+	      </td>
+	    </tr>
+	    <!-- SHOW DEPARTMENTS IF LOGGED IN -->
+	    <tr ng-if="testDrive == false" ng-repeat="(key,department) in departments track by $index" ng-if="common.alphaExists(university) == true">
+	      <td valign="top">
+		<input type="checkbox" value="{{department}}" ng-click="toggle(department)" check-list="delims.departments" name="department_names" id="delim_{{key}}" department="{{department.replaceAll('_',' ')}}" />
+	      </td>
+	      <td valign="top" style="padding-left:0.35em">
+		<label for="delim_{{key}}">{{department}}</label>
+	      </td>
+	      <td align="right" valign="middle">
+		{{resultsLength[display][department]}}
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>
+      </div>
+      <!-- ACTUAL RESULTS -->
+      <div class="col-xs-7 col-xs-offset-1 full-height">
+	<table class="match-parent" style="height:auto">
+	  <tbody ng-repeat="(key,value) in results" id="{{key}}_results" ng-show="display == '{{key}}'">
+	    <tr ng-if="profilePage != true && singleDisplay != true">
+	      <td>
+		<h3 style="text-transform: capitalize;"> We've matched you to {{getNumResults(key)}} {{key}} </h3>
+	      </td>
+	    </tr>
+	    <tr ng-if="profilePage == true">
+	      <td>
+		<h3 style="text-transform: capitalize;"> Saved Resources </h3>
+	      </td>
+	    </tr>
+	    <tr ng-if="testDrive == true" ng-repeat="(index,result) in value">
+	      <td valign="top" style="max-height:400px;overflow:hidden;">
+		<div class="result-header">
+		  <table class="match-parent">
+		    <tr>
+		      <td align="center" valign="middle" name="opener" onclick="showForm('reg_form')">
+			<span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" style="margin-right:0.5em;cursor:pointer"></span>
+		      </td>
+		      <td align="left" valign="middle" style="width:75%" onclick="showForm('reg_form')" class="result-name">
+			<a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'courses'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'theses'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'grants'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<h6><span ng-if="common.alphaExists(result.description) == true">{{common.snippet(result.description)}},</span> {{result.department}}</h6>
+		      </td>
+		      <td align="right" valign="middle" style="width:20%;padding-right:2%;">
+			<table>
+			  <tr>
+			    <td>
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key)==false,'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>
+			    </td>
+			    <td>
+			      <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-if="key == 'advisors' && result.email != '{}' && common.alphaExists(result.email) == true">
+				<span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
+			      </a>
+			      <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || common.alphaExists(result.email) == false"></span>
+			    </td>
+			    <td>
+			      <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
+				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+			      </a>
+			    </td>
+			  </tr>
+			</table>
+		      </td>
+		    </tr>
+		  </table>
+		</div>
+		<div class="hide result-body">
+		  <table class="match-parent">
+		    <tr>
+		      <td valign="top" align="left">
+			<img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
+		      </td>
+		      <td name="description_box">
+			<div data-ng-bind-html="displayHTML(result.block)"></div>
+			<br/>
+			<a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
+			  See Details
+			</a>
+		      </td>
+		    </tr>
+		  </table>
+		</div>
+	      </td>
+	    </tr>
+	    <tr ng-if="testDrive == false" ng-repeat="(index,result) in value" name="{{result.department.replaceAll(' ','_')}}">
+	      <td valign="top" style="max-height:400px;overflow:hidden">
+		<div class="result-header">
+		  <table class="match-parent">
+		    <tr>
+		      <td align="center" valign="middle" name="opener" ng-click="common.toggle($event)">
+			<span class="glyphicon glyphicon-chevron-right" name="closed"  data="yes" resource-id="{{result.id}}" resource-type="{{key}}" style="margin-right:0.5em;cursor:pointer"></span>
+		      </td>
+		      <td align="left" valign="middle" style="width:75%" ng-click="common.toggle($event)" class="result-name">
+			<a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+			  <h4 title="{{result.name}}" class="ng-binding">
+			    {{result.name}}
+			  </h4>
+			</a>
+			<h6><span ng-if="common.alphaExists(result.description) == true">{{common.snippet(result.description)}},</span> {{result.department}}</h6>
+		      </td>
+		      <td align="right" valign="middle" style="width:20%;padding-right:2%;" ng-click="common.toggle($event)">
+			<table>
+			  <tr>
+			    <td>
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key)==false,'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>		 
+			    </td>
+			    <td>
+			      <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
+				<span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
+			      </a>
+			      <!-- This takes up space so that everything is in nice columns -->
+			      <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || common.alphaExists(result.email) == false"></span>
+			    </td>
+			    <td>
+			      <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
+				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+			      </a>
+			      <a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
+				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+			      </a>				  
+			      <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
+				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+			      </a>
+			      <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
+			      </a>
+			    </td>
+			  </tr>
+			</table>
+		      </td>
+		    </tr>
+		  </table>
+		</div>
+		<div class="hide result-body">
+		  <table class="match-parent">
+		    <tr>
+		      <td valign="top" align="left">
+			<img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
+		      </td>
+		      <td name="description_box">
+			<div data-ng-bind-html="displayHTML(result.block)"></div>
+			<br/>
+			<a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
+			  See Details
+			</a>
+			<a href="single_display.php?id={{result.id}}&type=Course" ng-show="'{{key}}' == 'courses'" target="_blank">
+			  See Details
+			</a>
+			<a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
+			  See Details
+			</a>
+			<a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+			  See Details
+			</a>
+		      </td>
+		    </tr>
+		  </table>
+		</div>
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>
+	<!-- ALLOW PAGINATION USE IF LOGGED IN -->
+	<div id="pagination_buttons" ng-if="testDrive == false">
+	  <span class="page-button" ng-show="resultsPage[display] > 6" style="font-weight:900;letter-spacing:3px" ng-click="changePage(resultsPage[display]-10>0?resultsPage[display]-10:5)">...</span>
+	  <span ng-repeat="n in getPages()" class="page-button" ng-class="{'button-selected':n==resultsPage[display]}" ng-click="changePage(n)">
+	    {{n}}
+	  </span>
+	  <span class="page-button" ng-show="resultsPage[display]+6 < maxPages" style="font-weight:900;letter-spacing:3px" ng-click="changePage(resultsPage[display]+10<maxPages?resultsPage[display]+10:maxPages-5)">...</span>
+	</div>
+	<!-- RESTRICT PAGINATION USE IF NOT SIGNED UP -->
+	<div id="pagination_buttons" ng-if="testDrive == true">
+	  <span class="page-button" ng-show="resultsPage[display] > 6" style="font-weight:900;letter-spacing:3px" onclick="showForm('reg_form')">...</span>
+	  <span ng-repeat="n in getPages()" class="page-button" ng-class="{'button-selected':n==resultsPage[display]}" onclick="showForm('reg_form')">
+	    {{n}}
+	  </span>
+	  <span class="page-button" ng-show="resultsPage[display]+6 < maxPages" style="font-weight:900;letter-spacing:3px" onclick="showForm('reg_form')">...</span>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>

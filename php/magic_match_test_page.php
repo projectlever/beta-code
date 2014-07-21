@@ -209,7 +209,20 @@ foreach($categories as $type => $value){
 	if($rank != 0)
 	  array_push($json[$type],$dataArray);
       }
-    }    
+      // Reset variables
+      $id = "";
+      $name = "";
+      $weights = array();
+      $school = "";
+      $department = "";
+      $description = "";
+      $picture = "";
+      $author = "";
+      $pi = "";
+      $email = "";
+      $university = "";
+      $head = "";
+    }  
   }
   
   // Sort it

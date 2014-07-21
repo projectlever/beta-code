@@ -1,7 +1,9 @@
 <?php 
 session_start();
-if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) )
+if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) ){
+  $_SESSION["return_url"] = "http://projectlever.com/beta-code/profile.php";
   header("Location: ../webfiles/login/login/");
+}
 ?>
 <!DOCTYPE html>
 <head>

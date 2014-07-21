@@ -8,10 +8,10 @@ $id = $_POST['id'];
 $type = $_POST['type'];
 
 $fields = array(
-  "Advisor"=>array("Name","School","Department","University","Header","Link","Email","Picture","Info","Block"),
-  "Course"=>array("Name","School","Department","University","Faculty","Description"),
-  "Funding"=>array("FirstNamePI","Co-PINames","University","Name","Abstract","Email","Link"),
-  "Thesis"=>array("Author","Department","School","University","Abstract","Advisor1","Name")
+  "Advisor"=>array("Name","School","Department","University","Header","Link","Email","Picture","Info","Block","Advisor_ID"),
+  "Course"=>array("Name","School","Department","University","Faculty","Description","Course_ID"),
+  "Funding"=>array("FirstNamePI","Co-PINames","University","Name","Abstract","Email","Link","Funding_ID"),
+  "Thesis"=>array("Author","Department","School","University","Abstract","Advisor1","Name","Thesis_ID")
 );
 if ( isset($fields[$type]) ){
   $con = sql_connect('svetlana_Total');
@@ -55,10 +55,9 @@ if ( isset($fields[$type]) ){
       // Check for JSON format
       $data = json_decode($row[$fieldName],true);
       if ( $data == null ) // Not JSON format
-	$data = $row[$fieldName];
+	$data = $row[$fieldName];	  
       
       $out[$type][$fieldName] = $data;
-
     }
     if ( $type != "Advisor" ){
       if ( $type == "Course" )

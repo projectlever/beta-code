@@ -116,6 +116,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    signUp.reset();
 	    if ( response.data == "complete" ){		
 		$scope.testDrive = false;
+		$window.testDrive = false;
 		if ( $("#search_box").val().match(/\S/) != null )
 		    $scope.search();		
 	    }
@@ -159,6 +160,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    console.log(response);
 	    if ( response.data.search("login successful") > -1 ){
 		$scope.testDrive = false;
+		$window.testDrive = false;
 		if ( $("#search_box").val().match(/\S/) != null )
 		    $scope.search();
 	    }
@@ -483,6 +485,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 			if ( response.data == "registered" ){
 			    // GREAT! Let's let them continue using the site
 			    $scope.testDrive = false;
+			    $window.testDrive = false;
 			    if ( $("#search_box").val().match(/\S/) != null )
 				$scope.search();
 			}
