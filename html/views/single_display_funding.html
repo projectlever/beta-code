@@ -87,7 +87,7 @@
 	    <p data-ng-bind-html="getHTML(data.Funding.Abstract)"></p>
 	  </div>
 	  
-	  <div ng-repeat="(key,value) in data" ng-if="key != 'Funding' && value.length > 0 && key != 'weights'" class="{{key.toLowerCase().replace(' ','-')}}">
+	  <div ng-repeat="(key,value) in data" ng-if="key != 'Funding' && value.length > 0 && key != 'weights' && key != 'similar'" class="{{key.toLowerCase().replace(' ','-')}}">
 	    <h5>{{key}}</h5>
 	    <ul>
 	      <li ng-repeat="(infoKey, infoValue) in value">
@@ -108,13 +108,36 @@
 	</div>
       </div>	
     </div>
-    <div class="container full-width full-height" id="visualization" ng-if="pageType == 'Advisor' && vizDataExists == true" ng-show="selected == 'viz'">
+    <div class="container full-width full-height" id="visualization" ng-if="vizDataExists == true" ng-show="selected == 'viz'">
       <div class="row full-height">
 	<div class="col-xs-10 col-xs-offset-1 full-height text-center">
 	  <div class="bio" id="viz">
 	    
 	  </div>
 	  </div>
+      </div>
+    </div>
+    <div class="container full-width full-height" ng-show="selected == 'network'">
+      <div class="row full-height">
+	<div class="col-xs-10 col-xs-offset-1 full-height" style="padding-top:40px">
+	  <div ng-repeat="object in data.similar">
+	    <ul ng-repeat="(key,value) in object" ng-if="key == pageType">
+	      <li ng-repeat="(infoKey, infoValue) in value" ng-if="infoValue.name != data[pageType].Name">
+		<a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
+		<br/>
+		<div ng-if="common.alphaExists(infoValue.Description) == true">
+		  <strong>Description:</strong>
+		  <br/>
+		  <div data-ng-bind-html="getHTML(infoValue.Description)"></div>
+		  <br/>
+		  <div ng-if="key == 'Funding'">
+		    Co-PI: {{infoValue.coPiNames}}
+		  </div>
+		</div>
+	      </li>
+	    </ul>
+	  </div>
+	</div>
       </div>
     </div>
   </div>

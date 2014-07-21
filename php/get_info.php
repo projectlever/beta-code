@@ -89,9 +89,10 @@ if ( isset($fields[$type]) ){
 	  for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
 	    $out["Advisor"][] = array();
 	    $iii = count($out["Advisor"])-1;
-	    $res = sql_query($con,"SELECT `Name`,`Header`,`Block`,`Picture` FROM `Advisor` WHERE `Advisor_ID`=".$matches[$i]);
+	    $res = sql_query($con,"SELECT `Advisor_ID`,`Name`,`Header`,`Block`,`Picture` FROM `Advisor` WHERE `Advisor_ID`=".$matches[$i]);
 	    while ( $_row = mysqli_fetch_array($res) ){
 	      $out["Advisor"][$iii]["Name"] = $_row["Name"];
+	      $out["Advisor"][$iii]["Id"] = $_row["Advisor_ID"];
 	      if ( strlen($_row["Header"]) > 5 )		
 		$out["Advisor"][$iii]["Description"] = $_row["Header"];
 	      else
@@ -102,69 +103,80 @@ if ( isset($fields[$type]) ){
 	  }
 	}
       }
+      $out["similar"] = array();
+      foreach ($out["Advisor"] as $index=>$advisor){
+	 $out["similar"][] = getAdvisorResources($con,$advisor);
+      }
     }
     else if ( $type == "Advisor" ){
-      // Get all the information!
-      $matches = name_search($row["Name"],"Course",array(
-	"options"=>array(
-	  "match"=>true
-	),
-	"fields"=>array(
-	  "University"=>$row["University"]
-	)
-      ),"Faculty");
-      for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
-	$out["Course"][] = array();
-	$iii = count($out["Course"])-1;
-	$res = sql_query($con,"SELECT * FROM `Course` WHERE `Course_ID`=".$matches[$i]);
-	while ( $_row = mysqli_fetch_array($res) ){
-	  $out["Course"][$iii]["Name"] = $_row["Name"];
-	  $out["Course"][$iii]["Description"] = $_row["Description"];
-	  $out["Course"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Course";
-	}
-      }
-      $matches = name_search($row["Name"],"Thesis",array(
-	"options"=>array(
-	  "match"=>true
-	),
-	"fields"=>array(
-	  "University"=>$row["University"]
-	)
-      ),"Advisor1");
-      for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
-	$out["Thesis"][] = array();
-	$iii = count($out["Thesis"])-1;
-	$res = sql_query($con,"SELECT * FROM `Thesis` WHERE `Thesis_ID`=".$matches[$i]);
-	while ( $_row = mysqli_fetch_array($res) ){
-	  $out["Thesis"][$iii]["Name"] = $_row["Name"];
-	  $out["Thesis"][$iii]["Description"] = $_row["Abstract"];
-	  $out["Thesis"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Thesis";
-	  $out["Thesis"][$iii]["Author"] = $_row["Author"];
-	}
-      }
-      $matches = name_search($row["Name"],"Funding",array(
-	"options"=>array(
-	  "match"=>true
-	),
-	"fields"=>array(
-	  "University"=>$row["University"]
-	)
-      ),"FirstNamePI");
-	for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
-	$out["Funding"][] = array();
-	$iii = count($out["Funding"])-1;
-	$res = sql_query($con,"SELECT * FROM `Funding` WHERE `Funding_ID`=".$matches[$i]);
-	while ( $_row = mysqli_fetch_array($res) ){
-	  $out["Funding"][$iii]["Name"] = $_row["Name"];
-	  $out["Funding"][$iii]["Description"] = $_row["Abstract"];
-	  $out["Funding"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Funding";
-	  $out["Funding"][$iii]["coPiNames"] = $_row["Co-PINames"];
-	}
-      }
+      $out = array_merge($out,getAdvisorResources($con,$row));
     }
     echo json_encode($out);
     break;  
   }
   mysqli_close($con);
+}
+function getAdvisorResources($con,$row){
+  $out = array();
+  $matches = name_search($row["Name"],"Course",array(
+    "options"=>array(
+      "match"=>true
+    ),
+    "fields"=>array(
+      "University"=>$row["University"]
+    )
+  ),"Faculty");
+  for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
+    $out["Course"][] = array();
+    $iii = count($out["Course"])-1;
+    $res = sql_query($con,"SELECT * FROM `Course` WHERE `Course_ID`=".$matches[$i]);
+    while ( $_row = mysqli_fetch_array($res) ){
+      $out["Course"][$iii]["Name"] = $_row["Name"];
+      $out["Course"][$iii]["Description"] = $_row["Description"];
+      $out["Course"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Course";
+      $out["Course"][$iii]["Id"] = $_row["Course_ID"];
+    }
+  }
+  $matches = name_search($row["Name"],"Thesis",array(
+    "options"=>array(
+      "match"=>true
+    ),
+    "fields"=>array(
+      "University"=>$row["University"]
+    )
+  ),"Advisor1");
+  for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
+    $out["Thesis"][] = array();
+    $iii = count($out["Thesis"])-1;
+    $res = sql_query($con,"SELECT * FROM `Thesis` WHERE `Thesis_ID`=".$matches[$i]);
+    while ( $_row = mysqli_fetch_array($res) ){
+      $out["Thesis"][$iii]["Name"] = $_row["Name"];
+      $out["Thesis"][$iii]["Description"] = $_row["Abstract"];
+      $out["Thesis"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Thesis";
+      $out["Thesis"][$iii]["Author"] = $_row["Author"];
+      $out["Thesis"][$iii]["Id"] = $_row["Thesis_ID"];
+    }
+  }
+  $matches = name_search($row["Name"],"Funding",array(
+    "options"=>array(
+      "match"=>true
+    ),
+    "fields"=>array(
+      "University"=>$row["University"]
+    )
+  ),"FirstNamePI");
+  for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
+    $out["Funding"][] = array();
+    $iii = count($out["Funding"])-1;
+    $res = sql_query($con,"SELECT * FROM `Funding` WHERE `Funding_ID`=".$matches[$i]);
+    while ( $_row = mysqli_fetch_array($res) ){
+      $out["Funding"][$iii]["Name"] = $_row["Name"];
+      $out["Funding"][$iii]["Description"] = $_row["Abstract"];
+      $out["Funding"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Funding";
+      $out["Funding"][$iii]["coPiNames"] = $_row["Co-PINames"];
+      $out["Funding"][$iii]["Id"] = $_row["Funding_ID"];
+    }
+  }
+  return $out;
 }
 ?>

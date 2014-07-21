@@ -39,7 +39,7 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
       $out["university"] = $row["University"];
     if ( hasAlpha($row["Email"]) )
       $out["email"] = $row["Email"];
-    if ( hasAlpha($row["Outlines"]) ){
+    if ( hasAlpha($row["Outlines"]) == true ){
       $out["cvLink"] = json_decode($row["Outlines"],true);
       if ( $out["cvLink"] == null || !file_exists(full_path.outline_folder.$out["cvLink"]["file"]) ){
 	if ( file_exists($row["Outlines"]) ){

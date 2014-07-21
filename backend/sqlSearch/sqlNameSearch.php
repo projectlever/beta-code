@@ -8,7 +8,7 @@ function name_search($name,$databaseTable,$verifyWith,$fieldName){
   // First clean the name
   // Remove parenthesis
   if ( stripos($name,"(") !== FALSE ){
-    $name = substr($name,0,stripos("("));
+    $name = substr($name,0,stripos($name,"("));
   }
   // Check to see if the advisor is in the database
   $matches = array();
