@@ -51,19 +51,6 @@ function d3load(id,weights,width){
 			.attr('y1', function(d) { return d.source.y; })
 			.attr('x2', function(d) { return d.target.x; })
 			.attr('y2', function(d) { return d.target.y; });
-	
-		//update clip path
-		var clip = svg.selectAll('.clip')
-			.data( recenterVoronoi(node.data()), function(d) { return d.point.index; } );
-
-		clip.enter().append('clipPath')
-			.attr('id', function(d) { return 'clip-'+d.point.index; })
-			.attr('class', 'clip');
-		clip.exit().remove()
-
-		clip.selectAll('path').remove();
-		clip.append('path')
-			.attr('d', function(d) { return 'M'+d.join(',')+'Z'; });
 	});
 
 	// Load data here from json and initialize viz
