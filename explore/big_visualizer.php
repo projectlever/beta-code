@@ -1,5 +1,5 @@
 <?
-	$data = json_decode(include("magic0.php"),1);
+	$data = json_decode(include("http://projectlever.com/advisors/magic0.php"),1);
 	$data = array_slice($data["Advisor"],0,50);
 	
 	$departments = array();
