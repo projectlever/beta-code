@@ -1,0 +1,139 @@
+/* Joobstrap Joomla Framework *bootstrap_extend.php* v1.0.5  - 15.Jan 2013 - http://www.pixelsparadise.com */
+
+/* Released under a commercial license. This file IS copyright protected and NOT released under the MIT license. Please respect the designers rights! */
+/* You can edit it but it is not allowed to offer it for download or resell it */
+
+/* Overwrites, Joomla compatibility classes and extensions for Bootstrap Framework */
+.navbar { margin-bottom: 0px;}
+.navbar .brand {padding: 0 10px 0 0;}
+.btn-group.actions {margin-top:11px;}
+
+/* Normalize text logo size */
+.brand h1 {font-size:24px; padding:0; margin:0;}
+.nav .caret {margin-top: 8px;margin-left: 2px;}
+.nav ul .caret, .nav ul .caret {margin-top: 8px;margin-left: 2px;display:none;}
+.nav, .nav .dropdown-menu li {position:relative;}
+.nav .dropdown-menu li .flyout-menu {left:100%;top:0;}
+.nav li {position:relative;z-index: 597;}
+.nav .flyout-menu {visibility: hidden;position: absolute;top: 100%;z-index: 5000;float: left;min-width: 160px;max-width: 220px;_width: 160px;padding: 4px 0;margin: 0;list-style: none;background-color: #ffffff;border-color: #ccc;border-color: rgba(0, 0, 0, 0.2);border-style: solid;border-width: 1px;-webkit-border-radius: 0 0 5px 5px;-moz-border-radius: 0 0 5px 5px;border-radius: 0 0 5px 5px;-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);-webkit-background-clip: padding-box;-moz-background-clip: padding;background-clip: padding-box;*border-right-width: 2px;*border-bottom-width: 2px;}
+.nav .flyout-menu li {position:relative;float: none;white-space:nowrap;margin:0;padding:0;border:0;}
+.nav .flyout-menu li a {display: block;padding: 3px 15px;clear: both;font-weight: normal;line-height: 18px;color: #555555;white-space: nowrap;}
+.nav .flyout-menu li > a:hover, .nav .flyout-menu .active > a, .nav .flyout-menu .active > a:hover {color: #ffffff;text-decoration: none;background-color: #0088cc;}
+.nav .flyout-menu ul {top:-5px;left:100%;border-radius:2px;-moz-border-radius:2px;-webkit-border-radius:2px;}
+.nav li:hover > .flyout-menu {visibility:visible;}
+.navbar .caret, .navbar .nav .caret {border-top-color: #ffffff;}
+.navbar .nav .active .caret {opacity: 1;filter: alpha(opacity=100);}
+.nav-pills .caret {margin-top:6px;}
+
+/* menus with nav-stacked suffix */
+.nav-stacked ul, .nav-list ul {list-style:none;}
+.nav-stacked ul li a, .nav-list ul li a {display:block;padding:3px 5px;margin:1px 0;}
+.nav-stacked ul .active > a, .nav-stacked ul .active > a:hover, .nav-list ul .active > a, .nav-list ul .active > a:hover {color: black;background-color: transparent;}
+.nav-tabs.nav-stacked > li > ul {margin:0;padding-left:8px;background:#f8f8f8;border:1px solid #ddd;border-top:0;}
+.nav.nav-list li.parent ul {display:none;}
+.nav.nav-list li.parent:hover ul, .nav.nav-list li.active.parent ul {display:block;}
+
+/* Nice Fade Effect for Links */
+a { -webkit-transition: .5s ease-in-out; -moz-transition: .5s ease-in-out;-o-transition: .5s ease-in-out; transition: .5s ease-in-out;}
+
+/* Nice Fade Effect for Credits Area*/
+.credits_area_wrapper div p{opacity:.66; -webkit-transition: .5s ease-in-out; -moz-transition: .5s ease-in-out;-o-transition: .5s ease-in-out; transition: .5s ease-in-out;}
+.credits_area_wrapper:hover div p{opacity:1;}
+
+/* Displays Dropdown Menus also by Mouse over */
+li.dropdown:hover ul {display:block;}
+.dropdown-menu {margin: -1px 0 0;}
+
+/*Adds clear fix to modules to prevent them from floating into each other*/
+.clearfix {display: inline-block;}
+
+/* Resets the Bootstrap default Navbar design */
+.navbar-inner {min-height: 40px;padding-right: 0px; padding-left: 0px; background: none;background-image: none;background-image: none; background-image: none;background-image: none;background-image: none; background-repeat: no-repeat;border: none;-webkit-border-radius: 0px;-moz-border-radius: 0px;border-radius:0px;filter: none;-webkit-box-shadow: none;-moz-box-shadow: none; box-shadow: none;}
+
+/* Page Header Overwrite */
+.page-header {padding-bottom: 0px;margin: 0;border-bottom: 1px solid #eeeeee;}
+
+/* Headlines */
+h1, h2, h3, h4, h5, h6 {margin:.2em 0; line-height:auto;}
+
+/* If more than one row is used for modules the "new_row" suffix tells the first module in the second row that it is first */
+.row-fluid .new_row {margin-left:0;}
+
+/* Default module Setup */
+.moduletable { width:inherit;}
+
+/* Breadcrumb Module default styling*/
+.breadcrumb .icon-map-marker {opacity:.3;}
+.breadcrumb {background:none; padding:0; margin:0;}
+
+/* Hides Module title if turned off. Title is still in the source code. Good for search engines...*/
+.no-title .module-title {display:none;}
+
+/* Usefull Tools */
+.text-align-right {text-align:right;}
+.text-align-center {text-align:center;}
+.text-align-left {text-align:left;}
+.float-left {float:left;}
+.float-right {float:right;}
+.border_right {border-right:1px solid #e4e4e4;padding-right:20px;}
+.border_left {border-left:1px solid #e4e4e4;padding-left:20px;}
+.rounded-background {border-radius:999px;}
+.small_text {font-size:.8em; line-height:1.4em;}
+.big_text {font-size:1.2em}
+
+/* Joomla classes */
+.img-fulltext-left, .img-fulltext-right, .img-fulltext-left img, .img-fulltext-right img {width:100%;}
+.img-intro-left, .img-intro-right, .img-intro-left img, .img-intro-right img{width:100%;}
+
+/*Embed responsive Videos */
+.responsive-video iframe {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}
+
+/* Embed a 16:9 Vimeo or YouTube video responsive */
+.responsive-video {position: relative;padding-bottom: 56.25%; /* Default for 1600x900 videos 16:9 ratio*/padding-top: 0px;height: 0;overflow: hidden;}
+
+.responsiveiframe {position: relative;padding-bottom: 56%;height: 0;overflow: hidden;}
+.responsiveiframe iframe {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}
+
+/*Text selector styling */
+::-moz-selection{ background: #c9e7de; color:#000; text-shadow: none; }
+::selection { background:#c9e7de; color: #000; text-shadow: none; }
+
+/*Pricing Table Basic style */
+.pricing_table:hover {box-shadow:0px 0px 10px rgba(58,135,173,.7);}
+.pricing_table:hover h1 {text-shadow:0 0 10px rgba(255,255,255,1);}
+.pricing_table {border:1px solid #ddd;box-shadow:0px 0px 10px rgba(0,0,0,.2);border-radius:3px;margin:30px 0;}
+
+.pricing_table.featured_plan {}
+.pricing_table.featured_plan:before {content:"Best Price!"; color:#fff; font-size:11px;position:absolute; margin-top:-18px; margin-left:-18px;background-color:#0088cc;width:64px; height:64px;line-height:64px; text-align:center;border-radius:999px;box-shadow:0px 0px 4px rgba(0,0,0,.5);}
+.pricing_table ul {margin:0; padding:0;}
+.pricing_table ul li {list-style:none; text-align:center;margin:0; padding:20px;border-bottom:1px solid #ddd;}
+.pricing_table ul li:last-child {border-bottom:none;}
+.pricing_table ul li.plan_header {box-shadow:inset 0px -20px 20px rgba(0,0,0,1);background-color:#303030;border-top-left-radius:3px;border-top-right-radius:3px;}
+.pricing_table ul li.plan_header h1 {color:#fff; margin:10px; font-weight:600;}
+.pricing_table ul li.plan_header p {color:#aaa;font-size:13px;margin:10px;font-weight:300;text-shadow:1px 1px 1px #000;}
+.pricing_table ul li.plan_pricing h2 {line-height:64px;margin:0; padding:0;}
+.pricing_table ul li.plan_pricing span.small {font-size:14px;font-weight:lighter;padding:0 5px;}
+.pricing_table ul li.row-odd {background-color:#f2f2f2; box-shadow:inset 0px -10px 30px rgba(0,0,0,.05);text-shadow:1px 1px 1px #fff;border-top:1px solid #fff;}
+
+/*Form validation*/
+label.invalid {color:#c80000; font-weight:bold;border:none;} 
+.invalid {border:1px solid #c80000;}
+
+/* Extra Mobile Styles */
+@media (max-width: 767px) {
+	h1 {font-size: 32px;}
+	h2 {font-size: 24px;}
+	h3 {font-size: 20px;}
+	h4 {font-size: 18px;}
+	h5 {font-size: 16px;}
+	h6 {font-size: 15px;}
+}
+
+
+
+
+
+
+
+
+

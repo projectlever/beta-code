@@ -143,3 +143,16 @@ text-align:center;
 .skills {
 text-align:right;
 }
+#network_loading_sign {
+	position:relative;
+	display:inline;
+	top:0;
+	left:0;
+}
+#star_load {
+	width:10px;
+	position:relative;
+	top:0;
+	left:0;
+	display:none;
+}

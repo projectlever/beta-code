@@ -21,6 +21,7 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
+  <script type="text/javascript" src="js/hello.min.js"></script>
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>
   <script type="text/javascript" src="js/pl.js"></script>
@@ -46,12 +47,6 @@
       </div>
       <div class="navbar-collapse collapse navbar-right" id="navbar">
         <ul class="nav navbar-nav">
-          <li>
-	    <a href="http://projectlever.com/about.html">About</a>
-          </li>
-          <li>
-	    <a href="http://projectlever.com/magazine">Magazine</a>
-          </li>
           <li>
 	    <a href="http://projectlever.com/webfiles/login/register/">Sign Up</a>
 	  </li>

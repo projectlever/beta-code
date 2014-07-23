@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 1.6//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.6/template-install.dtd">
+<extension version="1.6" type="template" method="upgrade" client="site">
+
+  <name>GreatInc</name> 
+  <version>1.0.1</version> 
+  <creationDate>17/Jan/2012</creationDate> 
+  <author>Holger Koenemann</author> 
+  <authorEmail>webmaster@pixelsparadise.com</authorEmail> 
+  <authorUrl>http://www.pixelsparadise.com</authorUrl> 
+  <copyright>Copyright 2009-2012 - pixelsparadise.com</copyright> 
+  <license>Commercial</license> 
+<description>
+ <![CDATA[ <h1>Template Overview - "GreatInc" theme</h1>
+
+<h3>Changelog</h3>
+
+<b>1.0.1</b><br/>
+<ul>
+
+    <li> 17/Jan/2012 - Version 1.0.1 - Problem with missing pagination solved</li>
+    <li> 08/Jan/2012 - Version 1.0 - Main Release</li>
+
+</ul>
+
+
+]]> 
+</description>
+
+<files>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>html</folder>
+		<folder>includes</folder>
+		<filename>templateDetails.xml</filename>
+		<filename>index.php</filename>
+		<filename>index.html</filename>
+		<filename>params.ini</filename>
+		<filename>template_thumbnail.png</filename>	
+		<filename>template_preview.png</filename>	
+		<filename>favicon.ico</filename>				
+</files>
+		
+<positions>
+	<position>breadcrumbs</position>
+	<position>above</position>
+	<position>mainmenu</position>
+	<position>sub_header_left</position>
+	<position>sub_header_center</position>
+	<position>sub_header_right</position>
+	<position>top_left25</position>
+	<position>top_left_center25</position>
+	<position>top_right_center25</position>
+	<position>top_right25</position>
+	<position>bottom_left25</position>
+	<position>bottom_left_center25</position>
+	<position>bottom_right_center25</position>
+	<position>bottom_right25</position>
+	<position>bottom_left33</position>
+	<position>bottom_right33</position>
+	<position>bottom_center33</position>
+	<position>top_left33</position>
+	<position>top_right33</position>
+	<position>top_center33</position>
+	<position>bottom_right50</position>
+	<position>bottom_left50</position>
+	<position>top_left50</position>
+	<position>top_right50</position>
+	<position>top</position>
+	<position>bottom</position>
+	<position>right</position>
+	<position>left</position>
+	<position>footer_left</position>
+	<position>footer_center_left</position>
+	<position>footer_center</position>
+	<position>footer_center_right</position>
+	<position>footer_right</position>
+	<position>footer</position>
+	<position>debug</position>
+	<position>header</position>
+	<position>header1</position>
+	<position>header2</position>
+	<position>header3</position>
+	<position>header4</position>
+	<position>header5</position>
+	<position>header6</position>
+	<position>header7</position>
+	<position>header8</position>
+	<position>header9</position>
+	<position>header10</position>
+	<position>header11</position>
+	<position>header12</position>
+	<position>user4</position>
+	<position>footerload</position>
+	<position>breadcrumbsload</position>
+	<position>logo</position>
+	<position>top_left66</position>
+	<position>top_right66</position>
+	<position>bottom_left66</position>
+	<position>bottom_right66</position>
+	
+</positions>
+
+<config>
+	<fields name="params">
+		<fieldset name="Basic">
+		
+				<field name="showPathway" 
+					type="radio" 
+					default="1" 
+					label="Show Pathway Navigation" 
+					description="SHOW PATHWAY NAVIGATION"
+					>
+					<option value="0">No</option>
+					<option value="1">Yes</option>			
+			</field>
+			
+			<field name="showSuckerfish" 
+					type="radio" 
+					default="1" 
+					label="Activate Suckerfish JavaScript for IE?" 
+					description="enables Suckerfish Dropdown menu in IE browsers via JS"
+					>
+					<option value="0">No</option>
+					<option value="1">Yes</option>			
+			</field>
+			
+			<field name="showComponent" 
+					type="radio" 
+					default="1" 
+					label="Show Component" 
+					description="SHOW COMPONENT DESCRIPTION"
+					>
+					<option value="0">No</option>
+					<option value="1">Yes</option>			
+			</field>
+			
+			<field name="readDirection" 
+					type="radio" 
+					default="0" 
+					label="LTR or RTL text flow?" 
+					description="Display text from left ot right (LTR) or right to left (RTL) ?"
+					>
+					<option value="0">LTR</option>
+					<option value="1">RTL</option>			
+			</field>
+			
+					<field name="bckImage"
+					type="filelist"
+					default="building.jpg"
+					label="Select a background image file"
+					description="" 
+					directory="templates/greatinc/images/backgrounds">
+			</field>
+		</fieldset>
+		
+		<fieldset name="advanced">
+			
+			<field name="cssThree" 
+					type="list"
+					default="1"
+					label="Enable CSS3 effects?" 
+					description="Enables nice CSS3 effects like rounded corner, text shadows etc. Only users with modern browsers can see the 					effects, Users with older and IE browsers will see the normal version. Turn off if you want to have the same user 							experience for all visitors"
+					>
+					<option value="0">Off</option>
+					<option value="1">On</option>
+			</field>
+			
+			
+			<field name="logoType" 
+					type="list" 
+					default="1" 
+					label="Show text logo, moduleposition or image logo?" 
+					description="SHOW LOGO AS IMAGE OR TEXT OR MODULEPOSITION"
+					>
+					<option value="1">Image</option>
+					<option value="2">Text</option>	
+					<option value="3">Moduleposition </option>		
+			</field>
+			
+			<field name="logoText" 
+					type="text" 
+					default="GreatInc" 
+					size="12" 
+					label="Enter logo text if logo type is set to text" 
+					description="Enter the logo text"
+					>			
+			</field>
+					
+			
+			<field name="sliderEffect" 
+					type="radio" 
+					default="1" 
+					label="Type of slide effect" 
+					escription="Choose the type of slide effect"
+					>
+					<option value="1">Fade</option>
+					<option value="2">Slide</option>			
+			</field>
+			
+			<field name="sliderAuto" 
+					type="radio" 
+					default="1" 
+					label="Autoplay" 
+					description="Enables the autoplay function for the slider"
+					>
+					<option value="0">No</option>
+					<option value="1">Yes</option>			
+			</field>
+			
+			<field name="sliderPagination" 
+					type="radio" 
+					default="1" 
+					label="Show slider pagination" 
+					description="Show links with number to every slide"
+					>
+					<option value="0">No</option>
+					<option value="1">Yes</option>			
+			</field>
+			
+			<field name="hoverPause" 
+					type="radio" 
+					default="1" 
+					label="Stops on hover" 
+					description="The slideshow stops on mouseover. good for longer content or videos. "
+					>
+					<option value="1">No</option>
+					<option value="2">Yes</option>			
+			</field>
+			
+			
+			<field name="sliderTime" 
+					type="text" 
+					default="6000" 
+					size="5" 
+					label="Time a slide appears" 
+					description="Time one slide appears in ms. Default is 6000" 
+					>			
+			</field>
+			
+			<field name="sliderChange" 
+					type="text" 
+					default="600" 
+					size="5" 
+					label="Time from one slide to another" 
+					description="Enter the time between one slide to another in ms. Default is 600" 
+					>			
+			</field>
+
+			</fieldset>
+		</fields>
+	</config>
+
+</extension>

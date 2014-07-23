@@ -25,6 +25,7 @@
     list-style:none;
     padding:0;
     display: block;
+    font-weight: normal;
 }
 .tabnav-tabs li { 
     float: left;
@@ -51,4 +52,16 @@
 
 .bio{
     margin:40px 0px;
+}
+#loading_sign {
+    position:fixed;
+    z-index:5;
+    top:50px;
+    left:0;
+    background-color:#fff;
+    width:100%;
+    height:100%;
+}
+#loading_sign > img {
+    display:block;
 }

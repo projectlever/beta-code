@@ -70,13 +70,19 @@ if ( isset($fields[$type]) ){
       }
       foreach ($names as $index=>$name){
 	if ( stripos($name,"and") !== FALSE ){
-	  $temp = $name;
 	  unset($names[$index]);
-	  $names = array_merge($names,explode("and",$temp));
+	  if ( substr_count($name,",") > 1 ){
+	    $names = array_merge($names,explode(",",str_replace("and","",$name)));	    
+	  }
+	  else {
+	    $temp = $name;
+	    $names = array_merge($names,explode("and",$temp));
+	  }
 	}
       }
       foreach ($names as $index=>$name){
 	if ( $name != "" ){
+	  $name = str_replace(",","",$name);
 	  $matches = name_search($name,"Advisor",array(
 	    "options"=>array(
 	      "match"=>true

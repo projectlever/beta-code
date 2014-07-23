@@ -1,0 +1,125 @@
+/* Released under a commercial license. This file IS copyright protected and NOT released under the MIT license. Please respect the designers rights! */
+/* You can edit it but it is not allowed to offer it for download or resell it */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
+
+/* HTML Elements */
+body{background-color:#555;}
+li {padding-bottom:5px;}
+
+label,input,select,textarea {float:left;}
+
+/*Typo*/
+body{  font: 300 14px/1.7em "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;color:#555;font-family: 'Cabin', sans-serif;}
+h1, h2, h3, h4, h5, h6 {color:#000; font-weight:600;padding:.3em 0;line-height:1em;}
+blockquote {color:#479ccf;font-size:18px; line-height:32px; border-left:3px solid #eee;}
+.footer_area_wrapper blockquote{color:#fff; border-left:3px solid #333;}
+/*Basic Structure */
+.container-fluid {padding:40px 10%;}
+.container-fluid.slider_modules_wrapper, .container-fluid.header_modules_wrapper {margin:0px;padding:0px;}
+.sourrounding_wrapper.logo_area_wrapper .container-fluid {padding:0;position:relative;z-index:100;border-left:1px solid rgba(255,255,255,.7); background-color: rgba(0,0,0,.8); box-shadow:inset 0px 40px 40px rgba(255,255,255,.15), 6px 12px 12px rgba(0,0,0,.3);margin:80px 5% -100px 5%;line-height:60px;height:60px;}
+.sourrounding_wrapper.logo_area_wrapper .container-fluid .container-fluid {padding:0; margin:0;border:none;}
+.container-fluid .container-fluid {padding:0; margin:0;}
+.above_all_area_wrapper .inner_wrapper {background:none; box-shadow:none;padding:0;}
+.above_all_area_wrapper  .container-fluid {padding:0 10%;}
+.sourrounding_all {margin:40px 0 0px 0;}
+.inner_wrapper {box-shadow:0px 100px 100px rgba(0,0,0,.7);background-color:#fff;}
+.sourrounding_wrapper.credits_area_wrapper .inner_wrapper {color:#999;box-shadow:none;background:none; font-size:12px;padding:40px 0 20px 0;text-shadow:1px 1px 1px #000;}
+.sourrounding_wrapper.credits_area_wrapper .inner_wrapper a {color:#fff;}
+.main_content .container-fluid {padding:0 10%;}
+
+/*Main Nav styling */
+.sourrounding_wrapper.logo_area_wrapper ul.nav {float:right;}
+.sourrounding_wrapper.logo_area_wrapper ul.nav > li {display:inline; width:auto;height:60px; line-height:60px;padding:0;margin:0;}
+.sourrounding_wrapper.logo_area_wrapper ul.nav > li a{height:60px; line-height:60px;padding:0 10px;margin:0;text-shadow:none;}
+.sourrounding_wrapper.logo_area_wrapper ul.nav > li.active a {background:none; height:58px;color:#fff;}
+.sourrounding_wrapper.logo_area_wrapper ul.nav > li a:hover {color:#fff;text-shadow:none;}
+.caret {top:44px;left:50%;position:absolute;opacity:.5;}
+.navbar .nav li.dropdown.open > .dropdown-toggle,
+.navbar .nav li.dropdown.active > .dropdown-toggle,
+.navbar .nav li.dropdown.open.active > .dropdown-toggle {background: none;color:#fff;}
+.dropdown-menu:hover > li a {background-image:none;height:auto; line-height:auto;}
+.dropdown-menu:hover > li {margin:0;}
+.sourrounding_wrapper.logo_area_wrapper ul.nav > li.active li a {border:none;color:#555;}
+.sourrounding_wrapper.logo_area_wrapper ul.nav > li.active li a:hover {color:#fff;}
+
+/* Logo specific styling */
+a.brand {box-shadow:inset 0px -10px 10px rgba(0,0,0,.15);}
+a.brand:hover {box-shadow:inset 10px 10px 10px rgba(0,0,0,.15);}
+.brand.logo_text {margin-left:0px;height:60px; line-height:60px;}
+.brand.logo_text h1{height:60px; line-height:60px;text-shadow:none; color:#fff;margin:0 10px 0 20px;font-weight:300; letter-spacing:1px; font-size:20px;}
+
+/* Icons */
+.rounded-background {padding:20px;width:48px;height:48px;margin:20px auto;}
+
+/*Module Styling */
+ .top_area_wrapper .container-fluid {border-bottom:1px solid #e4e4e4;border-top:1px solid #e4e4e4; background-color:#eee;text-shadow:1px 1px 1px #fff;}
+.slides p {margin:0; padding:0;}
+.custom {background-position:center center; background-repeat:no-repeat; background-size: cover;}
+.header_content {text-shadow:1px 1px 1px #000; z-index:1000;display:block; float:left;position:absolute; bottom:0;margin:10%;}
+.header_content h1 {line-height84px;color:#fff;margin:0px; padding:0;float:left;font-weight:300; font-size:84px;}
+.header_content p {color:#fff;  float:left; width:50%;margin:0px 0 0 5px;font-size:16px;}
+.module-header {padding-bottom:1em;}
+
+/* Headlines */
+h2.module-title:after {content:"";width:48px; color:#000; margin-top:9px;display:block; height:2px;position:absolute;}
+h2.module-title {border-bottom:1px solid #555;padding-bottom:10px;}
+
+/*Footer section */
+.footer_area_wrapper .container-fluid, .below_header_modules_wrapper {background-color:#202020;text-shadow:1px 1px 1px #000;}
+.below_header_modules_wrapper h1, .below_header_modules_wrapper h2, .below_header_modules_wrapper h3, .below_header_modules_wrapper h4, .below_header_modules_wrapper h5, .below_header_modules_wrapper h6, .footer_area_wrapper h1, .footer_area_wrapper h2, .footer_area_wrapper h3, .footer_area_wrapper h4, .footer_area_wrapper h5, .footer_area_wrapper h6 {color:#888; font-weight:300;}
+.footer_area_wrapper .span12 {border-bottom:1px solid #282828;margin-bottom:10px;}
+
+/*Slider */
+ul.slides li {padding:0px;}
+
+/*Breadcrumbs*/
+.breadcrumb {line-height:12px;font-size:12px; margin:10px 0;border:1px solid #e4e4e4;border-left:none; border-right:none;padding:8px 5px 0px 5px;border:radius:none;}
+
+/* Well Box*/
+.well {text-shadow:none;}
+
+
+
+/* Extra Mobile Styles */
+@media (max-width: 767px) {
+  .nav-collapse .nav{width:100%; opacity:.95;position:relative;}
+  .nav-collapse ul.nav > li {border-bottom:1px solid #e4e4e4;}
+  .nav-collapse ul.nav.nav-dropdown li.active a.dropdown-toggle {color:#555;position:relative;}
+  .nav-collapse ul.nav.nav-dropdown > li a {border-radius:0px;border-bottom:1px solid #ccc;border-top:1px solid #fff;height:30px;line-height:30px;padding:10px 20px;margin:0;background-color:#eee;}
+  .nav-collapse ul.nav.nav-dropdown > li.active a {height:30px;line-height:30px;padding:10px 20px;margin:0;}
+  .caret {top:24px;position:absolute;opacity:.5;}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

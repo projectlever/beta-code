@@ -1,0 +1,23 @@
+/* Nice Fade Effect for Links */
+a { -webkit-transition: .5s ease-in-out; -moz-transition: .5s ease-in-out;-o-transition: .5s ease-in-out; transition: .5s ease-in-out;}
+
+/* Nice Fade Effect for Credits Area*/
+.credits_area_wrapper div {opacity:.75; -webkit-transition: .5s ease-in-out; -moz-transition: .5s ease-in-out;-o-transition: .5s ease-in-out; transition: .5s ease-in-out;}
+.credits_area_wrapper:hover div {opacity:1;}
+
+/* Displays Dropdown Menus also by Mouse over */
+li.dropdown:hover ul {display:block;}
+.dropdown-menu {margin: -1px 0 0;}
+
+/*Adds clear fix to modules to prevent them from floating into each other*/
+.clearfix {display: inline-block;}
+
+/* Resets the Bootstrap default Navbar design */
+.navbar-inner {min-height: 40px;padding-right: 0px; padding-left: 0px; background-color: none;background-image: none;background-image: none; background-image: none;background-image: none;background-image: none; background-repeat: no-repeat;border: none;-webkit-border-radius: 0px;-moz-border-radius: 0px;border-radius:0px;filter: none;-webkit-box-shadow: none;-moz-box-shadow: none; box-shadow: none;}
+
+/* Usefull Tools */
+.text-align-right {text-align:right;}
+.text-align-center {text-align:center;}
+.text-align-left {text-align:left;}
+.float-left {float:left;}
+.float-right {float:right;}

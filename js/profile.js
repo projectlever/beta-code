@@ -16,13 +16,16 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
     $scope.display = "advisors";
     $scope.testDrive = false;
     $scope.savesEdited = false;
-    $scope.editMode = false;
+    $scope.editMode = ($window.editMode == 1); // Did we enter in edit mode?
     $scope.departments = [];
     $scope.schools = [];
     $scope.selectedSchool = "";
+    $scope.selectedDepartment = "";
 
     $scope.common = common;
-
+	 $scope.isSavedResource = function(){
+		return true;	 
+	 }
     $scope.setEditMode = function(bool){
 	$scope.editMode = bool;
     }
@@ -65,6 +68,23 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	    }
 	});
     }
+    $scope.schoolIsSelected = function(school){
+    	console.log([school,$scope.selectedSchool]);
+    	return school[0] == $scope.selectedSchool;
+    }
+    $scope.isSelected = function(name,type,user){
+    	if ( user == undefined )
+    		return "";
+		if ( user.search(name) > -1 ){
+			$("#"+name.replace(/\s/g,"_")).attr("selected",true);
+		}
+		if ( type == 'school' ){
+			$scope.selectedSchool = name;		
+		}
+		else if ( type == 'department' ){
+			$scope.selectedDepartment = name;		
+		}
+    }
     $scope.displayHTML = function(html){
 	return $sce.trustAsHtml(html);
     }
@@ -72,7 +92,7 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	$scope.display = resource;
     }
     $scope.isOnRemoveList = function(id,type){
-	return _.find(removeList[type],function(arr){return arr == id;}) != undefined;
+		return _.find(removeList[type],function(arr){return arr == id;}) != undefined;
     }
     $scope.removeFavorites = function(){
 	$http({

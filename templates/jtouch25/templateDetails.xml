@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
+<install version="2.5" type="template" method="upgrade">
+	<name>jtouch25</name>
+	<creationDate>02 August 2012</creationDate>
+	<author>Nguyen @ MobileMeWs.com</author>
+	<authorEmail>mobilemews@gmail.com</authorEmail>
+	<authorUrl>http://www.mobilemews.com/jtouch</authorUrl>
+	<copyright>Copyright 2011-2012 MobileMeWs.com. All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<version>2.5.12 stable</version>
+	<description>
+		<![CDATA[
+			<div class="clr"></div>
+			<div style="font-weight:normal;color:#333;">
+				<img src="../templates/jtouch25/mobilemews/welcome.png" />
+				<div class="clr"></div>
+				<h2>Jtouch25 - version 2.5.12 stable</h2>
+				<p>A mobile and touch friendly template for Joomla 2.5, VirtueMart 2, and Kunena 1.7-2.0. Built on top of jQueryMobile 1.1</p>
+				<p>
+					<a href="http://www.mobilemews.com" target="_blank">Home page</a> | 
+					<a href="http://www.mobilemews.com/downloads/joomla-mobile-extensions/jtouch-mobile-template.html" target="_blank">Download latest releases</a> | 
+					<a href="http://www.mobilemews.com/forum/2-jtouch-mobile-templates" target="_blank">Support forum</a>
+				</p>
+				
+				<p>Love to use Jtouch? Please <a href="http://www.mobilemews.com/" target="_blank">donate</a> or <a href="http://extensions.joomla.org/extensions/mobile/mobile-display/19123" target="_blank">vote</a> for us!</p>
+				
+				<p>Copyright &copy; 2011-2012 <a href="http://www.mobilemews.com/" target="_blank">MobileMeWs.com</a>. All rights reserved.</p>
+			</div>
+		]]>
+		
+	</description>
+	<files>
+		<filename>index.html</filename>
+		<filename>index.php</filename>
+		<filename>component.php</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>template_preview.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>jtouch.png</filename>
+		<filename>banner.png</filename>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>client-libs</folder>
+		<folder>icons</folder>
+		<folder>html</folder>
+		<folder>utils</folder>
+		<folder>page-elements</folder>
+		<folder>mobilemews</folder>
+		<folder>-customize</folder>
+	</files>
+	<languages folder="languages">
+		<language tag="en-GB">en-GB.tpl_jtouch25.ini</language>
+	</languages>
+	<positions>
+		<position>jtouch-nav</position>
+		<position>jtouch-banner</position>
+		<position>jtouch-top</position>
+		<position>jtouch-bottom</position>
+		<position>jtouch-breadcrumb</position>
+		<position>jtouch-footer</position>
+		<position>jtouch-menu</position>
+		<position>jtouch-search</position>
+		<position>jtouch-tools</position>
+		<position>jtouch-rtools</position>
+		<position>jtouch-user1</position>
+		<position>jtouch-user2</position>
+	</positions>
+	<config>
+		<fields name="params">
+			<fieldset name="lnf" label="Look and Feel">
+				<field name="jtouch-theme" type="list" default="d" label="Page Theme" description="Select theme apply to the whole page">
+					<option value="a">A - Black</option>
+					<option value="b">B - Blue</option>
+					<option value="c">C - Silver</option>
+					<option value="d">D - Gray</option>
+					<option value="e">E - Yellow</option>
+					<option value="e">F - Your design F</option>
+					<option value="e">G - Your design G</option>
+				</field>
+				<field name="jtouch-header-theme" type="list" default="b" label="Header Theme" description="Select theme apply to the header bar">
+					<option value="a">A - Black</option>
+					<option value="b">B - Blue</option>
+					<option value="c">C - Silver</option>
+					<option value="d">D - Gray</option>
+					<option value="e">E - Yellow</option>
+					<option value="e">F - Your design F</option>
+					<option value="e">G - Your design G</option>
+				</field>
+				<field name="jtouch-header-button-view" type="list" default="1" label="Header Button" description="Customize the layout of Header buttons. Default is Text + Image">
+					<option value="1">Text + Image</option>
+					<option value="2">Text Only</option>
+					<option value="3">Image Only</option>
+				</field>
+				<field name="jtouch-footer-theme" type="list" default="d" label="Footer Theme" description="Select theme apply to the footer bar">
+					<option value="a">A - Black</option>
+					<option value="b">B - Blue</option>
+					<option value="c">C - Silver</option>
+					<option value="d">D - Gray</option>
+					<option value="e">E - Yellow</option>
+					<option value="e">F - Your design F</option>
+					<option value="e">G - Your design G</option>
+				</field>
+				<field name="jtouch-always-show-back" type="list" default="0" label="Show Back Button" description="Always show back button on the left hand of header bar. Default is No">
+					<option value="1">Yes</option>
+					<option value="2">Yes, without Text</option>
+					<option value="0">No</option>
+				</field>
+				
+				<field name="jtouch-fixed-header" type="radio" default="0" label="Fixed Header" description="Fixed position of header bar while scrolling. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-fixed-footer" type="radio" default="0" label="Fixed Footer" description="Fixed position of footer bar while scrolling. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-page-transition" type="list" default="fade" label="Page Transition" description="Transition effects that can be applied to any page link or ajax form submission. Default is Fade">
+					<option value="fade">Fade</option>
+					<option value="pop">Pop</option>
+					<option value="flip">Flip</option>
+					<option value="turn">Turn</option>
+					<option value="flow">Flow</option>
+					<option value="slidefade">Slide fade</option>
+					<option value="slide">Slide</option>
+					<option value="slideup">Slide up</option>
+					<option value="none">None</option>
+				</field>
+				
+				<field name="jtouch-banner" type="text" default="templates/jtouch25/banner.png" label="Main Banner" description="Path to image display on top of the page. Use as the main banner or logo for your mobile website. Enter -1 to turn banner OFF" />
+				<field name="spacer-desktop" type="spacer" hr="true" />
+				<field name="jtouch-desktop-template" class="validate-numeric" type="text" default="-1" label="Desktop Template ID" description="User can switch to the desktop version of your website by change its template. Put the ID of this desktop template here. -1 for turn off this function. Default is -1" />
+				<field name="space-view-mobile" type="spacer" label="&lt;span class='icon-16-language' style='background-repeat:no-repeat;padding-left:16px;' &gt; &lt;a href='../index.php?jtpl=1&#38;force=1' target='_blank' &gt; View site in mobile version &lt;/a&gt; &lt;/span&gt;" />
+			</fieldset>
+			
+			<fieldset name="ios" label="iOS Devices">
+				<field name="jtouch-ios-add-app" type="radio" default="1" label="Add to Home Screen" description="Display Add to Home Screen dialog when users visit the mobile site on a iOS device. Default is Yes">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-ios-icons" type="text" default="icons" label= "Icons Folder" description="Folder name (within jtouch25 template) has images which are using to create WebClip icon. Default is icons" />
+			</fieldset>
+			
+			<fieldset name="gbs" label="Advanced Parameters">
+				<field name="jtouch-turnoff-ids" class="" type="text" default="-1"  label="Turn Off Pages" description="If you don't want to load components from home page or any other pages, please specify their Menu Item IDs here, separates by commas, for example: 1,3,5. Default is -1" />
+				<field name="jtouch-debug" type="radio" default="0" label="Debug" description="Select On to use uncompressed css and js files, useful for developer. Default is Off">
+					<option value="1">On</option>
+					<option value="0">Off</option>
+				</field>
+				<field name="jtouch-jquery-load" type="radio" default="1" label="Use Default jQuery" description="Use the jQuery javascript provided by the Jtouch template or not. Default is Yes">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-jqm-css" type="list" default="1" label="JQM CSS" description="Full: Includes all required css. Structure: Use incase you have a full custom swatches from A to E. Default is Full">
+					<option value="1">Full</option>
+					<option value="2">Structure Only</option>
+				</field>
+				<field name="jtouch-show-powerby" type="radio" default="1" label="Show Powered By" description="Display MobileMeWs.com link at the bottom of your website. Help us spread the world, please :). Default is Yes">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="space-module-mapping" type="spacer" hr="true" />
+				<field name="space-module-mapping-header" type="spacer" label="&lt;strong&gt; MODULE MAPPING &lt;/strong&gt;"/>
+				<field name="space-module-mapping-desc" type="spacer" label="Enter position alias to map your desktop modules to mobile. For example: if you want to display modules placed on 'left' position of your desktop template to 'jtouch-user1' position of Jtouch25, enter 'left' to 'jtouch-user1' field"/>
+				<field name="jtouch-mm-jtouch-banner" type="text" default="jtouch-banner" label="jtouch-banner" />
+				<field name="jtouch-mm-jtouch-top" type="text" default="jtouch-top" label="jtouch-top" />
+				<field name="jtouch-mm-jtouch-user1" type="text" default="jtouch-user1" label="jtouch-user1" />
+				<field name="jtouch-mm-jtouch-user2" type="text" default="jtouch-user2" label="jtouch-user2" />
+				<field name="jtouch-mm-jtouch-bottom" type="text" default="jtouch-bottom" label="jtouch-bottom" />
+				<field name="jtouch-mm-jtouch-breadcrumb" type="text" default="jtouch-breadcrumb" label="jtouch-breadcrumb" />
+				<field name="jtouch-mm-jtouch-footer" type="text" default="jtouch-footer" label="jtouch-footer" />
+			</fieldset>
+			
+			<fieldset name="gas" label="Google Settings">
+				<field name="jtouch-google-captcha-enable" type="radio" default="0" label="Use ReCaptcha" description="If your website is turn on catpcha plugin and using Google ReCaptcha, please turn on this option. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-google-captcha-publickey" type="text" default="" label="ReCaptcha Public Key" description="Your ReCaptcha Public Key. Must be the same what you have input to ReCaptcha Plugin" />
+				
+				<field name="spacer-google-analytics" type="spacer" hr="true" />
+				<field name="jtouch-google-analytics" type="radio" default="0" label="Use Google Analytics" description="Add Google Analytics js to your website or not. If select Yes, please input your GA Account and domain main. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-google-account" type="text" default="UA-26927250-1" label="GA Account" description="Your Google Analytics Code" />
+				<field name="jtouch-google-domain" type="text" default="mobilemews.com" label="GA Account" description="Your domain" />
+				
+				<field name="space-google-adsence" type="spacer" hr="true" />
+				<field name="jtouch-google-adsence" type="list" default="0" label="Enable Google Adsence" description="Select position to display Google Adsence. Deault is No">
+					<option value="0">No</option>
+					<option value="1">Top</option>
+					<option value="2">Bottom</option>
+					<option value="3">Top + Bottom</option>
+				</field>
+				<field name="jtouch-google-adsence-type" type="list" default="NATIVE" label="Script Type" description="You can select between using PHP code or Native javascript. Deault is NATIVE">
+					<option value="PHP">PHP Code</option>
+					<option value="NATIVE">NATIVE Code</option>
+				</field>
+				<field name="jtouch-google-adsence-client" type="text" default="ca-pub-1140773070490***" label="Client ID" description="Your Google Adsence Client ID. For example: ca-pub-1140773070490156" />
+				<field name="jtouch-google-adsence-slot" type="text" default="7226972***" label="Slot Name" description="Your Google Adsence Slot Name. For example: 7226972107" />
+				<field name="jtouch-google-adsence-width" type="text" default="320" label="Banner Width (px)" description="Width - in pixel - of Google Adsence banenr. Default is 320" />
+				<field name="jtouch-google-adsence-height" type="text" default="50" label="Banner Height (px)" description="Height - in pixel - of Google Adsence banenr. Default is 50" />
+				
+			</fieldset>
+			
+			<fieldset name="ext-vm" label="VirtueMart 2">
+				<field name="jtouch-virtuemart-load" type="radio" default="0" label="Use VirtueMart2" description="Load stuffs for VirtueMart 2 or not. Select Yes if your website is running with VM. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="jtouch-virtuemart-btn-level1" type="radio" default="0" label="Button on 1st Page" description="Show 'Add to Cart' button on list of products page. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+			</fieldset>
+			
+			<fieldset name="ext-kunena" label="Kunena 1.7">
+				<field name="jtouch-kunena-load" type="radio" default="0" label="Use Kunena" description="Load stuffs for Kunena 1.7 or not. Select Yes if your website is running with Kunena forum. Default is No">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</install>

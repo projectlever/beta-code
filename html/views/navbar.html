@@ -3,7 +3,7 @@
     <div class="navbar-collapse collapse pl-logo">
       <ul class="nav navbar-nav">
 	<li>
-	  <a>Project Lever</a>
+	  <a href="home.php">Project Lever</a>
 	</li>
       </ul>
     </div>
@@ -26,13 +26,24 @@
 	<li ng-if="testDrive == true">
 	  <a href="javascript:void(0)" onclick="showForm('reg_form')" id="sign_up_button">Sign Up</a>
 	</li>
-	<li ng-if="profilePage != true">
-	  <a href="profile.php" ng-if="testDrive == false || !testDrive">Profile</a>
+	<li ng-if="testDrive == true">
 	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm('sign_in_form')" id="login_button">Log In</a>
 	</li>
-	<li ng-if="profilePage == true">
-	  <a href="../webfiles/login/logout/logout.php">Log Out</a>
-	</li>
+	<li ng-if="testDrive != true" class="ng-scope dropdown">
+	  <a href="#" id="profilemenu" data-toggle="dropdown" class="dropdown-toggle" role="button" style="padding-top: 9px;padding-bottom: 9px;"> 
+	    <img src="http://www.konstantinkashin.com/student_icon_white.png" style="height: 32px;width: auto;"> 
+	  </a>
+	  			<style type="text/css">
+	   		#main_drop_down a:hover {
+	   		 	color:#fff;
+	  			 }
+	  			</style>
+	  			<ul class="dropdown-menu" id="main_drop_down" role="menu" aria-labelledby="profilemenu" style="max-height:200px">
+	    			<li role="presentation"><a href="profile.php">Profile</a></li>
+	    			<li role="presentation"><a href="profile.php?edit">Settings</a></li>
+	    			<li role="presentation"><a href="../webfiles/login/logout/logout.php">Log Out</a></li>
+	  			</ul>	  
+			</li>
       </ul>
     </div>
   </div>

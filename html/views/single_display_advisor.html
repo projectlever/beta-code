@@ -11,6 +11,7 @@
 	    <button ng-click="toggleFavorite(id,pageType)">
 	      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(id,pageType)}" style="margin-left: 0;"></span>  
 	      <span> Star </span> 
+	      <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" id="star_load" />
 	    </button> 
 	  </div>
 	  <h2>{{data[pageType].Name}}</h2>
@@ -56,10 +57,11 @@
               </a>
             </li>
             <li class="tabnav-tab " ng-if="results != ''" ng-class="{'selected':selected=='network'}" ng-click="select('network')">
-              <a>
-		<span class="octicon octicon-repo"><img src="https://cdn3.iconfinder.com/data/icons/monosign/142/users-512.png" width="25px"/></span>
-		Similar Advisors
-              </a>
+            	<a>
+						<span class="octicon octicon-repo"><img src="https://cdn3.iconfinder.com/data/icons/monosign/142/users-512.png" width="25px"/></span>
+							Similar Advisors
+						</span>  	
+            	</a>            
             </li>
           </ul>        
 	</div>
@@ -109,10 +111,15 @@
       </div>
     </div>
     <div class="container full-width full-height" id="similar_{{pageType}}" ng-show="selected == 'network'">
+    	<div class="row">
+			<div class="col-xs-4 col-xs-offset-4 text-center" style="padding-top: 50px">
+				<img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" id="network_loading_sign" />			
+			</div>    	
+    	</div>
       <div class="row full-height">
-	<div class="col-lg-12 full-height text-center">
-	  <match-results></match-results>
-	</div>
+			<div class="col-lg-12 full-height text-center">
+	  			<match-results></match-results>
+			</div>
       </div>
     </div>
   </div>

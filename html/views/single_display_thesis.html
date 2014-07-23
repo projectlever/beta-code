@@ -20,9 +20,15 @@
 	    <span ng-if="common.alphaExists(data.Thesis.University) == true">{{common.replaceAll("_"," ",data.Thesis.University)}}</span>
 	  </h5>
 	  <span ng-if="common.alphaExists(data.Thesis.Advisor1) == true"> 
-	    <img src="/images/LittleAdvisorRed.png" width="25px" /> 
-	    <span>{{data.Thesis.Advisor1}}</span>
-	    <br/>
+	    <div ng-repeat="(key,value) in data">	     
+	      <ul ng-if="key == 'Advisor'" style="list-style:none;margin:0;padding:0;">
+		<li ng-repeat="(infoKey, infoValue) in value">
+		  <img ng-if="common.alphaExists(infoValue.Picture) == true" src="{{infoValue.Picture}}" width="25" />
+		  <img ng-if="common.alphaExists(infoValue.Picture) == false" src="/images/LittleAdvisorRed.png" width="25" />
+		  <a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
+		</li>
+	      </ul>
+	    </div>
 	  </span> 
 	</div>
       </div>

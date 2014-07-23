@@ -3,8 +3,7 @@
 require("../lib.php");
 
 $conditions = array(
-  "DivinitySchool.txt"=>"`School` LIKE '%Divinity%' AND `University`='Harvard_University'",
-  "NotreDame.txt"=>"`University` = 'University_of_Notre_Dame'" 
+  "DivinitySchool.txt"=>"`School` NOT LIKE '%Divinity%' AND `University`='Harvard_University'"
 );
 
 $con = sql_connect("svetlana_Total");

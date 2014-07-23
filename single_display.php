@@ -20,6 +20,7 @@
   <link type="text/css" href="css/advisor.css" rel="stylesheet"/>
   <link type="text/css" href="css/match.css" rel="stylesheet"/>
   <link type="text/css" href="css/single_advisor_viz.css" rel="stylesheet"/>
+  <link type="text/css" href="css/single_display.css" rel="stylesheet"/>
   
   <!-- Le Scripts-->		
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
@@ -38,15 +39,17 @@
   <script type="text/javascript" src="js/directives/displayType.js"></script>
   <script type="text/javascript" src="js/directives/matchResults.js"></script>
   <script type="text/javascript" src="js/services/common.js"></script>
+  <script type="text/javascript" src="js/services/resourceMatch.js"></script>
   <script type="text/javascript" src="js/single_advisor_viz.js"></script>
   
   <!-- Le Maps -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
 </head>
 <body class="pl-body">
-  <!-- Loading gif -->
-  <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
-
+  <div id="loading_sign">
+    <!-- Loading gif -->
+    <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
+  </div>
   <!-- NAVBAR -->
   <lever-navbar></lever-navbar>
   <!-- END NAVBAR, START BODY -->

@@ -1,0 +1,76 @@
+/* test */
+ul, table {
+    width:100%;
+    margin:0;
+    padding:0;
+}
+#controls {
+    position:absolute;
+    bottom:0;
+    text-align:left;
+}
+#file_diff {
+    text-align:left;
+}
+#close_button {
+    position:absolute;
+    top:0;
+    right:0;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    width:1.25em;
+    height:1.25em;
+    border:1px solid #000;
+    text-align:center;
+}
+#commits {
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    max-height:100%;
+    overflow:auto;
+    list-style:none;
+    z-index:1;
+}
+#commit_files {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:2;
+    display:none;
+    background-color:rgba(255,255,255,1);
+}
+#commit_files > table {
+    height:100%;
+}
+#commit_files tr:hover {
+    background-color:#fff;
+}
+#files li {
+    padding-bottom: 5px;
+    font-size:16px;
+    color:blue;
+    cursor:pointer;
+}
+#files li:hover {
+    text-decoration: underline;
+}
+tr {
+    cursor:pointer;
+}
+tr:hover {
+    background-color:#aaa;
+}
+td {
+    text-align:center;
+    vertical-align:middle;
+    width:60%;
+}
+td:first-child {
+    border-right:1px solid #aaa;
+    width:40%;
+}

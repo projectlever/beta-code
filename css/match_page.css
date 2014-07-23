@@ -653,9 +653,10 @@ footer {
 }
 [name="description_box"] {
     max-height:10em;
-}
-[name="description_box"] * {
-    font-size:1em;
+    text-align:center;
+    font-family: Raleway,sans-serif;
+    padding:0 2em;
+    font-weight:300;
 }
 .result-name {
     padding-top:10px;

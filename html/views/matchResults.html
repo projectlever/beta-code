@@ -77,6 +77,11 @@
 		<h3 style="text-transform: capitalize;"> We've matched you to {{getNumResults(key)}} {{key}} </h3>
 	      </td>
 	    </tr>
+	    <tr ng-if="singleDisplay == true && pageType == 'Advisor'">
+	      <td>
+		<h3 style="text-transform:none">You may also be interested in these similar advisors...</h3>
+	      </td>
+	    </tr>
 	    <tr ng-if="profilePage == true">
 	      <td>
 		<h3 style="text-transform: capitalize;"> Saved Resources </h3>
@@ -117,7 +122,8 @@
 			<table>
 			  <tr>
 			    <td>
-			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key)==false,'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>
+			    	<span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key) == false}" title="Save this result" ng-if="profilePage==true" ng-click="toggleFavorite(result.id,key)"></span>
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-if="profilePage!=true" ng-click="toggleFavorite(result.id,key)"></span>		
 			    </td>
 			    <td>
 			      <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-if="key == 'advisors' && result.email != '{}' && common.alphaExists(result.email) == true">
@@ -189,7 +195,8 @@
 			<table>
 			  <tr>
 			    <td>
-			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key)==false,'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>		 
+			    	<span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key) == false}" title="Save this result" ng-if="profilePage==true" ng-click="toggleFavorite(result.id,key)"></span>
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-if="profilePage!=true" ng-click="toggleFavorite(result.id,key)"></span>			 
 			    </td>
 			    <td>
 			      <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">

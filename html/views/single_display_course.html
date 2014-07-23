@@ -23,12 +23,19 @@
 	      <img ng-if="common.alphaExists(faculty.Picture) == true" src="{{faculty.Picture}}" width="25px" />
 	      <img ng-if="common.alphaExists(faculty.Picture) == false" src="/images/LittleAdvisorRed.png" width="25px" />
 	      <a ng-if="common.alphaExists(faculty.Link) == true" href="{{faculty.Link}}">{{faculty.Name}}</a>
-	      <span ng-if="common.alphaExists(faculty.link) == false">{{faculty.Name}}</span>
+	      <span ng-if="common.alphaExists(faculty.Link) == false">{{faculty.Name}}</span>
 	    </span>
 	  </span>
 	  <span ng-if="common.alphaExists(data.Course.Faculty) == true">
-	    <img src="/images/LittleAdvisorRed.png" width="25px" />
-	    <span>{{data.Course.Faculty}}</span>
+	    <div ng-repeat="(key,value) in data">	     
+	      <ul ng-if="key == 'Advisor'" style="list-style:none;margin:0;padding:0;">
+		<li ng-repeat="(infoKey, infoValue) in value">
+		  <img ng-if="common.alphaExists(infoValue.Picture) == true" src="{{infoValue.Picture}}" width="25" />
+		  <img ng-if="common.alphaExists(infoValue.Picture) == false" src="/images/LittleAdvisorRed.png" width="25" />
+		  <a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
+		</li>
+	      </ul>
+	    </div>
 	  </span>
 	</div>
       </div>
@@ -76,7 +83,13 @@
 	  </div>
 	  
 	  <div ng-repeat="(key,value) in data" ng-if="key != 'Course' && value.length > 0 && key != 'weights' && key != 'similar'" class="{{key.toLowerCase().replace(' ','-')}}">
-	    <h5>{{key}}</h5>
+	    <span ng-if="pageType == 'Course'">
+	      <h5 ng-if="key == 'Advisor'">Faculty</h5>
+	      <h5 ng-if="key != 'Advisor'">{{key}}</h5>
+	    </span>
+	    <span ng-if="pageType != 'Course'">
+	      <h5>{{key}}</h5>
+	    </span>
 	    <ul>
 	      <li ng-repeat="(infoKey, infoValue) in value">
 		<a href="{{infoValue.Link}}">{{infoValue.Name}}</a>

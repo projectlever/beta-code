@@ -14,8 +14,8 @@ if(mysqli_connect_errno($con)){
 $name           = safeString($_POST["Name"]);
 $profileImage   = $_FILES["profile_image"];
 $cv             = $_FILES["cv"];
-$school         = safeString($_POST["School"]);
-$department     = safeString($_POST["Department"]);
+$school         = trim(safeString($_POST["School"]));
+$department     = trim(safeString($_POST["Department"]));
 $research       = safeString($_POST["description"]);
 $linkedIn       = safeString($_POST["linkedin"]);
 	
@@ -48,9 +48,9 @@ if ( $cv["name"] != "" ){
     if ( $fileTypeCheck !== false && count($fileExtCheck) > 0 ){
       $cvName = makeFileName($fileExtCheck[0],"/home/svetlana/www/user-outlines/");
       move_uploaded_file($cv["tmp_name"],$cvName);
-      $jsonNames = json_decode(file_get_contents("/home/svetlana/www/user-outlines/names.json"),true);
+      $jsonNames = json_decode(file_get_contents("/user-outlines/names.json"),true);
       $jsonNames[$cvName] = $cv["name"];
-      file_put_contents("/home/svetlana/www/user-outlines/names.json",json_encode($jsonNames));
+      file_put_contents("/user-outlines/names.json",json_encode($jsonNames));
     }
     else {
       $_SESSION["edit_profile_error"] = "Improper CV type";
@@ -66,7 +66,7 @@ if ( $cv["name"] != "" ){
 }
 
 $sql = "UPDATE Users 
-			SET Name='".$name."', School='".trim($school)."', Department='".trim($department)."'";
+			SET Name='".$name."', School='".mega_trim($school)."', Department='".mega_trim($department)."'";
 if ( $research != "" ){
   $sql .= ", `Interests`='".trim($research)."'";
 }
@@ -101,5 +101,8 @@ function makeFileName($ext,$dest){
 function safeString($str){
   global $con;
   return mysqli_real_escape_string($con,$str);
+}
+function mega_trim($str){
+	return preg_replace("/^[\s\t\n]{0,}/","",preg_replace("/[\s\t\n]{0,}$/","",$str));
 }
 ?>

@@ -1,17 +1,33 @@
 <?php 
 // This script looks for Similar_Resource data in the database for a given id and type
+session_start();
 require("/home/svetlana/www/beta-code/backend/lib.php");
+require("/home/svetlana/www/beta-code/backend/match_algorithm.php");
 $id   = $_POST["id"];
 $type = $_POST["type"];
 
 $con = sql_connect("svetlana_Total");
-$ids = array();
-while ($row = mysqli_fetch_array(sql_query($con,"SELECT `Similar_Resources` FROM `$type` WHERE `".$type."_ID`=".$id))){
-  $ids = json_decode($row["Similar_Resources"],true);
-  break;
-};
-if ( count($ids) == 0 )
-  exit;
+
+$blob = array(
+	"Advisor"=>"Blob",
+	"Course"=>"Description",
+	"Funding"=>"Abstract",
+	"Thesis"=>"Description"
+);
+
+// Get the advisor's blob
+$res = sql_query($con,"SELECT `".$blob[$type]."` FROM `$type` WHERE `".$type."_ID`=".$id);
+if ( mysqli_num_rows($res) == 0 )
+	exit;
+$row = mysqli_fetch_array($res);
+
+// Run the matching algorithm
+$rank = match(sql_escape($con,$row[$blob[$type]]));
+// Remove the first one since it's the person we just searched. A resource always matches 100% to itself
+unset($rank[$type][0]); 
+// Limit the results to results of the same type
+$rank = $rank[$type];
+
 // Get the similar resource's information
 $desc = array(
   "Advisor"=>"Header",
@@ -36,9 +52,14 @@ $picture = array(
   "Funding"=> "/images/LittleGrantRed.png",
   "Thesis" => "/images/LittleThesisRed.png"
 );
+
 $out = array();
-foreach ($ids[$type] as $index => $val){
-  $row = mysqli_fetch_array(sql_query($con,"SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"]));
+$count = 0;
+foreach ($rank as $index => $val){
+  $res = sql_query($con,"SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"]." AND `University`='".$_SESSION["university"]."'");
+  if ( mysqli_num_rows($res) == 0 )
+    continue;
+  $row = mysqli_fetch_array($res);
   $temp = array(
     "description" => strip_tags($row[$desc[$type]]),
     "name"=>$row[$name[$type]],
@@ -62,6 +83,10 @@ foreach ($ids[$type] as $index => $val){
     $temp["school"] = $row["School"];
   }
   $out[] = $temp;
+  $count++;
+  if ( $count == 20 ){
+	break;  
+  }
 } 
 echo json_encode(array($type=>$out));
 mysqli_close($con);
