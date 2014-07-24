@@ -1,6 +1,6 @@
 <?php
 ini_set("auto_detect_line_endings", "1");
-require("/home/svetlana/www/beta-code/backend/lib.php");
+require("/home/svetlana/www/beta-code/backend/sql.php");
 require("/home/svetlana/www/beta-code/backend/crawler/update_database.php");
 
 $sql = new SQL();
@@ -23,7 +23,6 @@ foreach($fileinfos as $pathname => $fileinfo) {
   $f = fopen($pathname,"r+");
   if ( $f ){
     $titles = fgetcsv($f);
-    print_r($titles);
     // Find the column with the type of resource
     $typeCol = -1;
     foreach ($titles as $index=>$title){
@@ -74,21 +73,33 @@ foreach($fileinfos as $pathname => $fileinfo) {
 	}
       }
       // Standardize the name
-      $name = $fix->properize($name);
+      $name = $sql->escape($fix->properize($name));
 
       // Replace all line breaks with <br/> tags
-      $block = preg_replace("/[\r\n]/","<br/>",trim($block));
-      $info = preg_replace("/[\r\n]/","<br/>",trim($info));
-      $header = preg_replace("/[\r\n]/","<br/>",trim($header));
+      $block = $sql->escape(preg_replace("/[\r\n]/","<br>",trim($block)));
+      $info = $sql->escape(preg_replace("/[\r\n]/","<br>",trim($info)));
+      $header = $sql->escape(preg_replace("/[\r\n]/","<br>",trim($header)));
 
       // Make the department and school a JSON object
-      $department = json_encode(array(trim($department)));
-      $school = json_encode(array(trim($school)));
+      $department = $sql->escape(json_encode(array(trim($department))));
+      $school = $sql->escape(json_encode(array(trim($school))));
 
       // Replace spaces with underscores in the university name
-      $university = str_replace(" ","_",trim($university));
+      $university = $sql->escape(str_replace(" ","_",trim($university)));
 
-      echo $department."<br/>$university<br/>";
+      // Create the blob
+      $blob = $sql->escape($block." ".$header." ".$info);
+
+      // Get the picture
+      $picture = $sql->escape($picture);
+
+      // Insert the data into the database. TODO: Make a check to see if that entry already exists!
+      $query = $sql->query("INSERT into `Advisor` (`Name`,`University`,`Department`,`School`,`Info`,`Block`,`Picture`,`Header`,`Blob`) VALUES (
+                                                   '$name', '$university', '$department', '$school', '$info', '$block', '$picture', '$header', '$blob' )");
+      if ( $query === FALSE )
+	die($sql->get_error());
+
+      echo "Success --> $name<br/>";
 
       $university = "";
       $department = "";
@@ -98,7 +109,7 @@ foreach($fileinfos as $pathname => $fileinfo) {
       $block = "";
       $info = "";
     }
-    $sql->close();
+    $sql->close();exit;
   }
   fclose($f);
 }
