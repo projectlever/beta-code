@@ -29,7 +29,6 @@ class NameFixer {
     "/\b[eE]{1}nglish\b/",
     "/\b[vV]{1}isual\b/",
     "/\b[eE]{1}nvironmental\b/",
-    "/\b[mM]{1}\s*\.\s*[dD]\s*\.\s*\b/",
     "/\:{1,}/",
     "/\b[dD]{1}epartment\b/",
     "/\b[sS]{1}lavic\b/",
@@ -43,12 +42,13 @@ class NameFixer {
       $splitName = explode(",",$name);
       $name = preg_replace("/\s{2,}/"," ",trim($splitName[1]." ".$splitName[0]));
     }
+    $name = $this->lower($name);
+    $name = preg_replace("/[dD]{1}[rR]{1}\.{1}/","Dr.",$name); // Make the Dr. label pretty
     $name = $this->removeNonNameWords($name);
     $name = $this->removeIAAS($name);
     $name = $this->removeSpaceBeforeComma($name);
     $name = $this->removeAllAfterToken($name,"|");
     $name = $this->nameExt($name);
-    $name = $this->lower($name);
     $name = $this->capitalizeHyphenatedName($name);
     preg_match("/\S+/u",$name,$check);
     if ( count($check) == 0 )
@@ -123,7 +123,10 @@ class NameFixer {
   }
   public function _2($name){
     preg_match($this->ext[2],$name,$num);
-    $name = preg_replace($this->ext[2],"",$name) . ", " . str_replace("i","I",$num[0]);
+    $end = strtoupper($num[0]);
+    if ( count($num) > 0 )
+      $name = preg_replace($this->ext[2],"",$name);
+    $name .= ", $end";
     return $name;
   }
 }

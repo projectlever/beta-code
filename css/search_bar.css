@@ -1,0 +1,30 @@
+.search-bar {
+    resize: none;
+    word-wrap: break-word;
+    transition: height 0.05s linear;
+    -moz-transition: height 0.1s linear;
+    -webkit-transition: height 0.1s linear;
+    -o-transition: height 0.1s linear;
+    focus:none;
+    outline:none;
+    width:100%;
+    font-size:1.5em;
+    overflow:hidden;
+    height:1.75em;
+    line-height:1.75em;
+    padding-left:0.5em;
+    padding-right:40px;
+    font-weight:500;
+    font-size:1.5em;
+    border:1px solid #888;
+    border-right:none;
+    background-color:#fff;
+}
+.search-button {
+    background-color: #222334;
+    border-color: 1px solid #222334;
+    padding:6px;
+    color:#f5f5f5;
+    top:0;
+    cursor:pointer;
+}

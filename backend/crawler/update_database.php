@@ -1,5 +1,8 @@
 <?php
 
+if ( !class_exists("sql") )
+  header("/home/svetlana/www/beta-code/backend/lib.php");
+
 // Include the name fixer object
 include("NameFixer.php");
 header('Content-Type:text/html; charset:UTF-8');
@@ -9,17 +12,7 @@ DEFINE("REPLICAS",-2);
 DEFINE("INSERT",3);
 DEFINE("UPDATE",4);
 
-function sql_connect(){
-  $con = mysqli_connect("localhost","svetlana","vH8ymo=nhwM6","svetlana_Total");
-  if (mysqli_connect_errno($con)){
-    report("incomplete","","","Failed to connect to MySQL: ". mysqli_error($con));
-    return FALSE;
-  }
-  return $con;
-}
-function backup_information($data,$type){
-  global $backup_file, $progress_file;
-  progress($progress_file,"");
+function backup_information($data,$type,$backup_file){
   if ( file_exists($backup_file) ){
     $json = json_decode(file_get_contents($backup_file),true);
     if ( $json == null )
@@ -34,10 +27,10 @@ function backup_information($data,$type){
 }
 // This function checks to see if the thing (advisor, course, thesis, etc...) has already been imported. If it has, we are going to UPDATE
 // rather than INSERT the thing's information into the database
-function checkForPreviousImport($name,$info,$type,$con,$sheet_data){
+function checkForPreviousImport($name,$info,$type,$sql){
   // Check to see if the advisor is in the database
   $matches = array();
-  $nameCheck = runSQL($con,"SELECT * FROM `$type` WHERE `Name` = '".mysqli_real_escape_string($con,trim($name))."'",$sheet_data);
+  $nameCheck = $sql->query("SELECT * FROM `$type` WHERE `Name` = '".$sql->escape(trim($name))."'");
   if ( $nameCheck === FALSE )
     return FALSE;
   if ( mysqli_num_rows($nameCheck) > 0 ){
@@ -55,7 +48,7 @@ function checkForPreviousImport($name,$info,$type,$con,$sheet_data){
     for ( $i = 0, $n = strlen($names[0]); $i < $n; $i++ ){
       $regex .= "[".strtolower($names[0][$i]).strtoupper($names[0][$i])."]";
     }
-    $nameCheck = runSQL($con,"SELECT * FROM `$type` WHERE `Name` REGEXP '".mysqli_real_escape_string($con,trim($regex))."'",$sheet_data);
+    $nameCheck = $sql->query("SELECT * FROM `$type` WHERE `Name` REGEXP '".$sql->escape(trim($regex))."'",$sheet_data);
     if ( $nameCheck === FALSE ){
       return FALSE;
     }

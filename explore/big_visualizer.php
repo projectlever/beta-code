@@ -1,5 +1,7 @@
-<?
-	$data = json_decode(include("http://projectlever.com/advisors/magic0.php"),1);
+<?php
+	session_start();
+	define("MAX_TOPICS",25);
+	$data = $_SESSION["data"];
 	$data = array_slice($data["Advisor"],0,50);
 	
 	$departments = array();
@@ -75,6 +77,8 @@
 			"name"=>$word,
 		);
 		array_push($topics,$top);
+		if ( count($topics) == MAX_TOPICS )
+			break;
 	}
 	//print_r($weighted_topics);exit;
 	
@@ -98,15 +102,10 @@
 		$professors[$i]["links"] = array_values($professors[$i]["links"]);
 	}
 	
-	
-	//print_r($departments_final);
-	//print_r($topics);
-	//print_r($professors);
-	
 	$json = array(
-		"professors" => $professors,
-		"departments" => $departments_final,
-		"topics" => $topics,
+		"episodes" => $professors,
+		"themes" => $departments_final,
+		"perspectives" => $topics,
 	);
 
 	$json = json_encode($json);
