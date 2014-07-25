@@ -22,8 +22,8 @@ function query($connectorGuid, $input, $userGuid, $apiKey) {
 }
 
 // Example of doing a query
-/*$result = query("afce0c7f-4de2-4bc5-aab7-4f4c7badbb33", array(
+$result = query("afce0c7f-4de2-4bc5-aab7-4f4c7badbb33", array(
 	"webpage/url"=>"http://www.hds.harvard.edu/people/faculty/leila-ahmed"
 ), $userGuid, $apiKey);
 
-var_dump($result);*/
+var_dump($result);
