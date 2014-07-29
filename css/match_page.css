@@ -607,6 +607,14 @@ footer {
     width:100%;
     height:100%;
 }
+.pl-home .layer td {
+    padding:0 !important;
+    width:auto !important;
+    text-align:left !important;
+}
+.pl-home .layer td > h5 {
+    text-align:center;
+}
 #results_counter {
     list-style: none;
     margin:0;

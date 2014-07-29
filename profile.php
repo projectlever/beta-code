@@ -1,6 +1,7 @@
-<?php session_start(); if ( !(isset($_SESSION[ "loggedin"]) && $_SESSION[ "loggedin"]==true) ){ $_SESSION[ "return_url"]="http://projectlever.com/beta-code/profile.php" ; header( "Location: ../webfiles/login/login/"); } ?>
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
-
 <head>
     <title>Profile</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -26,6 +27,7 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
     <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+    <script type="text/javascript" src="js/hello.min.js"></script>
     <script type="text/javascript" src="js/profile.js"></script>
 
     <!-- DIRECTIVES -->
@@ -36,6 +38,14 @@
 
     <!-- SERVICES -->
     <script type="text/javascript" src="js/services/common.js"></script>
+    <?php 
+    if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){ 
+      echo "<script>var loggedIn = false;var testDrive = true;</script>";
+    }
+    else {
+      echo "<script>var loggedIn = true;var testDrive = false;</script>";
+    }
+    ?>
     <?php $set=isset($_GET[ "edit"]); $set=$set==1?1:0; echo "<script>var editMode = ".$set. ";</script>"; ?>
 
     <!-- Le Maps -->
@@ -95,14 +105,14 @@
                                     <option>
                                         Select Department
                                     </option>
-                                    <option ng-repeat="(dept,sch) in departments" id="{{common.replaceAll(' ','_',dept)}}" name="{{isSelected(dept,'department',user.department)}}">
+                                    <option ng-repeat="(dept,sch) in departments" ng-show="schoolIsSelected(sch)" id="{{common.replaceAll(' ','_',dept)}}" name="{{isSelected(dept,'department',user.department)}}">
                                         {{dept}}
                                     </option>
                                 </select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="input-container" style="margin-top:0;margin-top: 0; margin: 0; margin-bottom: 5px; padding-top: 20px; /* display: inline; */width: 45%;/* float: right; */position: relative;">
+                            <div class="input-container" style="margin-top:0;margin-top: 0; margin: 0; margin-bottom: 5px; padding-top: 20px;position: relative;">
                                 <input type="file" id="cv_display" name="cv" style="border-bottom: none;">
                                 <label for="cv_select" style="font-size: 11px;top: 0px;">CV</label>
                             </div>
@@ -110,7 +120,7 @@
                     </div>
                     <div class="col-xs-2 col-xs-offset-0 full-height">
                         <div class="userEdit">
-                            <button ng-if="editMode == true" ng-click="validate()">
+                            <button ng-if="editMode == true">
                                 <span>Save Profile</span>
                             </button>
                         </div>
@@ -118,7 +128,7 @@
                 </div>
                 <div class="row full-height" ng-show="editMode == false">
                     <div class="col-xs-3 col-xs-offset-0">
-                    		<img src="https://media.licdn.com/mpr/mpr/shrink_200_200/p/6/000/221/025/2ca2795.jpg" class="profile_image" />
+                      <img src="{{user.picture}}" class="profile_image" />
                     </div>
                     <div class="col-xs-6 col-xs-offset-0 full-height" ng-show="editMode == false">
                         <h2 style="margin-top:1em">{{user.name}}</h2>
@@ -132,16 +142,16 @@
 	    			<a href='{{user.cvLink}}' target='_blank'>{{user.cvName}}</a> 
 				    <br/>
 			  </span> 
-           <!--<span ng-if="user.email != null"> 
-				    <a href='mailto:{{user.email}}' target='_blank'>
-				      <img src="http://www.icon2s.com/wp-content/uploads/2013/07/ios7-message-icon.png" width="25px" />
-				    </a> 
-			  </span>-->
-                        <span ng-if="user.linkedIn != null"> 
-				    <a href='{{user.linkedIn}}' target='_blank'>
-				      <img src="http://artstarcustompaintworks.com/wp-content/uploads/2012/05/Linked_in.png" width="30px" />
-				    </a> 
+			  <span ng-if="user.email != null"> 
+			    <a href='mailto:{{user.email}}' target='_blank'>
+			      <img src="http://www.icon2s.com/wp-content/uploads/2013/07/ios7-message-icon.png" width="25px" />
+			    </a> 
 			  </span>
+                        <span ng-if="user.linkedIn != null"> 
+			  <a href='{{user.linkedIn}}' target='_blank'>
+			    <img src="http://artstarcustompaintworks.com/wp-content/uploads/2012/05/Linked_in.png" width="30px" />
+			  </a> 
+			</span>
                     </div>
                     <div class="col-xs-2 col-xs-offset-0">
                         <div class="userEdit">
@@ -166,7 +176,7 @@
               			Saved Resources
               		</a>
                                 <span class="octicon opticon-diff-added" id="save_icon" ng-show="savesEdited == true">
-							<img src="http://happytapper.com/wordpress/happytapper/wp-content/uploads/2013/05/flaticon-save.png" width="28px" title="Save Changes to Saved Resources" ng-click="removeFavorites();" />
+				  <img src="http://happytapper.com/wordpress/happytapper/wp-content/uploads/2013/05/flaticon-save.png" width="28px" title="Save Changes to Saved Resources" ng-click="removeFavorites();" />
 	      			</span>
                             </li>
                             <li class="tabnav-tab" ng-click="selected = 'researchProfile'" ng-class="{'selected':selected=='researchProfile'}">
@@ -212,6 +222,10 @@
             </div>
         </div>
     </form>
+    <!-- LOGIN OVERLAY -->
+    <?php 
+    include("html/login_overlay.php");
+    ?>
     <!-- ##################################################### END HERE ##################################################### -->
 
     <!-- Checks if Joomla 2.5 or lower or 3.0 or higher is in use and if the jQuery frameworks was already loaded to avoid incompatibility issues -->

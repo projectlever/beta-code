@@ -1,24 +1,291 @@
-var app = angular.module("plExplore", []).controller('explore', ['$scope', '$http',
-    function ($scope, $http) {
+var app = angular.module("plExplore", []).controller('explore', ['$scope', '$http', 'common','$window',
+    function($scope, $http, common,$window) {
         $scope.loadingResults = true;
+        $scope.testDrive = $window.testDrive;
+        $scope.common = common;
 
-        $scope.onResultObtained = function (response) {
+        $scope.onResultObtained = function(response) {
             console.log(response);
             setup($scope);
         }
-        $scope.onVizLoad = function () {
-        		$scope.$apply(function(){
-            	$scope.loadingResults = false;
+        $scope.onVizLoad = function() {
+            $scope.$apply(function() {
+                $scope.loadingResults = false;
             });
         }
-        $scope.onSearchButtonClick = function () {
-        		$scope.loadingResults = true;
+        $scope.onSearchButtonClick = function() {
+            $scope.loadingResults = true;
             $("#graph > svg").remove();
         }
-        // Set up the monster visualization
-        $(document).ready(function () {
-            setup($scope);
-        });
+        $scope.login = function(emailSelector, passSelector) {
+            // Set defaults
+            $scope.emailError = false;
+            $scope.passError = false;
+
+            var email = $(emailSelector).val();
+            var pass = $(passSelector).val();
+            if (email.match(/\S/) == null) {
+                $scope.emailError = true;
+                return;
+            }
+            if (pass.match(/\S/) == null) {
+                $scope.passError = true;
+                return;
+            }
+            $http({
+                method: 'POST',
+                url: "../../webfiles/login/login/login.php",
+                data: $.param({
+                    "email": email,
+                    "password": pass,
+                    "landingPage": true
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                console.log(response);
+                if (response.data.search("login successful") > -1) {
+                    window.location.reload();
+                } else if (response.data.search("register") > -1 || response.data.search("\/login\/register") > -1) {
+                    // Tell them to register
+                    $scope.emailError = true;
+                    $scope.errorMessage = "We could not locate a user with that email."
+                    $(passSelector).val("");
+                } else if (response.data.search("Incorrect password") > -1) {
+                    $scope.passError = true;
+                    $scope.errorMessage = "Email/password combination is incorrect.";
+                    $(passSelector).val("");
+                }
+            });
+        }
+        $scope.register = function(social, info) {
+            if (!social || social == false) {
+                var email = $("#user_email").val();
+                var pass = $("#user_pass").val();
+                var conf = $("#user_pass_confirm").val();
+                var univ = $("[name='university_value']")[0].options[$("[name='university_value']")[0].selectedIndex].innerHTML;
+                signUp.reset();
+                // Check for empty fields
+                if (email.match(/\S/) == null) {
+                    signUp.emailError = true;
+                    $("#user_email").focus();
+                    return;
+                }
+                if (pass.match(/\S/) == null) {
+                    signUp.passError = true;
+                    $("#user_pass").focus();
+                    return;
+                }
+                if (conf.match(/\S/) == null) {
+                    signUp.passError = true;
+                    return;
+                }
+                if (univ == "Your University") {
+                    signUp.univError = true;
+                    $("[name='university_value']").focus();
+                    return;
+                }
+                // Check to see if email is valid
+                if (email.search("@") == -1 || email.search(/\./) == -1) {
+                    signUp.emailError = true;
+                    signUp.errorMessage = "Please enter a valid '.edu' address";
+                    $("#user_email").focus();
+                    return;
+                }
+                // Check to see if the email is a .edu email
+                if (email.match(/\.edu$/) == null) {
+                    signUp.emailError = true;
+                    signUp.errorMessage = "Please enter a '.edu' email address";
+                    $("#user_email").focus();
+                    return;
+                }
+                // Check to see if pass == confirm_pass
+                if (pass != conf) {
+                    signUp.confError = true;
+                    signUp.errorMessage = "Password and confirm password fields do not match";
+                    $("#user_pass,#user_pass_confirm").val("");
+                    $("#user_pass").focus();
+                    return;
+                }
+                var post = {
+                    "email": email,
+                    "password": pass,
+                    "university": univ,
+                    "ajax": true
+                };
+            } else {
+                var post = {
+                    "email": info.email,
+                    "university": info.university,
+                    "ajax": true
+                };
+            }
+            $http({
+                method: 'POST',
+                url: "./php/register.php",
+                data: $.param(post),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                console.log(response);
+                signUp.reset();
+                if (response.data == "complete") {
+                    $scope.testDrive = false;
+                    $window.testDrive = false;
+                    if ($("#search_box").val().match(/\S/) != null)
+                        $scope.search();
+                } else if (response.data == "no school") {
+                    window.location = "http://www.projectlever.com/webfiles/login/register/school.html";
+                } else if (response.data == "registered") {
+                    $timeout(function() {
+                        $("#user_email_login").val(email);
+                        $scope.errorMessage = "You've already registered!";
+                        angular.element($("#login_button")[0]).triggerHandler("click");
+                    }, 0);
+                } else if (response.data == "invalid email") {
+                    signUp.emailError = true;
+                    signUp.errorMessage = "Invalid email address";
+                }
+            });
+        }
+        $scope.fbSignUp = function(p) {
+            if (!p) {
+                $window.hello.login("facebook", {
+                    "scope": "email",
+                    "display": "popup"
+                }, function(r) {
+                    if (r.error) {
+                        $scope.$apply(function() {
+                            $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+                        });
+                        angular.element($("#login_button")[0]).triggerHandler("click");
+                        return;
+                    }
+                    $window.hello(r.network).api("/me").success(function(p) {
+                        $scope.fbSignUp(p);
+                    });
+                });
+                return;
+            }
+            // Register the user
+            if (p.education) {
+                // Find the college(s) that they go to. If it's one we have in our database, sign them up with that college!
+                var colleges = [];
+                for (var i = p.education.length - 1; i > -1; i--) {
+                    if (p.education[i].type == "College") {
+                        colleges.push(p.education[i].school.name);
+                    }
+                }
+                if (colleges.length == 0) {
+                    $scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
+                    $("#user_email").val(p.email);
+                    angular.element($("#sign_up_button")[0]).triggerHandler("click");
+                } else {
+                    // Verify that we have that college in the database
+                    $http({
+                        method: 'POST',
+                        url: "./backend/checkForCollege.php",
+                        data: $.param({
+                            "colleges": JSON.stringify(colleges)
+                        }),
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    }).then(function(response) {
+                        if (response.data.length == 0) {
+                            $scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
+                            $("#user_email").val(p.email);
+                            angular.element($("#sign_up_button")[0]).triggerHandler("click");
+                        } else if (response.data.length == 1) {
+                            $scope.register(true, {
+                                "email": p.email,
+                                "university": response.data[0]
+                            });
+                        } else if (response.data.length > 1) {
+                            // Have the user select a university
+                            var selected = false;
+                            var index = 0;
+                            while (selected == false && response.data[index] != null) {
+                                if (confirm("Would you like to sign up to Project Lever as attending " + response.data[index] + "?")) {
+                                    $scope.register(true, {
+                                        "email": p.email,
+                                        "university": response.data[index]
+                                    });
+                                    selected = true;
+                                    break;
+                                } else {
+                                    index++;
+                                }
+                            }
+                            if (selected == false) {
+                                $scope.signUp.errorMessage = "You must select a university that you are attending to use Project Lever. Please use the form below.";
+                                $("#user_email").val(p.email);
+                                angular.element($("#sign_up_button")[0]).triggerHandler("click");
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        $scope.fbLogin = function() {
+                $window.hello.login("facebook", {
+                    "scope": "email",
+                    "display": "popup"
+                }, function(r) {
+                    if (r.error) {
+                        $scope.$apply(function() {
+                            $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+                        });
+                        angular.element($("#login_button")[0]).triggerHandler("click");
+                        return;
+                    }
+                    $window.hello(r.network).api("/me").success(function(p) {
+                        if (!p.email) {
+                            $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+                            $("#user_email_login").val(p.email);
+                            angular.element($("#login_button")[0]).triggerHandler("click");
+                        } else {
+                            $http({
+                                method: 'POST',
+                                url: "./php/verifyUser.php",
+                                data: $.param({
+                                    "email": p.email
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            }).then(function(response) {
+                                if (response.data == "registered") {
+                                    // GREAT! Let's let them continue using the site
+                                    $scope.testDrive = false;
+                                    $window.testDrive = false;
+                                    if ($("#search_box").val().match(/\S/) != null)
+                                        $scope.search();
+                                } else if (response.data == "new user") {
+                                    $scope.fbSignUp(p);
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+            // If not logged in...show the login form!
+        if ($window.loggedIn == false) {
+            setTimeout(function() {
+                $window.showForm('sign_in_form');
+            }, 150);
+        } else {
+            // Set up the monster visualization
+            $(document).ready(function() {
+                setup($scope);
+            });
+        }
+	// Initialize hello.js
+	$window.hello.init({
+            "facebook": "164434750353945"
+	});
     }
 ]);
 
@@ -42,15 +309,15 @@ function setup($scope) {
     var L = {},
         k = {};
     var i, y;
-    var r = d3.layout.tree().size([360, h / 2 - R]).separation(function (Y, X) {
+    var r = d3.layout.tree().size([360, h / 2 - R]).separation(function(Y, X) {
         return (Y.parent == X.parent ? 1 : 2) / Y.depth
     });
-    var W = d3.svg.diagonal.radial().projection(function (X) {
+    var W = d3.svg.diagonal.radial().projection(function(X) {
         return [X.y, X.x / 180 * Math.PI]
     });
-    var v = d3.svg.line().x(function (X) {
+    var v = d3.svg.line().x(function(X) {
         return X[0]
-    }).y(function (X) {
+    }).y(function(X) {
         return X[1]
     }).interpolate("bundle").tension(0.5);
 
@@ -67,7 +334,7 @@ function setup($scope) {
         f = d.append("g").attr("class", "episodes"),
         E = d.append("g").attr("class", "nodes");
     var Q = d3.select("#graph-info");
-    d3.json("./explore/big_visualizer.php", function (Y) {
+    d3.json("./explore/big_visualizer.php", function(Y) {
         data = Y;
         console.log(data);
         T = d3.map(Y);
@@ -77,7 +344,7 @@ function setup($scope) {
 
         // x is object with all objects together by key (all nodes + episodes here) 
         // A contains all the linked concepts ( we don't need this now)
-        q.forEach(function (aa) {
+        q.forEach(function(aa) {
             aa.key = p(aa.name);
             aa.canonicalKey = aa.key;
             x[aa.key] = aa;
@@ -95,11 +362,11 @@ function setup($scope) {
         j = d3.map();
         // go through each episode and push links by node to j
         // each item in j is an array of linked objects (key of j are objects) 
-        T.get("episodes").forEach(function (aa) {
-            aa.links = aa.links.filter(function (ab) {
+        T.get("episodes").forEach(function(aa) {
+            aa.links = aa.links.filter(function(ab) {
                 return typeof x[p(ab)] !== "undefined" && ab.indexOf("r-") !== 0
             });
-            j.set(aa.key, aa.links.map(function (ab) {
+            j.set(aa.key, aa.links.map(function(ab) {
                 var ac = p(ab);
                 if (typeof j.get(ac) === "undefined") {
                     j.set(ac, [])
@@ -119,7 +386,7 @@ function setup($scope) {
             O();
             M()
         }
-        window.onhashchange = function () {
+        window.onhashchange = function() {
             var aa = window.location.hash.substring(1);
             if (aa && x[aa]) {
                 G(x[aa], true)
@@ -140,14 +407,14 @@ function setup($scope) {
         };
         i = Math.floor(c / T.get("episodes").length);
         y = Math.floor(T.get("episodes").length * i / 2);
-        T.get("episodes").forEach(function (af, ae) {
+        T.get("episodes").forEach(function(af, ae) {
             af.x = U / -2;
             af.y = ae * i - y
         });
         var ad = 180 + J,
             Z = 360 - J,
             ac = (Z - ad) / (T.get("themes").length - 1);
-        T.get("themes").forEach(function (af, ae) {
+        T.get("themes").forEach(function(af, ae) {
             af.x = Z - ae * ac;
             af.y = h / 2 - R;
             af.xOffset = -S;
@@ -156,7 +423,7 @@ function setup($scope) {
         ad = J;
         Z = 180 - J;
         ac = (Z - ad) / (T.get("perspectives").length - 1);
-        T.get("perspectives").forEach(function (af, ae) {
+        T.get("perspectives").forEach(function(af, ae) {
             af.x = ae * ac + ad;
             af.y = h / 2 - R;
             af.xOffset = S;
@@ -168,8 +435,8 @@ function setup($scope) {
         // canonicalKey, key, source, target, x1, x2, y1, y2
         H = [];
         var ab, Y, aa, X = h / 2 - R;
-        T.get("episodes").forEach(function (ae) {
-            ae.links.forEach(function (af) {
+        T.get("episodes").forEach(function(ae) {
+            ae.links.forEach(function(af) {
                 ab = x[p(af)];
                 if (!ab || ab.type === "reference") {
                     return
@@ -216,14 +483,14 @@ function setup($scope) {
                 window.location.href = "/" + Y.slug;
                 return
             }
-            L.node.children.forEach(function (aa) {
+            L.node.children.forEach(function(aa) {
                 aa.children = aa._group
             });
             e();
             return
         }
         if (Y.isGroup) {
-            L.node.children.forEach(function (aa) {
+            L.node.children.forEach(function(aa) {
                 aa.children = aa._group
             });
             Y.parent.children = Y.parent._children;
@@ -231,7 +498,7 @@ function setup($scope) {
             return
         }
         Y = x[Y.canonicalKey];
-        q.forEach(function (aa) {
+        q.forEach(function(aa) {
             aa.parent = null;
             aa.children = [];
             aa._children = [];
@@ -243,13 +510,13 @@ function setup($scope) {
         L.node.children = j.get(Y.canonicalKey);
         L.map = {};
         var Z = 0;
-        L.node.children.forEach(function (ac) {
+        L.node.children.forEach(function(ac) {
             L.map[ac.key] = true;
-            ac._children = j.get(ac.key).filter(function (ad) {
+            ac._children = j.get(ac.key).filter(function(ad) {
                 return ad.canonicalKey !== Y.canonicalKey
             });
             ac._children = JSON.parse(JSON.stringify(ac._children));
-            ac._children.forEach(function (ad) {
+            ac._children.forEach(function(ad) {
                 ad.canonicalKey = ad.key;
                 ad.key = ac.key + "-" + ad.key;
                 L.map[ad.key] = true
@@ -267,7 +534,7 @@ function setup($scope) {
             L.map[aa] = true;
             Z += ab
         });
-        L.node.children.forEach(function (aa) {
+        L.node.children.forEach(function(aa) {
             aa.children = Z > 50 ? aa._group : aa._children
         });
         window.location.hash = L.node.key;
@@ -294,11 +561,11 @@ function setup($scope) {
             k.map[X.parent.canonicalKey + "-to-" + X.canonicalKey] = true;
             k.map[X.canonicalKey + "-to-" + X.parent.canonicalKey] = true
         } else {
-            j.get(X.canonicalKey).forEach(function (Y) {
+            j.get(X.canonicalKey).forEach(function(Y) {
                 k.map[Y.canonicalKey] = true;
                 k.map[X.canonicalKey + "-" + Y.canonicalKey] = true
             });
-            H.forEach(function (Y) {
+            H.forEach(function(Y) {
                 if (k.map[Y.source.canonicalKey] && k.map[Y.target.canonicalKey]) {
                     k.map[Y.canonicalKey] = true
                 }
@@ -309,13 +576,13 @@ function setup($scope) {
 
     function M() {
         V();
-        B.selectAll("path").attr("d", function (X) {
+        B.selectAll("path").attr("d", function(X) {
             return v([
                 [X.x1, X.y1],
                 [X.x1, X.y1],
                 [X.x1, X.y1]
             ])
-        }).transition().duration(w).ease(F).attr("d", function (X) {
+        }).transition().duration(w).ease(F).attr("d", function(X) {
             return v([
                 [X.x1, X.y1],
                 [X.target.xOffset * s, 0],
@@ -333,13 +600,13 @@ function setup($scope) {
 
     function e() {
         var X = r.nodes(L.node);
-        X.forEach(function (Z) {
+        X.forEach(function(Z) {
             if (Z.depth === 1) {
                 Z.y -= 20
             }
         });
         H = r.links(X);
-        H.forEach(function (Z) {
+        H.forEach(function(Z) {
             if (Z.source.type === "episode") {
                 Z.key = Z.source.canonicalKey + "-to-" + Z.target.canonicalKey
             } else {
@@ -364,7 +631,7 @@ function setup($scope) {
 
     function b(X) {
         var X = E.selectAll(".node").data(X, u);
-        var Y = X.enter().append("g").attr("transform", function (aa) {
+        var Y = X.enter().append("g").attr("transform", function(aa) {
             var Z = aa.parent ? aa.parent : {
                 xOffset: 0,
                 x: 0,
@@ -375,14 +642,14 @@ function setup($scope) {
         Y.append("circle").attr("r", 0);
         Y.append("text").attr("stroke", "#fff").attr("stroke-width", 4).attr("class", "label-stroke");
         Y.append("text").attr("font-size", 0).attr("class", "label");
-        X.transition().duration(w).ease(F).attr("transform", function (Z) {
+        X.transition().duration(w).ease(F).attr("transform", function(Z) {
             if (Z === L.node) {
                 return null
             }
             var aa = Z.isGroup ? Z.y + (7 + Z.count) : Z.y;
             return "translate(" + Z.xOffset + ",0)rotate(" + (Z.x - 90) + ")translate(" + aa + ")"
         });
-        X.selectAll("circle").transition().duration(w).ease(F).attr("r", function (Z) {
+        X.selectAll("circle").transition().duration(w).ease(F).attr("r", function(Z) {
             if (Z == L.node) {
                 return 100
             } else {
@@ -393,20 +660,20 @@ function setup($scope) {
                 }
             }
         });
-        X.selectAll("text").transition().duration(w).ease(F).attr("dy", ".3em").attr("font-size", function (Z) {
+        X.selectAll("text").transition().duration(w).ease(F).attr("dy", ".3em").attr("font-size", function(Z) {
             if (Z.depth === 0) {
                 return 20
             } else {
                 return 15
             }
-        }).text(function (Z) {
+        }).text(function(Z) {
             return Z.name
-        }).attr("text-anchor", function (Z) {
+        }).attr("text-anchor", function(Z) {
             if (Z === L.node || Z.isGroup) {
                 return "middle"
             }
             return Z.x < 180 ? "start" : "end"
-        }).attr("transform", function (Z) {
+        }).attr("transform", function(Z) {
             if (Z === L.node) {
                 return null
             } else {
@@ -416,7 +683,7 @@ function setup($scope) {
             }
             return Z.x < 180 ? "translate(" + t + ")" : "rotate(180)translate(-" + t + ")"
         });
-        X.selectAll("text.label-stroke").attr("display", function (Z) {
+        X.selectAll("text.label-stroke").attr("display", function(Z) {
             return Z.depth === 1 ? "block" : "none"
         });
         X.exit().remove()
@@ -424,7 +691,7 @@ function setup($scope) {
 
     function V() {
         var X = B.selectAll("path").data(H, u);
-        X.enter().append("path").attr("d", function (Z) {
+        X.enter().append("path").attr("d", function(Z) {
             var Y = Z.source ? {
                 x: Z.source.x,
                 y: Z.source.y
@@ -484,30 +751,30 @@ function setup($scope) {
     function D(Y) {
         var Y = f.selectAll(".episode").data(Y, u);
         var X = Y.enter().append("g").attr("class", "episode").on("mouseover", g).on("mouseout", n).on("click", G);
-        X.append("rect").attr("x", U / -2).attr("y", K / -2).attr("width", U).attr("height", K).transition().duration(w).ease(F).attr("x", function (Z) {
+        X.append("rect").attr("x", U / -2).attr("y", K / -2).attr("width", U).attr("height", K).transition().duration(w).ease(F).attr("x", function(Z) {
             return Z.x
-        }).attr("y", function (Z) {
+        }).attr("y", function(Z) {
             return Z.y
         });
-        X.append("text").attr("x", function (Z) {
+        X.append("text").attr("x", function(Z) {
             return U / -2 + t
-        }).attr("y", function (Z) {
+        }).attr("y", function(Z) {
             return K / -2 + o
-        }).attr("fill", "#fff").text(function (Z) {
+        }).attr("fill", "#fff").text(function(Z) {
             return Z.name
-        }).transition().duration(w).ease(F).attr("x", function (Z) {
+        }).transition().duration(w).ease(F).attr("x", function(Z) {
             return Z.x + t
-        }).attr("y", function (Z) {
+        }).attr("y", function(Z) {
             return Z.y + o
         });
-        Y.exit().selectAll("rect").transition().duration(w).ease(F).attr("x", function (Z) {
+        Y.exit().selectAll("rect").transition().duration(w).ease(F).attr("x", function(Z) {
             return U / -2
-        }).attr("y", function (Z) {
+        }).attr("y", function(Z) {
             return K / -2
         });
-        Y.exit().selectAll("text").transition().duration(w).ease(F).attr("x", function (Z) {
+        Y.exit().selectAll("text").transition().duration(w).ease(F).attr("x", function(Z) {
             return U / -2 + t
-        }).attr("y", function (Z) {
+        }).attr("y", function(Z) {
             return K / -2 + o
         });
         Y.exit().transition().duration(w).remove()
@@ -517,13 +784,13 @@ function setup($scope) {
     // m connects opposing perspectives (don't need it), but it is useful once when we call m([])
     function m(Y) {
         var X = f.selectAll("path").data(Y);
-        X.enter().append("path").attr("d", function (Z) {
+        X.enter().append("path").attr("d", function(Z) {
             return v([
                 [Z.x1, Z.y1],
                 [Z.x1, Z.y1],
                 [Z.x1, Z.y1]
             ])
-        }).attr("stroke", "#000").attr("stroke-width", 1.5).transition().duration(w).ease(F).attr("d", function (Z) {
+        }).attr("stroke", "#000").attr("stroke-width", 1.5).transition().duration(w).ease(F).attr("d", function(Z) {
             return v([
                 [Z.x1, Z.y1],
                 [Z.xx, Z.yy],
@@ -535,16 +802,16 @@ function setup($scope) {
 
 
     function z() {
-        f.selectAll("rect").attr("fill", function (X) {
+        f.selectAll("rect").attr("fill", function(X) {
             return l(X, "#000", N, "#000")
         });
-        B.selectAll("path").attr("stroke", function (X) {
+        B.selectAll("path").attr("stroke", function(X) {
             return l(X, "#aaa", N, "#aaa")
-        }).attr("stroke-width", function (X) {
+        }).attr("stroke-width", function(X) {
             return l(X, "1.5px", "2.5px", "1px")
-        }).attr("opacity", function (X) {
+        }).attr("opacity", function(X) {
             return l(X, 0.4, 0.75, 0.3)
-        }).sort(function (Y, X) {
+        }).sort(function(Y, X) {
             if (!k.node) {
                 return 0
             }
@@ -552,7 +819,7 @@ function setup($scope) {
                 Z = k.map[X.canonicalKey] ? 1 : 0;
             return aa - Z
         });
-        E.selectAll("circle").attr("fill", function (X) {
+        E.selectAll("circle").attr("fill", function(X) {
             if (X === L.node) {
                 return "#000"
             } else {
@@ -565,7 +832,7 @@ function setup($scope) {
                 }
             }
             return l(X, "#000", N, "#999")
-        }).attr("stroke", function (X) {
+        }).attr("stroke", function(X) {
             if (X === L.node) {
                 return l(X, null, N, null)
             } else {
@@ -578,7 +845,7 @@ function setup($scope) {
                 }
             }
             return null
-        }).attr("stroke-width", function (X) {
+        }).attr("stroke-width", function(X) {
             if (X === L.node) {
                 return l(X, null, 2.5, null)
             } else {
@@ -588,7 +855,7 @@ function setup($scope) {
             }
             return null
         });
-        E.selectAll("text.label").attr("fill", function (X) {
+        E.selectAll("text.label").attr("fill", function(X) {
             return (X === L.node || X.isGroup) ? "#fff" : l(X, "#000", N, "#999")
         })
     }

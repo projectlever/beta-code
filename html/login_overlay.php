@@ -1,4 +1,5 @@
 <link type="text/css" href="css/register.css" rel="stylesheet"/>
+<link type="text/css" href="css/socialicious/css/socialicious.css" rel="stylesheet" />
 <script type="text/javascript" src="js/register_overlay.js"></script>
 <!-- SIGN UP FORM  -->
 <div id="reg_form" class="layer" name="float-form" onclick="closeForm()" ng-if="testDrive == true">
@@ -31,7 +32,7 @@
 		    </td>
 		  </tr>
 		  <tr>
-		    <td style="width:50%;" valign="top">
+		    <td style="width:50% !important;" valign="top">
 		      <ul id="social_list">
 			<li>
 			  <a class="btn btn-facebook" ng-click="fbSignUp()">
@@ -84,6 +85,11 @@
 		      </table>    
 		    </td>
 		  </tr>
+		  <tr>
+		    <td colspan="3" align="center">
+		      <a href="javascript:void(0)" onclick="showForm('sign_in_form')">Already have an account? Log in!</a>
+		    </td>
+		  </tr>
 		</tbody>
 	      </table>
 	    </div>
@@ -128,7 +134,7 @@
 		    </td>
 		  </tr>
 		  <tr>
-		    <td style="width:50%;" valign="top">
+		    <td style="width:50% !important;" valign="top">
 		      <ul id="social_list">
 			<li>
 			  <a class="btn btn-facebook" ng-click="fbLogin()">
@@ -161,6 +167,11 @@
 			  </td>
 			</tr>
 		      </table>    
+		    </td>
+		  </tr>
+		  <tr>
+		    <td colspan="3" align="center">
+		      <a href="javascript:void(0)" onclick="showForm('reg_form')">Don't have an account? Sign up!</a>
 		    </td>
 		  </tr>
 		</tbody>

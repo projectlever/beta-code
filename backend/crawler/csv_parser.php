@@ -93,6 +93,8 @@ foreach($fileinfos as $pathname => $fileinfo) {
       // Get the picture
       $picture = $sql->escape($picture);
 
+      echo $university."<br/>$name<br/>";exit;
+
       // Insert the data into the database. TODO: Make a check to see if that entry already exists!
       $query = $sql->query("INSERT into `Advisor` (`Name`,`University`,`Department`,`School`,`Info`,`Block`,`Picture`,`Header`,`Blob`) VALUES (
                                                    '$name', '$university', '$department', '$school', '$info', '$block', '$picture', '$header', '$blob' )");

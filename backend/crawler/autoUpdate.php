@@ -1,5 +1,7 @@
 <?php
 
+$notify = "stone.ejoseph@gmail.com";
+
 // Turn on error reporting
 error_reporting(-1);
 ini_set('display_errors', 'On');
@@ -323,6 +325,7 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
   }
 }
 echo "complete";
+mail($notify,"AutoUpdater Scraping","Scraping complete. Report detailed below:");
 
 function hasChars($str){
   preg_match("/\S/",$str,$chars);

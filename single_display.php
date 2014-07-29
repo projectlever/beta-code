@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
 <html ng-app="plAdvisor" ng-controller="mainController as controller">
 <head>
@@ -27,6 +30,15 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript" src="js/hello.min.js"></script>
+  <?php 
+  if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){ 
+    echo "<script>var loggedIn = false;var testDrive = true;</script>";
+  }
+  else {
+    echo "<script>var loggedIn = true;var testDrive = false;</script>";
+  }
+  ?>
   <?php 
   echo "<script type='text/javascript'>var advisorId=".$_GET['id'].";var pageType='".$_GET["type"]."';
 </script>";
@@ -54,6 +66,10 @@
   <lever-navbar></lever-navbar>
   <!-- END NAVBAR, START BODY -->
   <display-type></display-type>
+  <!-- LOGIN OVERLAY -->
+  <?php 
+  include("html/login_overlay.php");
+  ?>
     
   <!-- Checks if Joomla 2.5 or lower or 3.0 or higher is in use and if the jQuery frameworks was already loaded to avoid incompatibility issues -->
   <script src="/templates/goodkarma/js/jquery.flexslider-min.js"></script>

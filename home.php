@@ -1,3 +1,8 @@
+<?php 
+session_start();
+if ( (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) )
+  header("Location: http://projectlever.com/beta-code/match.php");
+?>
 <!DOCTYPE html>
 <head>
   <title>Project Lever</title>
@@ -15,48 +20,38 @@
   <link type="text/css" href="templates/goodkarma/css/bootstrap_extend.css" rel="stylesheet"/>
   <link type="text/css" href="templates/goodkarma/css/style.css" rel="stylesheet"/>
   <link type="text/css" href="templates/goodkarma/css/flexslider.css" rel="stylesheet"/>    
+  <link type="text/css" href="css/profile.css" rel="stylesheet" />
+  <link type="text/css" href="css/match_page.css" rel="stylesheet" />
   <link type="text/css" href="css/home_page.css" rel="stylesheet"/>
+
   
   <!-- Le Scripts-->		
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
+  <?php 
+  if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){ 
+    echo "<script>var loggedIn = false;var testDrive = true;</script>";
+  }
+  else {
+    echo "<script>var loggedIn = true;var testDrive = false;</script>";
+  }
+  ?>
   <script type="text/javascript" src="js/hello.min.js"></script>
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>
   <script type="text/javascript" src="js/pl.js"></script>
   <script type="text/javascript" src="js/pl-home-main.js"></script>
+
+  <!-- DIRECTIVES -->
+  <script type="text/javascript" src="js/directives/navbar.js"></script>
+  <script type="text/javascript">
+   var homePage = true;
+  </script>
 </head>
 <body class="pl-home" ng-app="plMatch" ng-controller="MatchController as controller">
   <img src="images/resources/infographics/down_arrow.png" class="down_arrow"></div>
-  <div class="navbar navbar-fixed-top alt pl-navbar" data-spy="affix" data-offset-top="1000">
-   <div class="container full-width" style="padding-left:0">
-      <div class="navbar-collapse collapse pl-logo">
-	<ul class="nav navbar-nav">
-	  <li>
-	    <a>Project Lever</a>
-	  </li>
-	</ul>
-      </div>
-      <div class="navbar-header"> 
-	<a href="javascript:void(0)" class="navbar-brand">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-	</a>
-      </div>
-      <div class="navbar-collapse collapse navbar-right" id="navbar">
-        <ul class="nav navbar-nav">
-          <li>
-	    <a href="http://projectlever.com/webfiles/login/register/">Sign Up</a>
-	  </li>
-          <li>
-	    <a href="http://projectlever.com/webfiles/login/login/">Sign In</a>
-	  </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <lever-navbar></lever-navbar>
   <div class="header pl-frame pl-home-top-frame" id="frame_1">
     <div class="container">
       <div class="row">
@@ -282,6 +277,9 @@
       </div>
     </div>
   </div>
+  <?php 
+  include("html/login_overlay.php");
+  ?>
   <script>
    analytics.track('Visited Home', {
      

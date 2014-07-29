@@ -214,3 +214,6 @@ background-image: -ms-linear-gradient(bottom, #C8C8C8 0%, #FFFFFF 100%);
 background-image: linear-gradient(to bottom, #C8C8C8 0%, #FFFFFF 100%);
 	border:1px solid #aaa;
 }
+.error {
+    border: 1px solid #ff0000 !important;
+}

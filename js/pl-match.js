@@ -117,11 +117,14 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    if ( response.data == "complete" ){		
 		$scope.testDrive = false;
 		$window.testDrive = false;
-		if ( $("#search_box").val().match(/\S/) != null )
+		if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
 		    $scope.search();		
+		else if ( $window.homePage == true )
+		    $window.location = "match.php";
+		    
 	    }
 	    else if ( response.data == "no school" ){
-		window.location = "http://www.projectlever.com/webfiles/login/register/school.html";
+		$window.location = "http://www.projectlever.com/webfiles/login/register/school.html";
 	    }
 	    else if ( response.data == "registered" ){
 		$timeout(function(){
@@ -161,8 +164,10 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    if ( response.data.search("login successful") > -1 ){
 		$scope.testDrive = false;
 		$window.testDrive = false;
-		if ( $("#search_box").val().match(/\S/) != null )
+		if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
 		    $scope.search();
+		else if ( $window.homePage == true )
+		    $window.location = "match.php";
 	    }
 	    else if ( response.data.search("register") > -1 || response.data.search("\/login\/register") > -1 ){
 		// Tell them to register
@@ -486,8 +491,10 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 			    // GREAT! Let's let them continue using the site
 			    $scope.testDrive = false;
 			    $window.testDrive = false;
-			    if ( $("#search_box").val().match(/\S/) != null )
+			    if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
 				$scope.search();
+			    else if ( $window.homePage == true )
+				$window.location = "match.php";
 			}
 			else if ( response.data == "new user" ){
 			    $scope.fbSignUp(p);

@@ -3,6 +3,8 @@ function showForm(form_id){
     $("#"+form_id).show();
 }
 function closeForm(){
+    if ( loggedIn == false )
+	return;
     var e = window.event;
     if ( e.target )
 	var target = e.target;

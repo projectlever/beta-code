@@ -44,9 +44,7 @@ $json = array(
 $page = $_POST["page"];
 $display = 10;
 
-//$input = "Russian and American poetry, particularly contemporary poetry; the film and poetry; feminist and psychoanalytic theories; Pushkin; comparative approaches to Russian literature; cultural studies.";
 $input = $_POST["input"];
-//$input = "Chemistry";
 
 $input = simplePrep($input);
 

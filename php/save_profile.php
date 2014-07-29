@@ -48,9 +48,9 @@ if ( $cv["name"] != "" ){
     if ( $fileTypeCheck !== false && count($fileExtCheck) > 0 ){
       $cvName = makeFileName($fileExtCheck[0],"/home/svetlana/www/user-outlines/");
       move_uploaded_file($cv["tmp_name"],$cvName);
-      $jsonNames = json_decode(file_get_contents("/user-outlines/names.json"),true);
+      $jsonNames = json_decode(file_get_contents("/home/svetlana/www/user-outlines/names.json"),true);
       $jsonNames[$cvName] = $cv["name"];
-      file_put_contents("/user-outlines/names.json",json_encode($jsonNames));
+      file_put_contents("/home/svetlana/www/user-outlines/names.json",json_encode($jsonNames));
     }
     else {
       $_SESSION["edit_profile_error"] = "Improper CV type";
@@ -74,10 +74,10 @@ if ( $linkedin != "" ){
   $sql .= ", `LinkedIn`=".$linkedin."'";
 }
 if ( $profImage != "" ){
-  $sql .= ", `Profile_Image`='$profImage'";
+  $sql .= ", `Profile_Image`='".str_replace("/home/svetlana/www","",$profImage)."'";
 }
 if ( $cvName != "" ){
-  $sql .= ", `Outlines`='$cvName'";
+  $sql .= ", `Outlines`='".str_replace("/home/svetlana/www","",$cvName)."'";
 }
 $sql .= " WHERE Email='$_SESSION[email]'";
 
@@ -103,6 +103,6 @@ function safeString($str){
   return mysqli_real_escape_string($con,$str);
 }
 function mega_trim($str){
-	return preg_replace("/^[\s\t\n]{0,}/","",preg_replace("/[\s\t\n]{0,}$/","",$str));
+	return preg_replace("/^[\s\t\n\r]{0,}/","",preg_replace("/[\s\t\n\r]{0,}$/","",$str));
 }
 ?>

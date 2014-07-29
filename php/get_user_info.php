@@ -3,9 +3,9 @@
 require("/home/svetlana/www/beta-code/backend/lib.php");
 session_start();
 
-define("outline_folder","../user-outlines/");
-define("profile_images","../user-profile-images/");
-define("default_profile_image","../images/LittleAdvisorRed.png");
+define("outline_folder","user-outlines/");
+define("profile_images","user-profile-images/");
+define("default_profile_image","/images/LittleAdvisorRed.png");
 define("full_path","/home/svetlana/www/");
 
 $descField = array(
@@ -41,10 +41,11 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
       $out["email"] = $row["Email"];
     if ( hasAlpha($row["Outlines"]) == true ){
       $out["cvLink"] = json_decode($row["Outlines"],true);
-      if ( $out["cvLink"] == null || !file_exists(full_path.outline_folder.$out["cvLink"]["file"]) ){
+      $cName = str_replace("/user-outlines/","",$row["Outlines"]);
+      if ( $out["cvLink"] == null || !file_exists(full_path.outline_folder.$cName) ){
 	if ( file_exists($row["Outlines"]) ){
-	  $names = json_decode(file_get_contents(full_path."user-outlines/names.json"),true);
-	  preg_match("/[a-zA-Z0-9]{0,}\.pdf/",$row["Outlines"],$fname);
+	  $names = json_decode(file_get_contents(full_path.outline_folder."/names.json"),true);
+	  preg_match("/\.pdf$|\.docx$|\.doc$|\.txt$/",$row["Outlines"],$fname);
 	  if ( count($fname) == 0 )
 	    unset($out["cvLink"]);
 	  else {
@@ -59,12 +60,13 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
       }
       else {
 	$out["cvName"] = $out["cvLink"]["fname"];
-	$out["cvLink"] = outline_folder.$out["cvLink"]["file"];
+	$out["cvLink"] = outline_folder.$cName;
       }
     }
     if ( hasAlpha($row["Profile_Image"]) ){
-      if ( file_exists(profile_images.$row["Profile_Image"]) )
-	$out["picture"] = profile_images.$row["Profile_Image"];
+      $fname = profile_images.str_replace("/user-profile-images/","",$row["Profile_Image"]);
+      if ( file_exists(full_path.$fname) )
+	$out["picture"] = "/".$fname;
       else {
 	if ( file_exists($row["Profile_Image"]) )
 	  $out["picture"] = $row["Profile_Image"];

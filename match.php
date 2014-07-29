@@ -1,4 +1,7 @@
-<?php // Session is started in the include file include( "php/match-page.php"); if ( isset($_POST[ "search-query"]) ) echo "<script>var initQuery = '".$_POST[ "search-query"]. "';</script>"; ?>
+<?php // Session is started in the include file 
+      include( "php/match-page.php"); 
+      if ( isset($_POST[ "search-query"]) ) echo "<script>var initQuery = '".$_POST[ "search-query"]. "';</script>"; 
+?>
 <!DOCTYPE html>
 
 <head>
