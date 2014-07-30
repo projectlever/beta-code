@@ -35,6 +35,7 @@ session_start();
     <script type="text/javascript" src="js/directives/displayType.js"></script>
     <script type="text/javascript" src="js/directives/autogrow.js"></script>
     <script type="text/javascript" src="js/directives/matchResults.js"></script>
+    <script type="text/javascript" src="js/directives/loadingSign.js"></script>
 
     <!-- SERVICES -->
     <script type="text/javascript" src="js/services/common.js"></script>
@@ -54,12 +55,12 @@ session_start();
 
 <body class="pl-body" ng-app="profile" ng-controller="ProfileController as controller">
     <!-- Loading gif -->
-    <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
+    <loading-sign></loading-sign>
 
     <!-- NAVBAR -->
     <lever-navbar></lever-navbar>
     <!-- END NAVBAR, START BODY -->
-    <form id="save_form" class="container" action="php/save_profile.php" method="post" enctype="multipart/form-data">
+    <form id="save_form" class="container" action="php/save_profile.php" method="post" enctype="multipart/form-data" style="display:none">
         <div class="pl-content pl-zebra" id="profile-header">
             <div class="container full-width full-height">
                 <div class="row full-height" ng-show="editMode == true">
@@ -127,7 +128,7 @@ session_start();
                     </div>
                 </div>
                 <div class="row full-height" ng-show="editMode == false">
-                    <div class="col-xs-3 col-xs-offset-0">
+                    <div class="col-xs-3 col-xs-offset-0 text-center">
                       <img src="{{user.picture}}" class="profile_image" />
                     </div>
                     <div class="col-xs-6 col-xs-offset-0 full-height" ng-show="editMode == false">

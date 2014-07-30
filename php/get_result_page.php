@@ -48,7 +48,7 @@ else {
       for ( $i = 0, $n = count($tempResults); $i < $n; $i++ ){
 	// Delimit the results!
 	if ( isset($delims["departments"]) ){
-	  if ( !in_array($tempResults[$i]["department"],$delims["departments"]) ){
+	  if ( !in_array($tempResults[$i]["department"],$delims["departments"]) && ( $tempResults[$i]["department"] != "" || $tempResults[$i]["department"] != null ) ){
 	    continue;
 	  }
 	}

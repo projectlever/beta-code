@@ -40,6 +40,10 @@
 
     <!-- Le Maps -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
+    <script>
+     var ignore = true;
+     var loggedIn = false;
+    </script>
 </head>
 
 <body class="pl-body" ng-app="plMatch" ng-controller="MatchController as controller">

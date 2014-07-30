@@ -55,7 +55,7 @@
 		    <input type="checkbox" value="hasThesis" ng-click="toggle()" check-list="delims.thesis" id="thesis_delim" />
 		  </td>
 		  <td valign="top" style="padding-left:0.35em">
-		    <label for="thesis_delim">Has Thesis</label>
+		    <label for="thesis_delim">Advised a Thesis</label>
 		  </td>
 		  <td align="right" valign="middle">
 

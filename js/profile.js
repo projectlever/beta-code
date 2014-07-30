@@ -1,11 +1,5 @@
-var app = angular.module('profile',[]).controller('ProfileController',['$scope','$window','$http','$sce','common',function($scope,$window,$http,$sce,common){
-    var removeList = {
-	advisors : [],
-	courses  : [],
-	theses   : [],
-	grants   : [],
-	length   : 0
-    };
+var app = angular.module('profile',[]).controller('ProfileController',['$scope','$window','$http','$sce','common','$timeout',function($scope,$window,$http,$sce,common,$timeout){
+    var savedResources = {};
     // View controlling variables
     $scope.profilePage = true; // This is used to tell the navbar to show 'Logout' instead of 'Profile'
     $scope.user = {}; // User information
@@ -116,28 +110,6 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
     }
     $scope.showResource = function(resource){
 	$scope.display = resource;
-    }
-    $scope.isOnRemoveList = function(id,type){
-		return _.find(removeList[type],function(arr){return arr == id;}) != undefined;
-    }
-    $scope.removeFavorites = function(){
-	$http({
-	    method: 'POST',
-	    url: "./php/save_remove_resource.php",
-	    data: $.param({"list":JSON.stringify(removeList),"saved":"Remove"}),
-	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-	}).then(function(response){
-	    console.log(response);
-	    if ( response.data == "success" ){
-		for ( var type in removeList ){
-		    for ( var i = removeList[type].length-1; i > -1; i-- ){
-			$("#"+type+"_"+removeList[type][i]).parent().remove();
-		    }
-		}
-		removeList = [];
-		$scope.savesEdited = false;
-	    }
-	});
     }
     $scope.login = function(emailSelector,passSelector){
 	// Set defaults
@@ -369,21 +341,61 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	});
     }
     $scope.toggleFavorite = function toggleFavorite(id,type){
-	var index = -1;
-	if ( (index = _.indexOf(removeList[type],id)) > -1 ){
-	    // Remove it from the remove list	    
-	    removeList[type].splice(index,1);
-	    removeList.length--;
+	if ( type == "advisors" )
+	    type = "advisor";
+	else if ( type == "courses" ){
+	    type = "course";
+	}
+	else if ( type == "theses" ){
+	    type = "thesis";
+	}
+	else if ( type == "grants" ){
+	    type = "grant";
+	}
+	if ( $scope.isSavedResource(id,type) ){
+	    $http({
+		method: 'POST',
+		url: "./php/save_remove_resource.php",
+		data: $.param({"id":id,"type":type,"saved":"Remove"}),
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    }).then(function(response){
+		if ( response.data == "success" ){
+		    savedResources[type] = $window._.reject(savedResources[type],function(testId){
+			return testId == id;
+		    });
+		}
+	    });
 	}
 	else {
-	    // Add it to the remove list
-	    removeList[type].push(id);
-	    removeList.length++;
+	    $http({
+		method: 'POST',
+		url: "./php/save_remove_resource.php",
+		data: $.param({"id":id,"type":type,"saved":"Save"}),
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    }).then(function(response){
+		console.log(response);
+		if ( response.data == "success" ){
+		    savedResources[type].push(id);
+		}
+	    });
+	}	    
+    }
+    $scope.isSavedResource = function isSavedResource(id,type){
+	if ( type == "advisors" )
+	    type = "advisor";
+	else if ( type == "courses" ){
+	    type = "course";
 	}
-	if ( removeList.length > 0 )
-	    $scope.savesEdited = true;
-	else
-	    $scope.savesEdited = false;
+	else if ( type == "theses" ){
+	    type = "thesis";
+	}
+	else if ( type == "grants" ){
+	    type = "grant";
+	}
+	if ( savedResources[type] ){
+	    return $window._.indexOf(savedResources[type],id) > -1;
+	}
+	return false;
     }
     // If not logged in...show the login form!
     if ( $window.loggedIn == false ){
@@ -404,6 +416,10 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	    $scope.results.theses   = response.data.saved.Thesis;
 	    $scope.results.grants   = response.data.saved.Funding;
 	    console.log($scope.results);
+	    $timeout(function(){
+		$scope.onPageLoad();
+		$("#save_form").show();
+	    },250);
 	});
 	$http({
 	    method: "GET",
@@ -432,6 +448,13 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	    return validate();
 	});
     }
+    // Get the saved resources
+    $http({
+	method: 'POST',
+	url: "./php/get_saved_resources.php",
+    }).then(function(response){
+	savedResources = response.data;
+    });
     // Initialize hello.js
     $window.hello.init({
 	"facebook":"164434750353945"

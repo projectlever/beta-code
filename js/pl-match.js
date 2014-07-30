@@ -172,7 +172,6 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	}	
     }
     var getResultSet = function(data,callback){
-	console.log(data);
 	$http({
 	    method: 'GET',
 	    url: "./php/get_result_page.php?data="+JSON.stringify(data)+"&sid="+Math.random()
@@ -193,7 +192,6 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	return out;
     }
     $scope.toggle   = function(department){
-	console.log(department);
 	if ( department != null ){	 
 	    var attrName = department.replace(/\s/g,"_");
 	    if ( _.indexOf($scope.delims.departments,department) > -1 ){
@@ -391,7 +389,6 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     $scope.showResource = function showResource(type){
 	var resources;
 	var results = $scope.results[$scope.display+"NumResults"];
-	console.log([$("#"+type+"_results").length,results]);
 	$scope.display = type;
 	if ( (resources = $("#"+type+"_results")).length > 0 && results > 0 ){
 	    $scope.display = type;
@@ -431,7 +428,6 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 		data: $.param({"id":id,"type":type,"saved":"Save"}),
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    }).then(function(response){
-		console.log(response);
 		if ( response.data == "success" ){
 		    savedResources[type].push(id);
 		}

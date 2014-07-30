@@ -27,7 +27,7 @@ if ( (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) )
   
   <!-- Le Scripts-->		
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
   <?php 
   if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){ 
@@ -47,10 +47,12 @@ if ( (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) )
   <script type="text/javascript" src="js/directives/navbar.js"></script>
   <script type="text/javascript">
    var homePage = true;
+   var ignore = true;
   </script>
 
   <!-- SERVICES -->
   <script type="text/javascript" src="js/services/register.js"></script>
+  <script type="text/javascript" src="js/services/common.js"></script>
 </head>
 <body class="pl-home" ng-app="plMatch" ng-controller="MatchController as controller">
   <img src="images/resources/infographics/down_arrow.png" class="down_arrow"></div>

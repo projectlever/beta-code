@@ -122,8 +122,7 @@
 			<table>
 			  <tr>
 			    <td>
-			    	<span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key) == false}" title="Save this result" ng-if="profilePage==true" ng-click="toggleFavorite(result.id,key)"></span>
-			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-if="profilePage!=true" ng-click="toggleFavorite(result.id,key)"></span>		
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>		
 			    </td>
 			    <td>
 			      <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-if="key == 'advisors' && result.email != '{}' && common.alphaExists(result.email) == true">
@@ -195,8 +194,7 @@
 			<table>
 			  <tr>
 			    <td>
-			    	<span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isOnRemoveList(result.id,key) == false}" title="Save this result" ng-if="profilePage==true" ng-click="toggleFavorite(result.id,key)"></span>
-			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-if="profilePage!=true" ng-click="toggleFavorite(result.id,key)"></span>			 
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>			 
 			    </td>
 			    <td>
 			      <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
