@@ -5,6 +5,7 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
         var loadedSources = 0;
         var sourcesNeeded = 2;
         $scope.pageType = $window.pageType;
+	$scope.pageId   = $window.advisorId;
         $scope.vizDataExists = false;
         $scope.data = {};
         $scope.selected = "bio";
@@ -29,6 +30,9 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
         }
 
         // Methods
+	$scope.resourceExists = function(){
+	    return $("#similar_resources").children().length > 0;
+	}
         $scope.select = function(thing) {
             $scope.selected = thing;
         }

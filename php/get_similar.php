@@ -18,7 +18,7 @@ function find_similar_resources($id,$type){
     "Advisor"=>"Blob",
     "Course"=>"Description",
     "Funding"=>"Abstract",
-    "Thesis"=>"Description"
+    "Thesis"=>"Abstract"
   );
   
   // Get the advisor's blob
@@ -39,13 +39,13 @@ function find_similar_resources($id,$type){
     "Advisor"=>"Header",
     "Course"=>"Description",
     "Funding"=>"Abstract",
-    "Thesis"=>"Description"
+    "Thesis"=>"Abstract"
   );
   $block = array(
     "Advisor"=>"Block",
     "Course"=>"Description",
     "Funding"=>"Abstract",
-    "Thesis"=>"Description"
+    "Thesis"=>"Abstract"
   );
   $name = array(
     "Advisor"=>"Name",
