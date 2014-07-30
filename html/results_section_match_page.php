@@ -47,6 +47,24 @@
 	      <tbody>
 		<tr>
 		  <td colspan="3">
+		    <h5>Thesis</h5>
+		  </td>
+		</tr>
+		<tr>
+		  <td valign="top">
+		    <input type="checkbox" value="hasThesis" ng-click="toggle()" check-list="delims.thesis" id="thesis_delim" />
+		  </td>
+		  <td valign="top" style="padding-left:0.35em">
+		    <label for="thesis_delim">Has Thesis</label>
+		  </td>
+		  <td align="right" valign="middle">
+
+		  </td>
+		</tr>
+	      </tbody>
+	      <tbody>
+		<tr>
+		  <td colspan="3">
 		    <h5 ng-if="testDrive == false"> Departments </h5>
 		    <h5 ng-if="testDrive == true"> Universities </h5>
 		  </td>

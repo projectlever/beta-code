@@ -128,7 +128,7 @@
 		{{result.name}}
 	      </h4>
 	    </a>
-	    <h6><span ng-if="alphaExists(result.description)">{{snippet(result.description)}},</span> {{result.department}}</h6>
+	    <h6><span ng-if="alphaExists(result.description)">{{common.stripTags(snippet(result.description))}},</span> {{result.department}}</h6>
 	  </td>
 	  <td align="right" valign="middle" style="width:20%;padding-right:2%;" onclick="toggle(this)">
 	    <table>

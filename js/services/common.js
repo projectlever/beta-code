@@ -19,6 +19,9 @@ app.factory('common',function(){
 	    else
 		return desc;
 	},
+	stripTags : function(html){
+            return String(html).replace(/<[^>]+>/gm, '');
+	},
 	toggle : function($event,cancel){
 	    var result = $event.target;
 	    if ( cancel == true ){

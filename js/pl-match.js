@@ -1,7 +1,7 @@
 String.prototype.replaceAll = function(find,replace){
     return this.replace(new RegExp(find,"g"),replace);
 }
-var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce','register',function($scope, $http, $window, $timeout, $sce, register){
+var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce','register','common',function($scope, $http, $window, $timeout, $sce, register,common){
     var savedResources = {};
     var limitResultsTo = 10;
     var delimLength    = 0;
@@ -43,11 +43,13 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 
     $scope.delims = {
 	departments : [],
-	funding     : []
+	funding     : [],
+	thesis      : []
     };
     $scope.departments = [];
     $scope.resultsLength = {};
     $scope.testDrive = $window.testDrive;
+    $scope.common = common;
 
     // Login / Registration functions
 
@@ -299,6 +301,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     $scope.search   = function search(){
 	$("#results_container,#pagination_buttons").hide();
 	$(".loading-gif").show();
+	$("#thesis_delim:checked,#funding_delim:checked").trigger("click");
 	$scope.resultsPage =  {
 	    advisors : 1,
 	    courses  : 1,

@@ -173,8 +173,8 @@ session_start();
                         <ul class="tabnav-tabs">
                             <li class="tabnav-tab" ng-click="selected = 'savedResources'" ng-class="{'selected':selected=='savedResources'}">
                                 <a href="">
-              			Saved Resources
-              		</a>
+              			  Saved Resources
+              			</a>
                                 <span class="octicon opticon-diff-added" id="save_icon" ng-show="savesEdited == true">
 				  <img src="http://happytapper.com/wordpress/happytapper/wp-content/uploads/2013/05/flaticon-save.png" width="28px" title="Save Changes to Saved Resources" ng-click="removeFavorites();" />
 	      			</span>
@@ -182,19 +182,19 @@ session_start();
                             <li class="tabnav-tab" ng-click="selected = 'researchProfile'" ng-class="{'selected':selected=='researchProfile'}">
                                 <a>
                                     <span class="octicon octicon-diff-added">
-		  						<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Industry-Research-icon.png" width="28px"/>
-							</span>
+		  		      <img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Industry-Research-icon.png" width="28px"/>
+				    </span>
                                     Research Profile
                                     <span class="octicon opticon-diff-added" id="save_icon">
-		  						<img src="http://happytapper.com/wordpress/happytapper/wp-content/uploads/2013/05/flaticon-save.png" width="28px" 
-		       					ng-show="matchTextEdited == true" ng-click="saveMatchText();" />
-							</span>
+		  		      <img src="http://happytapper.com/wordpress/happytapper/wp-content/uploads/2013/05/flaticon-save.png" width="28px" 
+		       			   ng-show="matchTextEdited == true" ng-click="saveMatchText();" />
+				    </span>
                                 </a>
                             </li>
                             <li class="tabnav-tab " style="display:none" ng-click="selected = 'recommendedResources'" ng-class="{'selected':selected=='recommendedResources'}">
-                                <a>
-							Recommended Resources
-              		</a>
+                              <a>
+				Recommended Resources
+              		      </a>
                             </li>
                         </ul>
                     </div>

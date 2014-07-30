@@ -54,10 +54,10 @@ else {
 	}
 	// If type is advisor, check for funding resources!
 	if ( $resType == "Advisor" ){
+	  // Get the advisor information
+	  $res = json_decode(get_info($tempResults[$i]["id"],"Advisor"),true);
 	  if ( isset($delims["funding"]) ){
 	    if ( in_array("hasFunding",$delims["funding"]) ){
-	      $res = json_decode(get_info($tempResults[$i]["id"],"Advisor"),true);
-
 	      if ( $res == null || $res == "" || !is_array($res) )
 		continue;
 
@@ -65,6 +65,19 @@ else {
 		continue;
 	      
 	      if ( count($res["Funding"]) == 0 )
+		continue;
+	    }
+	  }
+	  // Check for thesis delimiter
+	  if ( isset($delims["thesis"]) ){
+	    if ( in_array("hasThesis",$delims["thesis"]) ){
+	      if ( $res == null || $res == "" || !is_array($res) )
+		continue; // Skip it
+
+	      if ( !isset($res["Thesis"]) )
+		continue;
+
+	      if ( count($res["Thesis"]) == 0 )
 		continue;
 	    }
 	  }

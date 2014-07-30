@@ -26,13 +26,17 @@
     <!-- Le Scripts-->
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
     <script type="text/javascript" src="js/hello.min.js"></script>
     <script type="text/javascript" src="js/general.js"></script>
     <script type="text/javascript" src="js/pl-match.js"></script>
     <script type="text/javascript" src="js/match.js"></script>
     <script type="text/javascript" src="js/directives/navbar.js"></script>
+
+    <!-- SERVICES -->
+    <script type="text/javascript" src="js/services/register.js"></script>
+    <script type="text/javascript" src="js/services/common.js"></script>
 
     <!-- Le Maps -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
