@@ -48,6 +48,9 @@ if ( (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) )
   <script type="text/javascript">
    var homePage = true;
   </script>
+
+  <!-- SERVICES -->
+  <script type="text/javascript" src="js/services/register.js"></script>
 </head>
 <body class="pl-home" ng-app="plMatch" ng-controller="MatchController as controller">
   <img src="images/resources/infographics/down_arrow.png" class="down_arrow"></div>

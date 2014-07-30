@@ -12,8 +12,8 @@
 	<li>
 	  <a href="match.php" ng-if="homePage != true">Match</a>
 	</li>
-	<li>
-	  <a href="explore.html" ng-if="testDrive == false || !testDrive">Explore</a>
+	<li ng-if="homePage != true">
+	  <a href="explore.html" ng-if="(testDrive == false || !testDrive)">Explore</a>
           <!-- RESTRICT EXPLORE USE IF NOT SIGNED UP -->
 	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm('reg_form')">Explore</a>
 	</li>

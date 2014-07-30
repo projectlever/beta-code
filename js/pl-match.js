@@ -1,10 +1,12 @@
 String.prototype.replaceAll = function(find,replace){
     return this.replace(new RegExp(find,"g"),replace);
 }
-var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce',function($scope, $http, $window, $timeout, $sce){
+var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$http','$window','$timeout','$sce','register',function($scope, $http, $window, $timeout, $sce, register){
     var savedResources = {};
     var limitResultsTo = 10;
     var delimLength    = 0;
+    var autoSelecting  = false; // When true, the (de)select all checkbox was clicked
+    $scope.homePage = $window.homePage;
     $scope.emailError = false;
     $scope.passError = false;
     $scope.signUp = signUp = {
@@ -40,147 +42,145 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     $scope.maxPages = 0;
 
     $scope.delims = {
-	departments : []
+	departments : [],
+	funding     : []
     };
     $scope.departments = [];
     $scope.resultsLength = {};
     $scope.testDrive = $window.testDrive;
 
+    // Login / Registration functions
+
+    $scope.login = function(email,pass){
+	register.login(email,pass,$scope,loginComplete);
+    }
+    $scope.register = function(social,info){
+	register.register(social,info,$scope,registrationComplete);
+    }
+    $scope.fbSignUp = function(p){
+	register.fbSignUp(p,fbSignUpSuccess,fbSignUpError);
+    }
+    $scope.fbLogin = function(){
+	register.fbLogin(fbLoginSuccess,fbLoginError);
+    }
+
+    // Login/Registration callbacks
+    var fbLoginError = function(r){
+	$scope.$apply(function(){
+	    $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+	});
+	angular.element($("#login_button")[0]).triggerHandler("click");
+	return;
+    }
+    var fbLoginSuccess = function(response){
+	if ( response.data == "registered" ){
+	    // GREAT! Let's let them continue using the site
+	    $scope.testDrive = false;
+	    $window.testDrive = false;
+	    if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
+		$scope.search();
+	    else if ( $window.homePage == true )
+		$window.location = "match.php";
+	}
+	else if ( response.data == "new user" ){
+	    $scope.fbSignUp(p);
+	}
+    }
+    var fbSignUpError = function(){
+	$scope.$apply(function(){
+	    $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
+	});
+	angular.element($("#login_button")[0]).triggerHandler("click");
+	return;
+    }
+    var fbSignUpSuccess = function(response){
+	if ( response.data.length == 0 ){
+	    $scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
+	    $("#user_email").val(p.email);
+	    angular.element($("#sign_up_button")[0]).triggerHandler("click");
+	}
+	else if ( response.data.length == 1 ){
+	    $scope.register(true,{"email":p.email,"university":response.data[0]});
+	}
+	else if ( response.data.length > 1 ){
+	    // Have the user select a university
+	    var selected = false;
+	    var index = 0;
+	    while ( selected == false && response.data[index] != null ){
+		if ( confirm("Would you like to sign up to Project Lever as attending " + response.data[index]+"?") ){
+		    $scope.register(true,{"email":p.email,"university":response.data[index]});
+		    selected = true;
+		    break;
+		}
+		else {
+		    index++;
+		}
+	    }
+	    if ( selected == false ){
+		$scope.signUp.errorMessage = "You must select a university that you are attending to use Project Lever. Please use the form below.";
+		$("#user_email").val(p.email);
+		angular.element($("#sign_up_button")[0]).triggerHandler("click");
+	    }
+	}
+    }
+    var loginComplete = function(response){
+	if ( response.data.search("login successful") > -1 ){
+	    $scope.testDrive = false;
+	    $window.testDrive = false;
+	    if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
+		$scope.search();
+	    else if ( $window.homePage == true )
+		$window.location = "match.php";
+	}
+	else if ( response.data.search("register") > -1 || response.data.search("\/login\/register") > -1 ){
+	    // Tell them to register
+	    $scope.emailError = true;
+	    $scope.errorMessage = "We could not locate a user with that email."
+	    $(passSelector).val("");
+	} 
+	else if ( response.data.search("Incorrect password") > -1 ){
+	    $scope.passError = true;
+	    $scope.errorMessage = "Email/password combination is incorrect.";
+	    $(passSelector).val("");
+	}
+    }
+    var registrationComplete = function(response){
+	if ( response.data == "complete" ){		
+	    $scope.testDrive = false;
+	    $window.testDrive = false;
+	    if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
+		$scope.search();		
+	    else if ( $window.homePage == true )
+		$window.location = "match.php";
+	    
+	}
+	else if ( response.data == "no school" ){
+	    $window.location = "http://www.projectlever.com/webfiles/login/register/school.html";
+	}
+	else if ( response.data == "registered" ){
+	    $timeout(function(){
+		$("#user_email_login").val(email);
+		$scope.errorMessage = "You've already registered!";
+		angular.element($("#login_button")[0]).triggerHandler("click");
+	    },0);
+	}
+	else if ( response.data == "invalid email" ){
+	    signUp.emailError = true;
+	    signUp.errorMessage = "Invalid email address";
+	}	
+    }
+    var getResultSet = function(data,callback){
+	console.log(data);
+	$http({
+	    method: 'GET',
+	    url: "./php/get_result_page.php?data="+JSON.stringify(data)+"&sid="+Math.random()
+	}).then(callback);
+    }
     $scope.displayHTML = function displayHTML(html){
 	return $sce.trustAsHtml(html);
     }
     $scope.getNumResults = function(type){
 	return $scope.results[type+"NumResults"];
-    }
-    $scope.register = function(social,info){
-	if ( !social || social == false ){
-	    var email = $("#user_email").val();
-	    var pass  = $("#user_pass").val();
-	    var conf  = $("#user_pass_confirm").val();
-	    var univ  = $("[name='university_value']")[0].options[$("[name='university_value']")[0].selectedIndex].innerHTML;
-	    signUp.reset();
-	    // Check for empty fields
-	    if ( email.match(/\S/) == null ){
-		signUp.emailError = true;
-		$("#user_email").focus();
-		return;
-	    }
-	    if ( pass.match(/\S/) == null ){
-		signUp.passError = true;
-		$("#user_pass").focus();
-		return;
-	    }
-	    if ( conf.match(/\S/) == null ){
-		signUp.passError = true;
-		return;
-	    }
-	    if ( univ == "Your University" ){
-		signUp.univError = true;
-	    $("[name='university_value']").focus();
-		return;
-	    }
-	    // Check to see if email is valid
-	    if ( email.search("@") == -1 || email.search(/\./) == -1 ){
-		signUp.emailError = true;
-		signUp.errorMessage = "Please enter a valid '.edu' address";	    
-		$("#user_email").focus();
-		return;
-	    }
-	    // Check to see if the email is a .edu email
-	    if ( email.match(/\.edu$/) == null ){
-		signUp.emailError = true;
-		signUp.errorMessage = "Please enter a '.edu' email address";
-		$("#user_email").focus();
-		return;
-	    }
-	    // Check to see if pass == confirm_pass
-	    if ( pass != conf ){
-		signUp.confError = true;
-		signUp.errorMessage = "Password and confirm password fields do not match";
-		$("#user_pass,#user_pass_confirm").val("");
-		$("#user_pass").focus();
-		return;
-	    }
-	    var post = {"email":email,"password":pass,"university":univ,"ajax":true};
-	}
-	else {
-	    var post = {"email":info.email,"university":info.university,"ajax":true};
-	}
-	$http({
-	    method: 'POST',
-	    url: "./php/register.php",
-	    data: $.param(post),
-	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-	}).then(function(response){
-	    console.log(response);
-	    signUp.reset();
-	    if ( response.data == "complete" ){		
-		$scope.testDrive = false;
-		$window.testDrive = false;
-		if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
-		    $scope.search();		
-		else if ( $window.homePage == true )
-		    $window.location = "match.php";
-		    
-	    }
-	    else if ( response.data == "no school" ){
-		$window.location = "http://www.projectlever.com/webfiles/login/register/school.html";
-	    }
-	    else if ( response.data == "registered" ){
-		$timeout(function(){
-		    $("#user_email_login").val(email);
-		    $scope.errorMessage = "You've already registered!";
-		    angular.element($("#login_button")[0]).triggerHandler("click");
-		},0);
-	    }
-	    else if ( response.data == "invalid email" ){
-		signUp.emailError = true;
-		signUp.errorMessage = "Invalid email address";
-	    }
-	});
-    }
-    $scope.login = function(emailSelector,passSelector){
-	// Set defaults
-	$scope.emailError = false;
-	$scope.passError = false;
-
-	var email = $(emailSelector).val();
-	var pass = $(passSelector).val();
-	if ( email.match(/\S/) == null ){
-	    $scope.emailError = true;
-	    return;
-	}
-	if ( pass.match(/\S/) == null ){
-	    $scope.passError = true;
-	    return;
-	}
-	$http({
-	    method: 'POST',
-	    url: "../../webfiles/login/login/login.php",
-	    data: $.param({"email":email,"password":pass,"landingPage":true}),
-	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-	}).then(function(response){
-	    console.log(response);
-	    if ( response.data.search("login successful") > -1 ){
-		$scope.testDrive = false;
-		$window.testDrive = false;
-		if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
-		    $scope.search();
-		else if ( $window.homePage == true )
-		    $window.location = "match.php";
-	    }
-	    else if ( response.data.search("register") > -1 || response.data.search("\/login\/register") > -1 ){
-		// Tell them to register
-		$scope.emailError = true;
-		$scope.errorMessage = "We could not locate a user with that email."
-		$(passSelector).val("");
-	    } 
-	    else if ( response.data.search("Incorrect password") > -1 ){
-		$scope.passError = true;
-		$scope.errorMessage = "Email/password combination is incorrect.";
-		$(passSelector).val("");
-	    }
-	});
     }
     $scope.getPages = function(){
 	var out = [];
@@ -191,35 +191,67 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	return out;
     }
     $scope.toggle   = function(department){
-	var attrName = department.replace(/\s/g,"_");
-	if ( _.indexOf($scope.delims.departments,department) > -1 ){
-	    $("[name='"+attrName+"']").show();
-	    // Check to see if all of the checkboxes are checked
-	    if ( $("[name='department_names']:checked").length == delimLength ){
-		$scope.selectAll = "Unselect All";
+	console.log(department);
+	if ( department != null ){	 
+	    var attrName = department.replace(/\s/g,"_");
+	    if ( _.indexOf($scope.delims.departments,department) > -1 ){
+		// Check to see if all of the checkboxes are checked
+		if ( $("[name='department_names']:checked").length == delimLength ){
+		    $scope.selectAll = "Unselect All";
+		    $("#select_all").prop("checked",false);
+		}
+	    }
+	    else {
+		$scope.selectAll = "Select All";
 		$("#select_all").prop("checked",false);
 	    }
+	    if ( autoSelecting == false )
+		$scope.changePage(1);
 	}
 	else {
-	    $("[name='"+attrName+"']").hide();
-	    $scope.selectAll = "Select All";
-	    $("#select_all").prop("checked",false);
+	    $scope.changePage(1);
 	}
     }
     $scope.checkAll    = function(){
+	var selectAll = false;
 	if ( $scope.selectAll == "Select All" ){
 	    var selector = "[name='department_names']:not(:checked)";
+	    selectAll = true;
 	}
 	else if ( $scope.selectAll == "Unselect All" ){
 	    var selector = "[name='department_names']:checked";
+	    selectAll = false;
 	}
 	else
 	    return;
 	angular.forEach($(selector),function(cb,index){
+	    autoSelecting = true;
 	    $timeout(function(){
 		$(cb).trigger("click");
 	    },50);
 	});	
+
+	// This function checks if angular is still (un)checking the checkboxes
+	function check(){
+	    if ( selectAll == true ){
+		if ( $("[name='department_names']:not(:checked)").length > 0 ){
+		    // Keep waiting
+		    $timeout(check,50);
+		    return;
+		}
+	    }
+	    else if ( selectAll == false ){
+		if ( $("[name='department_names']:checked").length > 0 ){
+		    // Keep waiting
+		    $timeout(check,50);
+		    return;
+		}
+	    }		
+	    // Finished!
+	    autoSelecting = false;
+	    $scope.changePage(1);
+	}
+	check();
     }
     $scope.changePage  = function(n){
 	$("#"+$scope.display+"_results,#pagination_buttons").hide();
@@ -227,11 +259,29 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	$("body").scrollTop(0);
 	$timeout(function(){
 	    $scope.resultsPage[$scope.display] = n;
-	    $http({
-		method: 'GET',
-		url: "./php/get_result_page.php?limit="+limitResultsTo+"&page="+n+"&type="+$scope.display+"&sid="+Math.random(),
-	    }).then(function(response){
-		$scope.results[$scope.display] = response.data;
+	    getResultSet({
+		display       :$scope.display,
+		page          :n,
+		delimiters    :$scope.delims,
+		limit         :limitResultsTo 
+	    },function(response){
+		console.log(response);
+		if ( $scope.display == "advisors" ){
+		    $scope.results.advisors = response.data.Advisor.results;				
+		}
+		else if ( $scope.display == "courses" ){
+		    $scope.results.courses = response.data.Course.results;				
+		}
+		else if ( $scope.display == "theses" ){
+		    $scope.results.theses = response.data.Thesis.results;				
+		}
+		else if ( $scope.display == "funding" || $scope.display == "grants" ){
+		    $scope.results.grants = response.data.Grant.results;				
+		}
+		$scope.results.advisorsNumResults = response.data.Advisor.results_length;
+		$scope.results.coursesNumResults = response.data.Course.results_length;
+		$scope.results.thesesNumResults = response.data.Thesis.results_length;
+		$scope.results.grantsNumResults = response.data.Grant.results_length;
 		$timeout(function(){
 		    $("#"+$scope.display+"_results,#pagination_buttons").show();
 		    $(".loading-gif").hide();
@@ -337,9 +387,12 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
     }
     $scope.showResource = function showResource(type){
 	var resources;
+	var results = $scope.results[$scope.display+"NumResults"];
+	console.log([$("#"+type+"_results").length,results]);
 	$scope.display = type;
-	if ( (resources = $("#"+type+"_results")).length > 0 ){
+	if ( (resources = $("#"+type+"_results")).length > 0 && results > 0 ){
 	    $scope.display = type;
+	    $scope.changePage(1);
 	}
     }
     $scope.toggleFavorite = function toggleFavorite(id,type){
@@ -395,115 +448,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	else
 	    return desc;
     }
-    $scope.fbSignUp = function(p){
-	if ( !p ){
-	    $window.hello.login("facebook",{"scope":"email","display":"popup"},function(r){
-		if ( r.error ){
-		    $scope.$apply(function(){
-			$scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
-		    });
-		    angular.element($("#login_button")[0]).triggerHandler("click");
-		    return;
-		}
-		$window.hello(r.network).api("/me").success(function(p){
-		    $scope.fbSignUp(p);
-		});
-	    });
-	    return;
-	}
-	// Register the user
-	if ( p.education ){
-	    // Find the college(s) that they go to. If it's one we have in our database, sign them up with that college!
-	    var colleges = [];
-	    for ( var i = p.education.length-1; i > -1; i-- ){
-		if ( p.education[i].type == "College" ){
-		    colleges.push(p.education[i].school.name);
-		}
-	    }
-	    if ( colleges.length == 0 ){
-		$scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
-		$("#user_email").val(p.email);
-		angular.element($("#sign_up_button")[0]).triggerHandler("click");
-	    }
-	    else {
-		// Verify that we have that college in the database
-		$http({
-		    method: 'POST',
-		    url: "./backend/checkForCollege.php",
-		    data: $.param({"colleges":JSON.stringify(colleges)}),
-		    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		}).then(function(response){
-		    if ( response.data.length == 0 ){
-			$scope.signUp.errorMessage = "We could not determine the college that you go to. Please use our sign up form.";
-			$("#user_email").val(p.email);
-			angular.element($("#sign_up_button")[0]).triggerHandler("click");
-		    }
-		    else if ( response.data.length == 1 ){
-			$scope.register(true,{"email":p.email,"university":response.data[0]});
-		    }
-		    else if ( response.data.length > 1 ){
-			// Have the user select a university
-			var selected = false;
-			var index = 0;
-			while ( selected == false && response.data[index] != null ){
-			    if ( confirm("Would you like to sign up to Project Lever as attending " + response.data[index]+"?") ){
-						    $scope.register(true,{"email":p.email,"university":response.data[index]});
-				selected = true;
-				break;
-			    }
-			    else {
-				index++;
-			    }
-			}
-			if ( selected == false ){
-			    $scope.signUp.errorMessage = "You must select a university that you are attending to use Project Lever. Please use the form below.";
-			    $("#user_email").val(p.email);
-			    angular.element($("#sign_up_button")[0]).triggerHandler("click");
-			}
-		    }
-		});
-	    }
-	}
-    }
-    $scope.fbLogin = function(){
-	$window.hello.login("facebook",{"scope":"email","display":"popup"},function(r){
-	    if ( r.error ){
-		$scope.$apply(function(){
-		    $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
-		});
-		angular.element($("#login_button")[0]).triggerHandler("click");
-		return;
-	    }
-	    $window.hello(r.network).api("/me").success(function(p){
-		if ( !p.email ){
-		    $scope.errorMessage = "An error occurred while using Facebook to login. Please use our login form.";
-		    $("#user_email_login").val(p.email);
-		    angular.element($("#login_button")[0]).triggerHandler("click");
-		}
-		else {
-		    $http({
-			method: 'POST',
-			url: "./php/verifyUser.php",
-			data: $.param({"email":p.email}),
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		    }).then(function(response){
-			if ( response.data == "registered" ){
-			    // GREAT! Let's let them continue using the site
-			    $scope.testDrive = false;
-			    $window.testDrive = false;
-			    if ( $("#search_box").val().match(/\S/) != null && $window.homePage != true )
-				$scope.search();
-			    else if ( $window.homePage == true )
-				$window.location = "match.php";
-			}
-			else if ( response.data == "new user" ){
-			    $scope.fbSignUp(p);
-			}
-		    });
-		}
-	    });
-	});
-    }
+    
     // Initializing code
     if ( $window.initQuery != undefined ){
 	$(".search-bar").html(initQuery);
@@ -523,10 +468,6 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    e.stopPropagation? e.stopPropagation() : e.cancelBubble();
 	    return false;
 	}
-    });
-    // Initialize hello.js
-    $window.hello.init({
-	"facebook":"164434750353945"
     });
     // Get the saved resources
     $http({

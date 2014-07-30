@@ -29,6 +29,24 @@
 	      <tbody>
 		<tr>
 		  <td colspan="3">
+		    <h5>Funding</h5>
+		  </td>
+		</tr>
+		<tr>
+		  <td valign="top">
+		    <input type="checkbox" value="hasFunding" ng-click="toggle()" check-list="delims.funding" id="funding_delim" />
+		  </td>
+		  <td valign="top" style="padding-left:0.35em">
+		    <label for="funding_delim">Has Funding</label>
+		  </td>
+		  <td align="right" valign="middle">
+
+		  </td>
+		</tr>
+	      </tbody>
+	      <tbody>
+		<tr>
+		  <td colspan="3">
 		    <h5 ng-if="testDrive == false"> Departments </h5>
 		    <h5 ng-if="testDrive == true"> Universities </h5>
 		  </td>
