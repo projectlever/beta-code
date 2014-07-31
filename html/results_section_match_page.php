@@ -26,10 +26,10 @@
 	      </li>
 	    </ul>
 	    <table id="department_delims">
-	      <tbody>
+	      <tbody ng-if="display == 'advisors'">
 		<tr>
 		  <td colspan="3">
-		    <h5>Funding</h5>
+		    <h5>Faculty Funding</h5>
 		  </td>
 		</tr>
 		<tr>
@@ -44,7 +44,7 @@
 		  </td>
 		</tr>
 	      </tbody>
-	      <tbody>
+	      <tbody ng-if="display == 'advisors'">
 		<tr>
 		  <td colspan="3">
 		    <h5>Thesis</h5>

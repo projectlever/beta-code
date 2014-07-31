@@ -29,9 +29,10 @@ require("../../algorithm.php");
 // Set up categories
 $categories = array(
   "Advisor" => array("Advisor_ID","Tags","Picture","Department","School","Name","Header","Email"),
-  "Course" => array("Course_ID","Tags","School","Department","Name","Description"),
-  "Thesis" => array("Thesis_ID","Tags","School","Department","Name","Author","Abstract"),
-  "Grant" => array("Grant_ID","Tags","Name","Description"),
+  "Course"  => array("Course_ID","Tags","School","Department","Name","Description"),
+  "Thesis"  => array("Thesis_ID","Tags","School","Department","Name","Author","Abstract"),
+  "Grant"   => array("Grant_ID","Tags","Name","Description"),
+  "Funding" => array("Funding_ID","Tags","Name","Abstract")
 );
 // Set up json
 $json = array(
@@ -39,6 +40,7 @@ $json = array(
   "Course"=>array(),
   "Thesis"=>array(),
   "Grant"=>array(),
+  "Funding"=>array()
 );
 
 $page = $_POST["page"];
@@ -202,7 +204,8 @@ foreach($categories as $type => $value){
 	  "author" => $author,
 	  "pi" => $pi,
 	  "email"=>$email,
-	  "university"=>$university
+	  "university"=>$university,
+	  "type"=>$type
 	);
 	if($rank != 0)
 	  array_push($json[$type],$dataArray);

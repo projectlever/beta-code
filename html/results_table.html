@@ -22,7 +22,7 @@
 		{{result.name}}
 	      </h4>
 	    </a>
-	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 	      <h4 title="{{result.name}}" class="ng-binding">
 		{{result.name}}
 	      </h4>
@@ -42,7 +42,7 @@
 	    <table>
 	      <tr>
 		<td>
-		  <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>
+		  <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,result.type)}" title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>
 		</td>
 		<td>
 		  <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
@@ -62,7 +62,7 @@
 		  </a>
 		</td>
 		<td>
-		  <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+		  <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>
 		</td>
@@ -79,7 +79,8 @@
 	    <img src="{{result.picture.replace('.png','Red.png')}}" width="50" />
 	  </td>
 	  <td name="description_box">
-	    <div data-ng-bind-html="displayHTML(result.block)"></div>
+	    <div ng-if="common.alphaExists(result.block)==true" data-ng-bind-html="displayHTML(result.block)"></div>
+	    <div ng-if="common.alphaExists(result.block)==false" data-ng-bind-html="displayHTML(result.description)"></div>
 	    <br/>
 	    <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
 	      See Details
@@ -90,7 +91,7 @@
 	    <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 	      See Details
 	    </a>
-	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 	      See Details
 	    </a>
 	  </td>
@@ -123,7 +124,7 @@
 		{{result.name}}
 	      </h4>
 	    </a>
-	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 	      <h4 title="{{result.name}}" class="ng-binding">
 		{{result.name}}
 	      </h4>
@@ -134,10 +135,10 @@
 	    <table>
 	      <tr>
 		<td>
-		  <span ng-if="testDrive == false" class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>
+		  <span ng-if="testDrive == false" class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,result.type)}" title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>
 		  
 		  <!-- RESTRICT USE IF NOT SIGNED UP -->
-		  <span ng-if="testDrive == true" class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key)}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>
+		  <span ng-if="testDrive == true" class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,result.type)}" title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>
 		</td>
 		<td>
 		  <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != '' && testDrive == false">
@@ -161,7 +162,7 @@
 		  <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>
-		  <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+		  <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 		    <span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 		  </a>
 		</td>
@@ -195,7 +196,7 @@
 	    <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 	      See Details
 	    </a>
-	    <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+	    <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 	      See Details
 	    </a>
 	  </td>

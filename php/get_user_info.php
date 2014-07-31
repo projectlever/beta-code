@@ -12,13 +12,15 @@ $descField = array(
   "Advisor"=>"Block",
   "Course" =>"Description",
   "Thesis" =>"Description",
-  "Funding"=>"Abstract"
+  "Funding"=>"Abstract",
+  "Grant"=>"Description"
 );
 $header = array(
   "Advisor"=>"Header",
   "Funding"=>"FirstNamePI",
   "Course"=>"Description",
-  "Thesis"=>"Abstract"
+  "Thesis"=>"Abstract",
+  "Grant"=>"Description"
 );
 
 if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
@@ -82,7 +84,8 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
     "Advisor"=>array(),
     "Course" =>array(),
     "Thesis" =>array(),
-    "Funding"=>array()
+    "Funding"=>array(),
+    "Grant"=>array()
   );
   $res = sql_query($con,"SELECT * FROM `Saved` WHERE `Email`='".$out["email"]."'");
   $saveCon = sql_connect("svetlana_Total");
@@ -127,7 +130,8 @@ if ( isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true ){
       "block"      => $_row[$descField[$type]],
       "email"      => $email,
       "description"=> strip_tags($_row[$header[$type]]),
-      "picture"    => $_row["Picture"]
+      "picture"    => $_row["Picture"],
+      "type"       => $type
     );
   }
   echo json_encode($out);

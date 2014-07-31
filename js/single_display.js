@@ -5,7 +5,7 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
         var loadedSources = 0;
         var sourcesNeeded = 2;
         $scope.pageType = $window.pageType;
-	$scope.pageId   = $window.advisorId;
+	$scope.pageId   = $scope.id = $window.advisorId;
         $scope.vizDataExists = false;
         $scope.data = {};
         $scope.selected = "bio";
@@ -20,7 +20,6 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
             $scope.testDrive = false;
         }
         $scope.displayDelimiters = false;
-        $scope.id = 0;
 
         var sourceLoaded = $scope.sourceLoaded = function() {
             loadedSources++;
@@ -48,12 +47,13 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
             return email;
         }
         $scope.toggleFavorite = function toggleFavorite(id, type) {
+	    type = type.toLowerCase();
             if (type == "advisors" || type == "Advisor") type = "advisor";
             else if (type == "courses" || type == "course" || type == "Course") {
                 type = "course";
             } else if (type == "theses" || type == "thesis" || type == "Thesis") {
                 type = "thesis";
-            } else if (type == "grants" || type == "funding" || type == "grant" || type == "Grant") {
+            } else if (type == "grants" || type == "grant" || type == "Grant") {
                 type == "grant";
             }
             if ($scope.isSavedResource(id, type)) {
@@ -94,30 +94,31 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
                     }
                 }).then(function(response) {
                     $("#star_load").css("display", "none");
-                    console.log(savedResources);
-                    console.log([id, type]);
                     if (response.data == "success") {
                         if (type == "advisors") type = "advisor";
                         else if (type == "courses") {
                             type = "course";
                         } else if (type == "theses") {
                             type = "thesis";
-                        } else if (type == "grants" || type == "funding") {
-                            type == "funding";
+                        } else if (type == "grants") {
+                            type = "grant";
                         }
-                        savedResources[type.toLowerCase()].push(String(id));
+			if ( !savedResources[type] )
+			    savedResources[type] = [];
+                        savedResources[type].push(String(id));
                     }
                 });
             }
         }
         $scope.isSavedResource = function isSavedResource(id, type) {
+	    type = type.toLowerCase();
             if (type == "advisors" || type == "Advisor")
                 type = "advisor";
             else if (type == "courses" || type == "Course") {
                 type = "course";
             } else if (type == "theses" || type == "Thesis") {
                 type = "thesis";
-            } else if (type == "grants" || type == "Funding") {
+            } else if (type == "grants") {
                 type = "grant";
             }
             if (savedResources[type]) {
@@ -134,6 +135,9 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
             } else
                 return string;
         }
+	$scope.log = function(msg){
+	    console.log(msg);
+	}
         $scope.login = function(emailSelector, passSelector) {
             // Set defaults
             $scope.emailError = false;
@@ -388,6 +392,19 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
                 });
             });
         }
+	$scope.foundSimilarResources = function(response){
+	    console.log(response);
+	    if ( !$scope.data.similar )
+		$scope.data.similar = [];
+	    var sim = {};
+	    if ( $scope.pageType != "Advisor" ){
+		sim[$scope.pageType] = response[$scope.pageType];
+		$scope.data.similar.push(sim);   
+	    }
+	    else {
+		$scope.results.advisors = response.Advisor;
+	    }
+	}
         $scope.toType = function(obj) {
                 return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
             }
@@ -403,12 +420,12 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then(function(response) {
-            console.log(response);
+	    console.log(response);
             $scope.data = response.data;
             $scope.id = response.data[pageType][pageType + "_ID"];
 
             // Get similar resources
-            resourceMatch.match($scope, $http, $scope.id, pageType);
+            resourceMatch.match($scope, $http, $scope.pageId, pageType);
 
             // Set up the visualization
             $scope.vizDataExists = response.data.vizDataExists;
@@ -439,11 +456,12 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
                     type = "course";
                 } else if (type == "theses") {
                     type = "thesis";
-                } else if (type == "grants" || type == "funding") {
+                } else if (type == "grants") {
                     type == "grant";
                 }
                 savedResources[type] = response.data[prop];
             }
+	    console.log(savedResources);
             sourceLoaded();
         });
         if ($window.loggedIn == false) {

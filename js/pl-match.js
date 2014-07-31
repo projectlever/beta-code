@@ -317,7 +317,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    var temp = {out:[]};
 	    var tempList = {};
 	    for ( var type in response.data.results ){
-		var data = response.data.results[type];		
+		var data = response.data.results[type];
 		for ( var i = 0, n = data.length; i < n; i++ ){
 		    if ( $scope.testDrive == false )
 			var deptName = data[i].department;
@@ -340,14 +340,32 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 			case "Grant":{
 			    var typeName = "grants";
 			}
-		    }
+		    }		   
 
 		    // Push the department to the temporary department list. It's temporary so that Angular doesn't try to
 		    // update as it's building
 		    if ( deptName !== null && temp[deptName] !== true ){
-			temp.out.push(deptName);
-			temp[deptName]=true;
-			$scope.delims.departments.push(deptName);
+			if ( deptName.search("-") > -1 ){
+			    var dnames = deptName.split("-");
+			    for ( var j = dnames.length-1; j > -1; j-- ){
+				// Remove leading and trailing spaces, tabs, and indents
+				dnames[j] = dnames[j].replace(/^[\s\n\r\t]{0,}/,"").replace(/[\s\n\r\t]{0,}$/,"");
+				if ( temp[dnames[j]] != true && dnames[j] != "" ){
+				    temp.out.push(dnames[j]);
+				    temp[dnames[j]] = true;
+				    if ( $window._.find($scope.delims.departments,function(dept){
+					return dept == dnames[j];
+				    }) !== null ){
+					$scope.delims.departments.push(dnames[j]);
+				    }
+				}
+			    }
+			}
+			else {			    
+			    temp.out.push(deptName);
+			    temp[deptName]=true;
+			    $scope.delims.departments.push(deptName);
+			}
 		    }
 		}
 	    }
@@ -357,12 +375,14 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	    $scope.results.advisorsNumResults = response.data.result_count.Advisor.total;
 	    $scope.results.coursesNumResults = response.data.result_count.Course.total;
 	    $scope.results.thesesNumResults = response.data.result_count.Thesis.total;
-	    $scope.results.grantsNumResults = response.data.result_count.Grant.total;
+	    $scope.results.grantsNumResults = response.data.result_count.Grant.total + response.data.result_count.Funding.total;
 
 	    $scope.results.advisors = response.data.results.Advisor || [];
 	    $scope.results.courses  = response.data.results.Course || [];
 	    $scope.results.theses   = response.data.results.Thesis || [];
-	    $scope.results.grants   = response.data.results.Grant || [];	    
+
+	    // Combine the grant and funding results for now
+	    $scope.results.grants   = response.data.results.Grant.concat(response.data.results.Funding) || [];	    
 	    $timeout(function(){
 		$("#results_container,#pagination_buttons").show();
 		$(".loading-gif,#match_page_intro").hide();
@@ -370,6 +390,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	});
     };
     $scope.isSavedResource = function isSavedResource(id,type){
+	type = type.toLowerCase();
 	if ( type == "advisors" )
 	    type = "advisor";
 	else if ( type == "courses" ){
@@ -396,6 +417,7 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 	}
     }
     $scope.toggleFavorite = function toggleFavorite(id,type){
+	type = type.toLowerCase();
 	if ( type == "advisors" )
 	    type = "advisor";
 	else if ( type == "courses" ){
@@ -429,6 +451,8 @@ var app = angular.module("plMatch",[]).controller("MatchController",['$scope','$
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    }).then(function(response){
 		if ( response.data == "success" ){
+		    if ( !savedResources[type] )
+			savedResources[type] = [];
 		    savedResources[type].push(id);
 		}
 	    });

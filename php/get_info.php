@@ -1,5 +1,6 @@
 <?php
 session_start();
+$autoRun = false; // Prevents find_similar_resources in get_similar.php from running automatically
  
 include('/home/svetlana/www/beta-code/backend/sqlSearch/sqlNameSearch.php');
 
@@ -15,12 +16,14 @@ function get_info($id,$type){
     "Advisor"=>array("Name","School","Department","University","Header","Link","Email","Picture","Info","Block","Advisor_ID"),
     "Course"=>array("Name","School","Department","University","Faculty","Description","Course_ID"),
     "Funding"=>array("FirstNamePI","Co-PINames","University","Name","Abstract","Email","Link","Funding_ID"),
-    "Thesis"=>array("Author","Department","School","University","Abstract","Advisor1","Name","Thesis_ID")
+    "Thesis"=>array("Author","Department","School","University","Abstract","Advisor1","Name","Thesis_ID"),
+    "Grant"=>array("Name","University","Description","Sponsor","Email","Link","Grant_ID")
   );
   if ( isset($fields[$type]) ){
-    $con = sql_connect('svetlana_Total');
-    $result = sql_query($con,"SELECT * FROM `".$type."` WHERE `".$type."_ID`=".$id);
-    
+
+    // Get the prestored session data. This contains information on the latest match results
+    // The weights (stored in the session data) are necessary for speeding up the matching algorithm.
+
     if ($_SESSION["data"]){
       $json = $_SESSION["data"];
       $data = $json[$type];
@@ -48,22 +51,35 @@ function get_info($id,$type){
 	$out[$res_type] = array();
     }
     
-    // Find the advisor viz
+    // Find the advisor visualization
     if ( $type == "Advisor" )
       $out["vizDataExists"] = file_exists(_ROOT_."advisor_viz/".$id.".json");
     else
       $out["vizDataExists"] = false;
+
+    // Connect to the database and get all of the information for each $type of resource
+
+    $con = sql_connect('svetlana_Total');
+    $result = sql_query($con,"SELECT * FROM `".$type."` WHERE `".$type."_ID`=".$id);
     
     while ( $row = mysqli_fetch_array($result) ){
-      foreach ($fields[$type] as $index=>$fieldName){
-	// Check for JSON format
+      foreach ( $fields[$type] as $index=>$fieldName ){
+
+	// Check for JSON format - a lot of fields are stored as JSON, but some are not. So we should double check for that
 	$data = json_decode($row[$fieldName],true);
 	if ( $data == null ) // Not JSON format
 	  $data = $row[$fieldName];	  
 	
 	$out[$type][$fieldName] = $data;
       }
-      if ( $type != "Advisor" ){
+      $out[$type]["type"] = $type;
+
+      // If we are not looking at an Advisor or a Grant, then we want to find other resources of the same $type that are related to the advisor
+      // So, if an advisor has taught multiple courses, the following code finds those other courses :)
+
+      if ( $type != "Advisor" && $type != "Grant" ){
+
+	// Get the name or names of the advisor(s) who are related to this $type of resource
 	if ( $type == "Course" )
 	  $names = explode(",",($row["Faculty"]));
 	else if ( $type == "Funding" ){
@@ -72,6 +88,8 @@ function get_info($id,$type){
 	else if ( $type == "Thesis" ){
 	  $names = explode(",",($row["Advisor1"]));
 	}
+
+	// Some times there are multiple names in the field. So, we will take those names and place them in an array for easier processing
 	foreach ($names as $index=>$name){
 	  if ( stripos($name,"and") !== FALSE ){
 	    unset($names[$index]);
@@ -84,6 +102,8 @@ function get_info($id,$type){
 	    }
 	  }
 	}
+
+	// For every name, run a name matching algorithm on all of the resources in the database
 	foreach ($names as $index=>$name){
 	  if ( $name != "" ){
 	    $name = str_replace(",","",$name);
@@ -95,6 +115,8 @@ function get_info($id,$type){
 		"University"=>$row["University"]
 	      )
 	    ),"Name");
+
+	    // For each name match, get that advisor's information!
 	    for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
 	      $out["Advisor"][] = array();
 	      $iii = count($out["Advisor"])-1;
@@ -106,12 +128,14 @@ function get_info($id,$type){
 		  $out["Advisor"][$iii]["Description"] = $_row["Header"];
 		else
 		  $out["Advisor"][$iii]["Description"] = substr(strip_tags($_row["Block"]),0,350);
-		$out["Advisor"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Advisor";
+		$out["Advisor"][$iii]["Link"] = "single_display.php?id=".$_row["Advisor_ID"]."&type=Advisor";
 		$out["Advisor"][$iii]["Picture"] = $_row["Picture"];
+		$out["Advisor"][$iii]["type"] = "Advisor";
 	      }
 	    }
 	  }
 	}
+	// Put the new information into the "similar" array
 	$out["similar"] = array();
 	foreach ($out["Advisor"] as $index=>$advisor){
 	  $out["similar"][] = getAdvisorResources($con,$advisor);
@@ -145,6 +169,7 @@ function getAdvisorResources($con,$row){
       $out["Course"][$iii]["Description"] = $_row["Description"];
       $out["Course"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Course";
       $out["Course"][$iii]["Id"] = $_row["Course_ID"];
+      $out["Course"][$iii]["type"] = "Course";
     }
   }
   $matches = name_search($row["Name"],"Thesis",array(
@@ -165,6 +190,7 @@ function getAdvisorResources($con,$row){
       $out["Thesis"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Thesis";
       $out["Thesis"][$iii]["Author"] = $_row["Author"];
       $out["Thesis"][$iii]["Id"] = $_row["Thesis_ID"];
+      $out["Thesis"][$iii]["type"] = "Thesis";
     }
   }
   $matches = name_search($row["Name"],"Funding",array(
@@ -185,6 +211,7 @@ function getAdvisorResources($con,$row){
       $out["Funding"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Funding";
       $out["Funding"][$iii]["coPiNames"] = $_row["Co-PINames"];
       $out["Funding"][$iii]["Id"] = $_row["Funding_ID"];
+      $out["Funding"][$iii]["type"] = "Grant";
     }
   }
   return $out;

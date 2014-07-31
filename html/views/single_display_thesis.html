@@ -7,8 +7,8 @@
 	</div>
 	<div class="col-xs-8 col-xs-offset-0 full-height">
 	  <div class="starResource" style="float: right;margin-top: 15px;"> 
-	    <button>
-	      <span class="glyphicon glyphicon-star pl-hover" style="margin-left: 0;"></span>  
+	    <button ng-click="toggleFavorite(data[pageType][pageType+'_ID'],pageType)">
+	      <span class="glyphicon glyphicon-star pl-hover" style="margin-left: 0;" ng-class="{'starred':isSavedResource(data[pageType][pageType+'_ID'],pageType)==true}"></span>  
 	      <span> Star </span> 
 	    </button> 
 	  </div>
@@ -53,7 +53,7 @@
 		Visualization
               </a>
             </li>
-            <li class="tabnav-tab " ng-click="selected = 'network'" ng-class="{'selected':selected=='network'}" ng-if="resourceExists()">
+            <li class="tabnav-tab " ng-click="selected = 'network'" ng-class="{'selected':selected=='network'}">
               <a>
 		<span class="octicon octicon-repo"><img src="/images/LittleThesisRed.png" width="25px"/></span>
 		Similar Theses
@@ -106,10 +106,25 @@
       </div>
     </div>
     <div class="container full-width full-height" ng-show="selected == 'network'">
+      <div class="row">
+	<div class="col-xs-4 col-xs-offset-4 text-center" style="padding-top: 50px">
+	  <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" id="network_loading_sign" />			
+	</div>    	
+      </div>
       <div class="row full-height">
 	<div class="col-xs-10 col-xs-offset-1 full-height" style="padding-top:40px">
+	  <div ng-if="data.Advisor.length > 0">
+	    <h5 style="margin-bottom:2em">Other theses advised by 
+	      <span ng-repeat="advisor in data.Advisor">
+		<a href="{{advisor.Link}}" ng-if="common.alphaExists(advisor.Link)==true">{{advisor.Name}}</a>
+		<span ng-if="common.alphaExists(advisor.Link)==false">{{advisor.Name}}</span>
+		{{$index==data.Advisor.length-2?",and ":$last?"":", "}}
+	      </span>
+	    </h5>
+	  </div>
 	  <div ng-repeat="object in data.similar">
-	    <ul ng-repeat="(key,value) in object" ng-if="key == pageType">
+	    <h5 style="margin-top:2em;margin-bottom:2em" ng-if="$index > data.Advisor.length-1">Other similar theses</h5>
+	    <ul ng-repeat="(key,value) in object" ng-if="key == pageType" id="similar_resources">
 	      <li ng-repeat="(infoKey, infoValue) in value" ng-if="infoValue.name != data[pageType].Name && infoValue.Id != pageId">
 		<a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
 		<br/>

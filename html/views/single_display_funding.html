@@ -7,7 +7,7 @@
 	</div>
 	<div class="col-xs-8 col-xs-offset-0 full-height">
 	  <div class="starResource" style="float: right;margin-top: 15px;"> 
-	    <button>
+	    <button ng-click="toggleFavorite(data[pageType][pageType+'_ID'],pageType)">
 	      <span class="glyphicon glyphicon-star pl-hover" style="margin-left: 0;"></span>  
 	      <span> Star </span> 
 	    </button> 
@@ -71,7 +71,7 @@
 		Visualization
               </a>
             </li>
-            <li class="tabnav-tab " ng-click="selected = 'network'" ng-class="{'selected':selected=='network'}" ng-if="resourceExists()==true">
+            <li class="tabnav-tab " ng-click="selected = 'network'" ng-class="{'selected':selected=='network'}">
               <a>
 		<span class="octicon octicon-repo"><img src="/images/LittleGrantRed.png" width="25px"/></span>
 		Similar Funding Sources
@@ -120,10 +120,15 @@
 	  <div class="bio" id="viz">
 	    
 	  </div>
-	  </div>
+	</div>
       </div>
     </div>
     <div class="container full-width full-height" ng-show="selected == 'network'">
+    	<div class="row">
+	  <div class="col-xs-4 col-xs-offset-4 text-center" style="padding-top: 50px">
+	    <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" id="network_loading_sign" />			
+	  </div>    	
+    	</div>
       <div class="row full-height">
 	<div class="col-xs-10 col-xs-offset-1 full-height" style="padding-top:40px">
 	  <div ng-repeat="object in data.similar">

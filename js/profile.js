@@ -341,6 +341,7 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	});
     }
     $scope.toggleFavorite = function toggleFavorite(id,type){
+	type = type.toLowerCase();
 	if ( type == "advisors" )
 	    type = "advisor";
 	else if ( type == "courses" ){
@@ -414,8 +415,7 @@ var app = angular.module('profile',[]).controller('ProfileController',['$scope',
 	    $scope.results.advisors = response.data.saved.Advisor;
 	    $scope.results.courses  = response.data.saved.Course;
 	    $scope.results.theses   = response.data.saved.Thesis;
-	    $scope.results.grants   = response.data.saved.Funding;
-	    console.log($scope.results);
+	    $scope.results.grants   = response.data.saved.Funding.concat(response.data.saved.Grant);
 	    $timeout(function(){
 		$scope.onPageLoad();
 		$("#save_form").show();

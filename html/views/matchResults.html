@@ -122,13 +122,13 @@
 			<table>
 			  <tr>
 			    <td>
-			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>		
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>		
 			    </td>
 			    <td>
 			      <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-if="key == 'advisors' && result.email != '{}' && common.alphaExists(result.email) == true">
 				<span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
 			      </a>
-			      <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || common.alphaExists(result.email) == false"></span>
+			      <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || result.email == '{}' ||  common.alphaExists(result.email) == false"></span>
 			    </td>
 			    <td>
 			      <a href="javascript:void(0)" onclick="showForm('reg_form')" ng-show="'{{key}}' == 'advisors'" target="_blank">
@@ -183,7 +183,7 @@
 			    {{result.name}}
 			  </h4>
 			</a>
-			<a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+			<a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 			  <h4 title="{{result.name}}" class="ng-binding">
 			    {{result.name}}
 			  </h4>
@@ -194,14 +194,14 @@
 			<table>
 			  <tr>
 			    <td>
-			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-click="toggleFavorite(result.id,key)"></span>			 
+			      <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,key) == true}" title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>			 
 			    </td>
 			    <td>
 			      <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
 				<span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>	    
 			      </a>
 			      <!-- This takes up space so that everything is in nice columns -->
-			      <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || common.alphaExists(result.email) == false"></span>
+			      <span class="glyphicon glyphicon-envelope" style="margin-left:0.75em;color:#fff" ng-if="key != 'advisors' || result.email == '{}' || common.alphaExists(result.email) == false"></span>
 			    </td>
 			    <td>
 			      <a href="single_display.php?id={{result.id}}&type=Advisor" ng-show="'{{key}}' == 'advisors'" target="_blank">
@@ -213,7 +213,7 @@
 			      <a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 			      </a>
-			      <a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+			      <a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 				<span class="glyphicon glyphicon-new-window pl-hover" title="View details"></span>
 			      </a>
 			    </td>
@@ -241,7 +241,7 @@
 			<a href="single_display.php?id={{result.id}}&type=Thesis" ng-show="'{{key}}' == 'theses'" target="_blank">
 			  See Details
 			</a>
-			<a href="single_display.php?id={{result.id}}&type=Funding" ng-show="'{{key}}' == 'grants'" target="_blank">
+			<a href="single_display.php?id={{result.id}}&type={{result.type}}" ng-show="'{{key}}' == 'grants'" target="_blank">
 			  See Details
 			</a>
 		      </td>

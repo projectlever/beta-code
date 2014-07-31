@@ -40,8 +40,7 @@ session_start();
   }
   ?>
   <?php 
-  echo "<script type='text/javascript'>var advisorId=".$_GET['id'].";var pageType='".$_GET["type"]."';
-</script>";
+  echo "<script type='text/javascript'>var advisorId=".$_GET['id'].";var pageType='".$_GET["type"]."';</script>";
   ?>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
