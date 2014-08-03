@@ -26,8 +26,34 @@ $html          = file_get_contents("https://docs.google.com/spreadsheets/d/1kbXa
 
 $log_file      = "./logs/" . date("m_d_y_H_i_s") . "_autocrawl_log.json";
 $backup_file   = "./backups/" . date("m_d_y_H_i_s") . "_entry_backup.json";
-$manual_file   = "manual_imports.json";
+$manual_file   = "./manual/" . date("m_d_y_H_i_s") . "_entry_backup.json";
 $results_file  = "./results/" . date("m_d_y_H_i_s") . "_autocrawl_results.json";
+$error_file  = "./errors/" . date("m_d_y_H_i_s") . "_autocrawl_results.json";
+
+// Analytics
+$success = array(
+  "Advisor"=>0,
+  "Course"=>0,
+  "Grant"=>0,
+  "Funding"=>0,
+  "Thesis"=>0,
+);
+$failed = array(
+  "Advisor"=>0,
+  "Course"=>0,
+  "Grant"=>0,
+  "Funding"=>0,
+  "Thesis"=>0,
+);
+$total = array(
+  "Advisor"=>0,
+  "Course"=>0,
+  "Grant"=>0,
+  "Funding"=>0,
+  "Thesis"=>0,
+);
+
+
 
 // Manual imports array
 $manual = array();
@@ -44,18 +70,10 @@ define("Link_Scraper","Link Scraper"); // The extractor or crawler that returns 
 define("Data_Scraper","Data Scraper"); // The extractor or crawler that returns data from any link being scraped
 define("Direct_Link","Direct Link"); // The first link that will be scraped
 
-// Data to track
-$total = array(
-  "Advisor"=>0,
-  "Course"=>0,
-  "Thesis"=>0,
-  "Funding"=>0
-);
-
 // Database columns by type of resource
 $categories = array( // The left most element takes priority over the others
   "Advisor"=>array(
-    "name"=>array("name/_text"),
+    "name"=>array("name/_text","name"),
     "block"=>array("block"),
     "info"=>array("info","bio"),
     "header"=>array("header"),
@@ -80,6 +98,13 @@ $categories = array( // The left most element takes priority over the others
     "link"=>array("link","Link"),
     "manager"=>array("manager/_text","manager"),
     "co-pi"=>array("co-pi")
+  ),
+  "Grant"=>array(
+    "name"    => array("name/_text","name"),
+    "block"   => array("description"),
+    "link"    => array("link","Link"),
+    "email"   => array("email"),
+    "sponsor" => array("sponsor/_text","sponsor")
   )
 );
 
@@ -96,6 +121,9 @@ $mustHave = array(
   ),
   "Funding"=>array(
     "name"=>array("name/_text","name","title/_text","title"),
+  ),
+  "Grant" => array(
+    "name"=>array("name/_text","name")
   )
 );
 
@@ -128,8 +156,10 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
     $rowNumber = $i+2;
     $temp = array();
 
-    // Used to insert a certain typ
-    if ( $row["Resource Type"]["text"] != "Funding" ) continue;
+    // Used to insert a certain department
+    if ( $row["Resource Type"]["text"] != "Advisor" ) continue;
+
+    if ( stripos($row["Department"]["text"],"Computer") === FALSE ) continue;
     
     // Get each column in the row and store it's text value and SimpleHTMLDOM object
     foreach ($row as $col => $data) {
@@ -194,14 +224,30 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
 	  $manual[] = array("row"=>$rowNumber,"sheet"=>$sheetName);
 	  continue;
 	}
-
+	if ( !isset($result->{'results'}) ){
+	  plog($log_file,"Could not find property 'results' in the returned object from Import.IO at row $rowNumber in sheet $sheetName. Object: ".print_r($result,true));
+	  continue;
+	}
+	
 	// Loop through the results and get all of the links
-	foreach ( $result->{'result'} as $dexx => $data ){
+	foreach ( $result->{'results'} as $dexx => $data ){
+	  $propName = "";
 	  if ( isset($data->{'links'}) ){
-	    if ( gettype($data->{'links'}) == "array" )
-	      $links = array_merge($links,$data->{'links'});
-	    else 
-	      $links[] = $data->{'links'};
+	    $propName = "links";
+	  }
+	  elseif ( isset($data->{'link'}) ){
+	    $propName = "link";
+	  }
+	  if ( $propName != "" ){
+	    if ( gettype($data->{$propName}) == "array" ){
+	      $links = array_merge($links,$data->{$propName});
+	    }
+	    else  {
+	      $links[] = $data->{$propName};
+	    }
+	  }
+	  else {
+	    plog($log_file,"ERROR: Could not find correct name from Import.IO object! Tried looking for 'links' and 'link' in object at row $rowNumber in sheet $sheetName. Object: " . $result);
 	  }
 	}
 	$code = $data_code;
@@ -227,8 +273,11 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
     else if ( stripos($type,"thes") !== FALSE ){
       $type = "Thesis";
     }
-    else if ( stripos($type,"funding") !== FALSE || stripos($type,"grant") !== FALSE ){
+    else if ( stripos($type,"funding") !== FALSE ){
       $type = "Funding";
+    }
+    else if ( stripos($type,"grant") !== FALSE ){
+      $type = "Grant";
     }
     foreach ($links as $iii => $link){
       echo "<br/>---------------------------------------------------------<br/>";
@@ -236,6 +285,10 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
       $result = query($data_code,array(
 	"webpage/url"=>$link
       ),$userGuid,$apiKey);
+      
+      echo "<pre>";
+      print_r($result);
+      echo "</pre>";exit;
 
       // Check to see if the result is valid
       if ( isResult($result) === FALSE ){
@@ -247,12 +300,11 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
       $fields = $categories[$type];
       $data   = array();
       $results = $result->{'results'};
-
+      
       // Loop through each result (which is an stdClass object)
       foreach ($results as $iiii => $result){
 	// Loop through each field name and see if that field exists in the result object
 	foreach ($fields as $trueName => $fieldNames){
-	  $data[$trueName] = "";
 	  for ( $h = count($fieldNames)-1; $h > -1; $h-- ){
 	    $fieldName = $fieldNames[$h];
 	    if ( isset($result->{$fieldName}) ){
@@ -275,7 +327,7 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
 		  $data[$trueName] = trim(strip_tags(implode(" ",$use)));
 		}
 		else {
-		  $data[$trueName] = trim(strip_tags(implode("<br/>",$use)));
+		  $data[$trueName] = trim(implode("<br/>",$use));
 		}
 	      }
 	      else {
@@ -283,7 +335,7 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
 		  $data[$trueName] = trim(strip_tags($result->{$fieldName}));
 		}
 		else {
-		  $data[$trueName] = trim(strip_tags($result->{$fieldName}));
+		  $data[$trueName] = trim($result->{$fieldName});
 		}
 	      }
 	    }
@@ -311,21 +363,59 @@ for ($s = 1, $z = count($parser->get_sheets_keys()); $s < $z; $s++) {
 	// Make sure the name isn't blank!
 	if ( hasChars($data["name"]) === false ){
 	  plog($log_file,"Missing name at row $rowNumber in sheet $sheetName");
+	  $manual[] = array("row"=>$rowNumber,"sheet"=>$sheetName);
 	  continue;
 	}
+
+	// Add in any missing fields
+	foreach ($categories[$type] as $field=>$other){
+	  if ( !isset($data[$field]) )
+	    $data[$field]="";
+	} 
+
 	plog($log_file,"Inserting data into database...");
 	$sql->connect("svetlana_Total");
 	// If they do have the mustHave fields, then prepare the information to be inserted into the database!
-	if ( function_exists("update_database_".strtolower($type)) === true )
+	if ( function_exists("update_database_".strtolower($type)) === true ){
+	  $total[$type]++;
 	  call_user_func_array("update_database_".strtolower($type),array($data,$log_file,$sql,$backup_file));
+	}
 	$sql->close();
       }
     }
     sleep(5);
   }
 }
-echo "complete";
-mail($notify,"AutoUpdater Scraping","Scraping complete. Report detailed below:");
+// Store the manual imports
+file_put_contents($manual_file,json_encode($manual));
+
+$out = "<table><tbody><tr><td colspan='2'><h4>Total resources:</h4></td></tr>";
+foreach ($total as $type=>$n){
+  if ( $n > 0 && $type != "" )
+    $out .= "<tr><td>".$type.": </td><td>" . $n."</td></tr>";
+}
+$out .= "<tr><td colspan='2'><h5>Successful:</h5></td></tr>";
+foreach ($success as $type=>$n){
+  if ( $n > 0 && $type != "" )
+    $out .= "<tr><td>".$type . ":</td><td>" . $n . "</td></tr><tr><td>Percent Success:</td><td>" . ($n/$total[$type])."</td></tr>";
+}
+$out .= "<tr><td><h5>Failed</h5>:</td></tr>";
+foreach ($failed as $type=>$n){
+  if ( $n > 0 && $type != "" )
+    $out .= "<tr><td>".$type . ":</td><td>" . $n . "</td></tr><tr><td>Percent Failed:</td><td>" . ($n/$total[$type])."</td></tr><br/>";
+}
+$out .= "</tbody></table><br/>";
+$out .= "Number of manual imports => " . count($manual) . "<br/>";
+
+$to = $notify;
+
+$subject = 'AutoUpdate Results';
+
+$headers = "";
+$headers .= "MIME-Version: 1.0\r\n";
+$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+mail($to, $subject, $out, $headers);
 
 function hasChars($str){
   preg_match("/\S/",$str,$chars);
@@ -394,11 +484,29 @@ function get_web_page($link, $userGuid, $apiKey, $type, $sheet_data, $code, $inf
         ));
 }
 function plog($file,$msg){
+  global $log_file, $error_file, $success, $failed;
   echo $msg."<br/>";
+  if ( $file == "" )
   if ( file_exists($file) )
     file_put_contents($file,$msg."\r\n",FILE_APPEND);
   else
     file_put_contents($file,$msg."\r\n");
+
+  if ( stripos($msg,"error") !== FALSE || stripos($msg,"fail") !== FALSE ){ // Failed to update or insert
+    if ( stripos($msg,"advisor") !== FALSE ) $failed["Advisor"]++;
+    elseif ( stripos($msg,"course") !== FALSE ) $failed["Course"]++;
+    elseif ( stripos($msg,"fund") !== FALSE ) $failed["Funding"]++;
+    elseif ( stripos($msg,"grant") !== FALSE ) $failed["Grant"]++;
+    elseif ( stripos($msg,"thes") !== FALSE ) $failed["Thesis"]++;
+    file_put_contents($error_file,$msg."\r\n",FILE_APPEND);
+  }
+  else if ( stripos($msg,"updated") !== FALSE || stripos($msg,"success") !== FALSE ){ // Update successful!
+    if ( stripos($msg,"advisor") !== FALSE ) $success["Advisor"]++;
+    elseif ( stripos($msg,"course") !== FALSE ) $success["Course"]++;
+    elseif ( stripos($msg,"fund") !== FALSE ) $success["Funding"]++;
+    elseif ( stripos($msg,"grant") !== FALSE ) $success["Grant"]++;
+    elseif ( stripos($msg,"thes") !== FALSE ) $success["Thesis"]++;
+  }
 }
 function get_info($row, $sheet_name, $i)
 {
