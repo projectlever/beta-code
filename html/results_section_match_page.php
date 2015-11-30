@@ -9,6 +9,7 @@
 		Advisors
 		<span>{{results.advisorsNumResults}}</span>
 	      </li>
+
 	      <li id="courses_results_count" class="result-type" ng-click="showResource('courses')" ng-class="{'selected-result-type':display=='courses','result-type':display!='courses'}">
 		<img src="/images/LittleCourseRed.png" width="25">
 		Courses
@@ -24,6 +25,12 @@
 		Funding
 		<span>{{results.grantsNumResults}}</span>
 	      </li>
+              <li id="extracurriculars_results_count" class="selected-result-type" ng-click="showResource('extracurriculars')" ng-class="{'selected-result-type':display=='extracurriculars','result-type':display!='extracurriculars'}">
+		<img src="/images/LittleAdvisorRed.png" width="25">
+		Extracurriculars
+		<span>{{results.extracurricularsNumResults}}</span>
+	      </li>
+
 	    </ul>
 	    <table id="department_delims">
 	      <tbody ng-if="display == 'advisors'">
@@ -108,7 +115,7 @@
 	      <tbody ng-repeat="(key,value) in results" id="{{key}}_results" ng-show="display == '{{key}}'">
 		<tr>
 		  <td>
-		    <h3 style="text-transform: capitalize;"> We've matched you to {{getNumResults(key)}} {{key}} </h3>
+		    <!-- <h3 style="text-transform: capitalize;"> We've matched you to {{getNumResults(key)}} {{key}} </h3> -->
 		  </td>
 		</tr>
 		<?php
@@ -124,6 +131,7 @@
 	      </span>
 	      <span class="page-button" ng-show="resultsPage[display]+6 < maxPages" style="font-weight:900;letter-spacing:3px" ng-click="changePage(resultsPage[display]+10<maxPages?resultsPage[display]+10:maxPages-5)">...</span>
 	    </div>
+If you want to see more matches, try adding more detail to your search criteria. For example, instead of "{{duda}}" try typing a full sentence describing your interests
 	    <!-- RESTRICT PAGINATION USE IF NOT SIGNED UP -->
 	    <div id="pagination_buttons" ng-if="testDrive == true">
 	      <span class="page-button" ng-show="resultsPage[display] > 6" style="font-weight:900;letter-spacing:3px" onclick="showForm('reg_form')">...</span>
