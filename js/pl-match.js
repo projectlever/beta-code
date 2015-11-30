@@ -2,7 +2,7 @@ String.prototype.replaceAll = function(find, replace) {
     return this.replace(new RegExp(find, "g"), replace);
 };
 
-var API_PATH = "/api/"
+var API_PATH = "api/"
 
 var app = angular.module("plMatch", []);
 app.controller(

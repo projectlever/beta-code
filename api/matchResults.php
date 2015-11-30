@@ -1,4 +1,5 @@
 <?php
+$config = include("config.php");
 require("libs/functions.php");
 session_start();
 $test = false;
@@ -52,7 +53,10 @@ $display = 10;
 $input = $_POST["input"];
 $input = "Asian Women";
 $input = simplePrep($input);
-$con = mysqli_connect("localhost","'" . $config["DB_USER"] . "'","'" . $config["DB_PASSWORD"] . "'","'" . $config["DB_NAME"] . "'");
+
+$con = mysqli_connect("localhost", $config["DB_USER"] ,$config["DB_PASSWORD"] , $config["DB_NAME"]);
+
+
 if (mysqli_connect_errno($con))
 	echo "Failed to connect to MySQL: " . mysqli_connect_error($con);
 switch($class){
