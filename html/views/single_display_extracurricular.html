@@ -1,0 +1,120 @@
+<div ng-if="pageType == 'Extracurricular'">
+  <div class="pl-content pl-zebra" id="profile-header">
+    <div class="container full-width full-height">
+      <div class="row full-height">
+	<div class="col-xs-2 col-xs-offset-1 full-height">
+	  <img class="avatar" src="/images/LittleGrantRed.png" alt="Advisor's Profile Picture" width="150px" border-radius="15px" border-color="#000" />	
+	</div>
+	<div class="col-xs-8 col-xs-offset-0 full-height">
+	  <div class="starResource" style="float: right;margin-top: 15px;"> 
+	    <button ng-click="toggleFavorite(data[pageType][pageType+'_ID'],pageType)">
+	      <span class="glyphicon glyphicon-star pl-hover" style="margin-left: 0;" ng-class="{'starred':isSavedResource(data[pageType][pageType+'_ID'],pageType)==true}"></span>  
+	      <span> Star </span> 
+	    </button> 
+	  </div>
+	  <h3 style="margin-top:1em">{{data[pageType].Name}}</h3>
+	  <h4> 
+	    <span ng-if="common.alphaExists(data[pageType].University) == true">{{common.replaceAll("_"," ",data[pageType].University)}}</span>
+	  </h4>
+	</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- NAV HERE -->
+  <div class="pl-content pl-zebra" id="profile-match-nav">
+    <div class="container full-width full-height">      
+      <div class="row full-height">
+	<div class="col-xs-6 col-xs-offset-3 full-height">	
+	  <ul class="tabnav-tabs">
+            <li class="tabnav-tab" ng-click="selected = 'bio'" ng-class="{'selected':selected=='bio'}">
+              <a href="">
+		<span class="octicon octicon-diff-added"><img src="http://www.patong.fr/images/icon-people.png" width="25px"/></span>
+		Info
+              </a>
+            </li>
+            <li class="tabnav-tab " ng-if="vizDataExists == true" ng-click="selected = 'viz'" ng-class="{'selected':selected=='viz'}">
+              <a>
+		<span class="octicon octicon-repo"><img src='https://camo.githubusercontent.com/48ebb6c0a04a056696bfe77658e890dd5284e4be/68747470733a2f2f7261772e6769746875622e636f6d2f466f64792f56697375616c697a652f6d61737465722f49636f6e732f7061636b6167655f69636f6e2e706e67' width="25px"/></span>
+		Visualization
+              </a>
+            </li>
+            <li class="tabnav-tab " ng-click="selected = 'network'" ng-class="{'selected':selected=='network'}">
+              <a>
+		<span class="octicon octicon-repo"><img src="/images/LittleGrantRed.png" width="25px"/></span>
+              </a>
+            </li>
+          </ul>        
+	</div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- BIO DETAILS HERE -->
+  <div class="pl-content pl-zebra" id="profile-details">
+    <div class="container full-width full-height" id="profile-details" ng-show="selected == 'bio'">
+      <div class="row full-height">
+	<div class="col-xs-10 col-xs-offset-1 full-height">
+	  <div class="bio">
+	    <p data-ng-bind-html="getHTML(data[pageType].Description)"></p>
+	  </div>
+	  
+	  <div ng-repeat="(key,value) in data" ng-if="key != 'Extracurricular' && value.length > 0 && key != 'weights' && key != 'similar'" class="{{key.toLowerCase().replace(' ','-')}}">
+	    <h5>{{key}}</h5>
+	    <ul>
+	      <li ng-repeat="(infoKey, infoValue) in value">
+		<a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
+		<br/>
+		<div ng-if="common.alphaExists(infoValue.Description) == true">
+		  <strong>Description:</strong>
+		  <br/>
+		  <div data-ng-bind-html="getHTML(infoValue.Description)"></div>
+		  <br/>
+		</div>
+	      </li>
+	    </ul>
+	  </div>
+	</div>
+      </div>	
+    </div>
+    <div class="container full-width full-height" id="visualization" ng-if="vizDataExists == true" ng-show="selected == 'viz'">
+      <div class="row full-height">
+	<div class="col-xs-10 col-xs-offset-1 full-height text-center">
+	  <div class="bio" id="viz">
+	    
+	  </div>
+	  </div>
+      </div>
+    </div>
+    <div class="container full-width full-height" ng-show="selected == 'network'">
+      <div class="row">
+	<div class="col-xs-4 col-xs-offset-4 text-center" style="padding-top: 50px">
+	  <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" id="network_loading_sign" />			
+	</div>    	
+      </div>
+      <div class="row full-height">
+	<div class="col-xs-10 col-xs-offset-1 full-height" style="padding-top:40px">
+	  <div ng-repeat="object in data.similar">
+	    <ul ng-repeat="(key,value) in object" ng-if="key == pageType" id="similar_resources">
+	      <li ng-repeat="(infoKey, infoValue) in value" ng-if="infoValue.name != data[pageType].Name && infoValue.Id != pageId">
+		<a href="{{infoValue.Link}}">{{infoValue.Name}}</a>
+		<br/>
+		<div ng-if="common.alphaExists(infoValue.Description) == true">
+		  <strong>Description:</strong>
+		  <br/>
+		  <div data-ng-bind-html="getHTML(infoValue.Description)"></div>
+		  <br/>
+		  <div ng-if="key == 'Funding'">
+		    Co-PI: {{infoValue.coPiNames}}
+		  </div>
+		</div>
+	      </li>
+	    </ul>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+    <!-- ##################################################### END HERE ##################################################### -->
+</div>

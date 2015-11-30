@@ -58,7 +58,7 @@
                                     <span class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,result.type)}"
                                     title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>
                                 </td>
-                                <td>
+                                <td ng-if="result.email">
                                     <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != ''">
                                         <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>
                                     </a>
@@ -185,7 +185,7 @@
                                     <span ng-if="testDrive == true" class="glyphicon glyphicon-star pl-hover" ng-class="{'starred':isSavedResource(result.id,result.type)}"
                                     title="Save this result" ng-click="toggleFavorite(result.id,result.type)"></span>
                                 </td>
-                                <td>
+                                <td ng-if="result.email">
                                     <a href="mailto:{{getEmail(result.email)}}" ng-if="key == 'advisors' && result.email != '{}' && result.email != '' && testDrive == false">
                                         <span class="glyphicon glyphicon-envelope pl-hover" title="Contact this advisor"></span>
                                     </a>

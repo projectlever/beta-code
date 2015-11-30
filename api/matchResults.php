@@ -8,7 +8,6 @@ if ( !isset($_POST["test_drive"]) || $_POST["test_drive"] == false ){
 		# echo "Not logged in. " . session_id()." != ".$_POST["session"] . " test_drive=".$_POST["test_drive"];
 		$class = 4;
 		$test = true;
-		$sessionUniversity = "Boston College";
 	}
 	else {
 		$test  = true;

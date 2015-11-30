@@ -344,7 +344,7 @@ app.controller(
                         delimiters: $scope.delims,
                         limit: limitResultsTo
                     }, function(response) {
-                        console.log(response);
+                        //console.log(response);
                         if ($scope.display ==
                             "advisors") {
                             $scope.results.advisors =
@@ -413,7 +413,7 @@ app.controller(
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    console.log(response);
+                    // console.log(response);
                 	// alert(JSON.stringify(response));
                     // Loop through and find departments
                     var temp = {
@@ -508,7 +508,7 @@ app.controller(
                     }
                     $scope.resultsLength = response.data.result_count;
                     $scope.departments = temp.out;
-                    console.log($scope.departments);
+                    // console.log($scope.departments);
                     delimLength = temp.out.length;
                     $scope.results.advisorsNumResults =
                         response.data.result_count.Advisor.total;
@@ -536,7 +536,7 @@ app.controller(
                         .Funding || [];
                     $scope.currentResults = $scope.results.advisors;
                     $scope.currentCount = $scope.results.advisorsNumresults;
-                    console.log($scope.results.fundings);
+                    // console.log($scope.results.fundings);
                     // Combine the grant and funding results for now
                     $scope.results.grants =  $scope.results.grants.concat( 
                         $scope.results.fundings);
@@ -570,7 +570,7 @@ app.controller(
                         -1;
                 }
                 $scope.currentSearch = $scope.results.advisors
-                console.log($scope.results);
+                // console.log($scope.results);
                 return false;
             };
             

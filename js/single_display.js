@@ -56,6 +56,9 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
             } else if (type == "grants" || type == "grant" || type == "Grant") {
                 type == "grant";
             }
+            else if (type == "extracurriculars" || type == "extracurricular" || type == "Extracurricular") {
+                type == "extracurricular";
+            }
             if ($scope.isSavedResource(id, type)) {
                 $("#star_load").css("display", "inline");
                 $http({
@@ -103,6 +106,9 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
                         } else if (type == "grants") {
                             type = "grant";
                         }
+                        else if (type == "extracurriculars") {
+                            type = "extracurricular";
+                        }
 			if ( !savedResources[type] )
 			    savedResources[type] = [];
                         savedResources[type].push(String(id));
@@ -120,6 +126,9 @@ var app = angular.module("plAdvisor", []).controller('mainController', ['$scope'
                 type = "thesis";
             } else if (type == "grants") {
                 type = "grant";
+            }
+            else if (type == "extracurriculars") {
+                type = "extracurricular";
             }
             if (savedResources[type]) {
                 if (typeof id != "string")
