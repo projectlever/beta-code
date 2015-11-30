@@ -79,6 +79,8 @@
     </div>
     <!-- RESULTS SECTION -->
     <?php include( "html/results_section_match_page.php"); ?>
+
+
     <!-- LOG IN OVERLAY -->
     <?php include( "html/login_overlay.php"); ?>
     <script type="text/javascript">

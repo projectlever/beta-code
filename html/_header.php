@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+  <?php
+  if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){ 
+    echo "<script>var loggedIn = false;var testDrive = true;</script>";
+  }
+  else {
+    echo "<script>var loggedIn = true;var testDrive = false;</script>";
+  }
+  ?>
+
+
 <html>
 <head>
   <title>Project Lever</title>
@@ -25,14 +35,6 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
   <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>    
-  <?php 
-  if ( !(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){ 
-    echo "<script>var loggedIn = false;var testDrive = true;</script>";
-  }
-  else {
-    echo "<script>var loggedIn = true;var testDrive = false;</script>";
-  }
-  ?>
   <script type="text/javascript" src="js/hello.min.js"></script>
   <script type="text/javascript" src="js/general.js"></script>
   <script type="text/javascript" src="js/pl-match.js"></script>

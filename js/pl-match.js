@@ -2,6 +2,7 @@ String.prototype.replaceAll = function(find, replace) {
     return this.replace(new RegExp(find, "g"), replace);
 };
 
+var API_PATH = "/api/"
 
 var app = angular.module("plMatch", []);
 app.controller(
@@ -401,7 +402,7 @@ app.controller(
                 };
                 $http({
                     method: 'POST',
-                    url: "./php/magic_match_test_page.php",
+                    url: API_PATH +"matchResults.php",
                     data: $.param({
                         "input": $("#search_box").val(),
                         "session": $window.session_id,
@@ -412,8 +413,7 @@ app.controller(
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                        
-                	console.log(response);
+                    console.log(response);
                 	// alert(JSON.stringify(response));
                     // Loop through and find departments
                     var temp = {
@@ -529,14 +529,16 @@ app.controller(
                         .Thesis || [];
                     $scope.results.extracurriculars = response.data.results
                         .Extracurricular || [];
-                     
+                    $scope.results.grants = response.data.results
+                        .Grants || [];
+                    $scope.results.fundings = response.data.results
+                        .Funding || [];
                     $scope.currentResults = $scope.results.advisors;
                     $scope.currentCount = $scope.results.advisorsNumresults;
-                    
-
+                    console.log($scope.results.fundings);
                     // Combine the grant and funding results for now
-                    $scope.results.grants = response.data.results
-                        .Grant.concat(response.data.results.Funding) || [];
+                    $scope.results.grants =  $scope.results.grants.concat( 
+                        $scope.results.fundings);
                     $timeout(function() {
                         $(
                             "#results_container,#pagination_buttons"

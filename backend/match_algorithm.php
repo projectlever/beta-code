@@ -1,11 +1,10 @@
 <?php 
-require("/home/svetlana/www/algorithm.php");
+require($config["API_PATH"]."libs/algorithm.php");
 if ( !function_exists("sql_connect") )
-  include("/home/svetlana/www/beta-code/backend/lib.php");
+  include($config["API_PATH"]."sqlConfig.php");
 
 function match($input){
   $con = sql_connect("svetlana_Total");
-
   // Set up categories
   $categories = array(
     "Advisor" => array("Advisor_ID","Tags","Picture","Department","School","Name","Header","Email"),

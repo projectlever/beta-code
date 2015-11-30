@@ -1,4 +1,6 @@
-<?php include("html/_header.php"); ?>
+<?php 
+$config = include("api/config.php");
+include("html/_header.php"); ?>
 
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
@@ -25,11 +27,9 @@
           <form action="match.php?test_drive" method="post" id="test_drive">
       <textarea class="search-bar" name="search-query" id="search_box" placeholder="Tell us about your interests!" auto-grow="5"></textarea>
           </form>
-          {{ textm }}
         </td>
         <td align="left" valign="middle" style=s"padding-left:0;">
           <span class="glyphicon glyphicon-search search-button" id="search_button" ng-click="search()"></span>
-          {{ textm }}
         </td>
       </tr>
     </table>

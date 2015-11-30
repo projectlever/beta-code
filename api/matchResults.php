@@ -1,4 +1,5 @@
 <?php
+require("libs/functions.php");
 session_start();
 $test = false;
 if ( !(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true )){
@@ -24,8 +25,9 @@ else {
 header('Content-Type:text/html; charset=UTF-8');
 
 // Useful algorithms
-require("algorithm.php");
+require("libs/algorithm.php");
 // Set up categories
+
 
 $categories = array(
 	"Advisor" => array("Advisor_ID","Tags","Picture","Department","School","Name","Header","Email"),
@@ -48,8 +50,9 @@ $json = array(
 $page = $_POST["page"];
 $display = 10;
 $input = $_POST["input"];
+$input = "Asian Women";
 $input = simplePrep($input);
-$con = mysqli_connect("localhost","svetlana","vH8ymo=nhwM6","svetlana_Total");
+$con = mysqli_connect("localhost","root","thegreat","svetlana_Total");
 if (mysqli_connect_errno($con))
 	echo "Failed to connect to MySQL: " . mysqli_connect_error($con);
 switch($class){
@@ -292,6 +295,6 @@ foreach ($json as $type=>$results){
 }
 mysqli_close($con);
 header('Content-Type: application/json');
-echo json_encode($limitedJSON);
+echo json_encode(utf8_encode_all($limitedJSON));
 # echo (microtime(true)-$startTime);
 ?>
