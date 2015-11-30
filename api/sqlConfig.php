@@ -10,7 +10,9 @@ function sql_connect($database){
     $function_error = SQL_DATABASE_REQUIRED;
     return FALSE;
   }
-  $con = mysqli_connect("localhost",".$config["DB_USER"].",".$config["DB_PASSWORD"].",$config["DB_NAME"]);
+
+$con = mysqli_connect("localhost","'" . $config["DB_USER"] . "'","'" . $config["DB_PASSWORD"] . "'","'" . $config["DB_NAME"] . "'"); 
+
   if (mysqli_connect_errno($con)){
     $function_error = mysqli_error($con);
     return FALSE;
