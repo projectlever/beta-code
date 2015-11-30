@@ -508,6 +508,7 @@ app.controller(
                     }
                     $scope.resultsLength = response.data.result_count;
                     $scope.departments = temp.out;
+                    console.log($scope.departments);
                     delimLength = temp.out.length;
                     $scope.results.advisorsNumResults =
                         response.data.result_count.Advisor.total;
@@ -569,33 +570,17 @@ app.controller(
                         -1;
                 }
                 $scope.currentSearch = $scope.results.advisors
+                console.log($scope.results);
                 return false;
             };
             
         $scope.showResource = function showResource(type) {
                 type = type.toLowerCase();
-                if (type == "advisors"){
-                    $scope.currentResults = $scope.results.advisors;
-                    $scope.currentCount = $scope.results.advisorsNumresults;
-                 }
-                else if (type == "courses") {
-                    $scope.currentResults = $scope.results.courses;
-                    $scope.currentCount = $scope.results.coursesNumresults;
-                } else if (type == "theses") {
-                   $scope.currentResults = $scope.results.theses;
-                    $scope.currentCount = $scope.results.thesesNumresults;
-                } else if (type == "grants") {
-                    $scope.currentResults = $scope.results.grants;
-                    $scope.currentCount = $scope.results.grantsNumresults;
-                } else if (type == "extracurriculars") {
-                    $scope.currentResults = $scope.results.extracurriculars;
-                    $scope.currentCount = $scope.results.extracurricularsNumresults;
-                }
                 //var resources;
                 //var results = $scope.results[$scope.display +
                 //    "NumResults"];
                 //alert(results);
-                //$scope.display = type;
+                $scope.display = type;
                 //if ((resources = $("#" + type + "_results")).length > 0 &&
                 //    results > 0) {
                 //    $scope.display = type;

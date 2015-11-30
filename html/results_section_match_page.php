@@ -115,7 +115,7 @@
 	      <tbody ng-repeat="(key,value) in results" id="{{key}}_results" ng-show="display == '{{key}}'">
 		<tr>
 		  <td>
-		    <!-- <h3 style="text-transform: capitalize;"> We've matched you to {{getNumResults(key)}} {{key}} </h3> -->
+		    <h3 style="text-transform: capitalize;"> We've matched you to {{getNumResults(key)}} {{key}} </h3> 
 		  </td>
 		</tr>
 		<?php
