@@ -1,4 +1,5 @@
 <?php 
+$config = include("config.php");
 define("SQL_DATABASE_REQUIRED","sql_connect requires \$database to be defined");
 
 $function_error = "";
@@ -9,7 +10,7 @@ function sql_connect($database){
     $function_error = SQL_DATABASE_REQUIRED;
     return FALSE;
   }
-  $con = mysqli_connect("localhost","svetlana","vH8ymo=nhwM6",$database);
+  $con = mysqli_connect("localhost",".$config["DB_USER"].",".$config["DB_PASSWORD"].",$config["DB_NAME"]);
   if (mysqli_connect_errno($con)){
     $function_error = mysqli_error($con);
     return FALSE;
