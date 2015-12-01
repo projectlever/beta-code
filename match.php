@@ -60,7 +60,7 @@
                     <table class="match-parent">
                         <tr>
                             <td>
-                                <textarea class="search-bar" id="search_box" placeholder="Tell us about your interests!" auto-grow="5"></textarea>
+                                <textarea class="search-bar" id="search_box" placeholder="Tell us about your research interests!" auto-grow="5"></textarea>
                             </td>
                             <td>
                                 <span class="glyphicon glyphicon-search search-button" ng-click="search()"></span>
