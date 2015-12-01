@@ -25,7 +25,7 @@ include("html/_header.php"); ?>
       <tr>
         <td valign="middle" align="right" style="width:100%;padding-right:0;padding-left:0;">
           <form action="match.php?test_drive" method="post" id="test_drive">
-      <textarea class="search-bar" name="search-query" id="search_box" placeholder="Tell us about your interests!" auto-grow="5"></textarea>
+      <textarea class="search-bar" name="search-query" id="search_box" placeholder="Tell us about your research interests!" auto-grow="5"></textarea>
           </form>
         </td>
         <td align="left" valign="middle" style=s"padding-left:0;">

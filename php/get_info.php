@@ -2,7 +2,7 @@
 session_start();
 $autoRun = false; // Prevents find_similar_resources in get_similar.php from running automatically
  
-include('/home/svetlana/www/beta-code/backend/sqlSearch/sqlNameSearch.php');
+include('/home/svetlana/www/beta-code2/backend/sqlSearch/sqlNameSearch.php');
 
 define("_ROOT_","/home/svetlana/www/");
 if ( isset($_POST["id"]) ){
@@ -17,7 +17,8 @@ function get_info($id,$type){
     "Course"=>array("Name","School","Department","University","Faculty","Description","Course_ID"),
     "Funding"=>array("FirstNamePI","Co-PINames","University","Name","Abstract","Email","Link","Funding_ID"),
     "Thesis"=>array("Author","Department","School","University","Abstract","Advisor1","Name","Thesis_ID"),
-    "Grant"=>array("Name","University","Description","Sponsor","Email","Link","Grant_ID")
+    "Grant"=>array("Name","University","Description","Sponsor","Email","Link","Grant_ID"),
+    "Extracurricular"=>array("Name","University","Description","Link","Extracurricular_ID")
   );
   if ( isset($fields[$type]) ){
 
@@ -212,6 +213,18 @@ function getAdvisorResources($con,$row){
       $out["Funding"][$iii]["coPiNames"] = $_row["Co-PINames"];
       $out["Funding"][$iii]["Id"] = $_row["Funding_ID"];
       $out["Funding"][$iii]["type"] = "Grant";
+    }
+  }
+
+  for ( $i = 0, $n = count($matches); $i < $n; $i++ ){
+    $out["Extracurricular"][] = array();
+    $iii = count($out["Extracurricular"])-1;
+    $res = sql_query($con,"SELECT * FROM `Extracurricular` WHERE `Extracurricular_ID`=".$matches[$i]);
+    while ( $_row = mysqli_fetch_array($res) ){
+      $out["Extracurricular"][$iii]["Name"] = $_row["Name"];
+      $out["Extracurricular"][$iii]["Description"] = $_row["Abstract"];
+      $out["Extracurricular"][$iii]["Link"] = "single_display.php?id=".$matches[$iii]."&type=Extracurricular";
+      $out["Extracurricular"][$iii]["Id"] = $_row["Thesis_ID"];
     }
   }
   return $out;
