@@ -48,7 +48,9 @@ include("html/_header.php"); ?>
     <br/>
         </div>
         <div class="col-md-12 text-center" style="height:70%;">
-    <img src="http://projectlever.com/images/Project Lever Graphic 1.png" id="youtube_vid_thumbnail" style="display:inline">
+
+
+    <img src="beta-code2/images/plevergraphic.png" id="youtube_vid_thumbnail" style="display:inline">
           <!-- Youtube video HTML -->
 <!--    <iframe class="youtube-player" type="text/html" width="640" height="385" src="https://www.youtube.com/embed/UIT_rrgxXus?version=3&amp;enablejsapi=1&amp;playerapiid=ytplayer" allowfullscreen="" frameborder="0" id="video_screen"></iframe>--//-->
   </div>
