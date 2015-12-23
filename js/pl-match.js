@@ -98,6 +98,7 @@ app.controller(
                     // GREAT! Let's let them continue using the site
                     $scope.testDrive = false;
                     $window.testDrive = false;
+		    $window.loggedIn = true;
                     if (($("#search_box").val().match(/\S/) !== null) &&
                         ($window.homePage !== true))
                         $scope.search();
@@ -164,7 +165,8 @@ app.controller(
                 if (response.data.search("login successful") > -1) {
                     $scope.testDrive = false;
                     $window.testDrive = false;
-                    if ($("#search_box").val().match(/\S/) !== null &&
+                    $window.loggedIn = true;    
+		if ($("#search_box").val().match(/\S/) !== null &&
                         $window.homePage !== true)
                         $scope.search();
                     else if ($window.homePage === true)
@@ -189,7 +191,8 @@ app.controller(
                 if (response.data == "complete") {
                     $scope.testDrive = false;
                     $window.testDrive = false;
-                    if ($("#search_box").val().match(/\S/) !== null &&
+                    $window._SESSION["loggedin"] = true;    
+		if ($("#search_box").val().match(/\S/) !== null &&
                         $window.homePage !== true)
                         $scope.search();
                     else if ($window.homePage === true)

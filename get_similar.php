@@ -30,13 +30,28 @@ function find_similar_resources($id,$type){
   );
   
   // Get the advisor's blob
-  $res = sql_query($con,"SELECT `".$blob[$type]."` FROM `$type` WHERE `".$type."_ID`=".$id);
-  if ( mysqli_num_rows($res) == 0 )
-    exit;
-  $row = mysqli_fetch_array($res);
-  
+  if($type == "Advisor")
+  {
+    $res = sql_query($con,"SELECT Department ,School ,University ,Header ,Block ,Info ,Link ,Name ,Processed_Text ,Scraped_Level ,Class ,Division ,Tags ,Valid_Words FROM `$type` WHERE `".$type."_ID`=".$id);
+    if ( mysqli_num_rows($res) == 0 )
+      exit;
+    $row = mysqli_fetch_array($res);
+    $advuni = $row[2];
+    $str = join(" ", array_values($row));
+   $query = "WHERE University = '$advuni'";
+  }
+  else
+  {
+    $res = sql_query($con,"SELECT `".$blob[$type]."` FROM `$type` WHERE `".$type."_ID`=".$id);
+    if ( mysqli_num_rows($res) == 0 )
+      exit;
+    $row = mysqli_fetch_array($res);
+    $str = $row[$blob[$type]];
+  }
+
   // Run the matching algorithm
-  $rank = match(sql_escape($con,$row[$blob[$type]]));
+#  $rank = match(sql_escape($con,$str), $query);
+  $rank = match(sql_escape($con,$str));
   // Remove the first one since it's the person we just searched. A resource always matches 100% to itself
   unset($rank[$type][0]); 
   // Limit the results to results of the same type
@@ -74,8 +89,21 @@ function find_similar_resources($id,$type){
   $out = array();
   $count = 0;
   $added = 0; // Items with rank above the minimum that have been added
+
+
+$hmr = count($rank);
   foreach ($rank as $index => $val){
-    $res = sql_query($con,"SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"]." AND `University`='".$_SESSION["university"]."'");
+  if($type == "Advisor")
+  {
+    $q = "SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"]." AND `University`='$advuni'";
+  }
+  else
+    $q = "SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"];
+
+#    $res = sql_query($con,"SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"]." AND `University`='".$_SESSION["university"]."'");
+    $q = "SELECT * FROM `$type` WHERE `".$type."_ID`=".$val["id"];
+    $res = sql_query($con,$q);
+
     if ( mysqli_num_rows($res) == 0 )
       continue;
     $row = mysqli_fetch_array($res);
@@ -83,7 +111,7 @@ function find_similar_resources($id,$type){
       "Description" => strip_tags($row[$desc[$type]]),
       "Name"=>$row[$name[$type]],
       "Id"=>$row[$type."_ID"],
-      "description" => strip_tags($row[$desc[$type]]),
+      "description" => $row["University"] . "/" . strip_tags($row[$desc[$type]]),
       "name"=>$row[$name[$type]],
       "id"=>$row[$type."_ID"],
       "Link"=>"single_display.php?id=".$row[$type."_ID"]."&type=".$type,
@@ -106,6 +134,8 @@ function find_similar_resources($id,$type){
       $temp["Department"] = $row["Department"];
       $temp["School"] = $row["School"];
     }
+      $out[] = $temp;
+    continue;
     if ( $val["rank"] > 70 ){
       $out[] = $temp;
       $added++;
@@ -113,7 +143,7 @@ function find_similar_resources($id,$type){
     else {
       $out[] = $temp;
       $count++;
-      if ( $count == 5 ){
+      if ( $count > 100 ){
 	break;  
       }
     }

@@ -3,17 +3,17 @@
     <div class="navbar-collapse collapse pl-logo">
       <ul class="nav navbar-nav">
 	<li>
-	  <a href="home.php">Project Lever</a>
+	  <a href="/beta-code2/home.php">Project Lever</a>
 	</li>
       </ul>
     </div>
     <div class="navbar-collapse collapse navbar-right" id="navbar">
       <ul class="nav navbar-nav">
 	<li>
-	  <a href="match.php" ng-if="homePage != true">Match</a>
+	  <a href="/beta-code2/match.php" ng-if="homePage != true">Match</a>
 	</li>
 	<li ng-if="homePage != true">
-	  <a href="explore.php" ng-if="(testDrive == false || !testDrive)">Explore</a>
+	  <a href="/beta-code2/explore.php" ng-if="(testDrive == false || !testDrive)">Explore</a>
           <!-- RESTRICT EXPLORE USE IF NOT SIGNED UP -->
 	  <a href="javascript:void(0)" ng-if="testDrive == true" onclick="showForm('reg_form')">Explore</a>
 	</li>

@@ -1,0 +1,742 @@
+/************************ TABLE OF CONTENTS ********************************
+-- HOME PAGE STYLING
+---|--Small Screens
+---|--Search bar styling
+-- RESULT STYLING
+-- DEPARTMENT DELIMS FOR MATCH PAGE
+-- MATCH PAGE INTRO
+
+
+***************************************************************************/
+
+
+/************************* HOME PAGE STYLING ******************************/
+/* -- custom css for Bootstrap 3.x --*/
+
+/* move special fonts to HTML head for better performance */
+/*@import url(http://fonts.googleapis.com/css?family=Voltaire)'*/
+
+@-moz-document url-prefix(){
+  #results_counter {
+    display:inline-table;
+  }
+}
+html,body {
+  width: 100%;
+  font-family: 'Raleway', sans-serif;
+  background-color:#fff;
+}
+body * {
+    max-height:100%;
+}
+
+/* fix bs3 horizontal scrollbar bug */
+.row { margin: 0; padding: 0 }
+
+
+/* use special fonts in certain elements */
+h1,h2,h3,h4,.lead,.btn,.navbar a {
+  text-transform:uppercase;
+  font-family: 'Raleway', sans-serif;
+  letter-spacing:2px;
+}
+
+h1 {
+  font-family: 'Raleway', sans-serif;
+  font-weight:500;
+  font-size:40px;
+}
+
+.redfont {
+  color:#7D0000; 
+  font-size:20px;
+}
+
+/* make images gray */
+img.grayscale {
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+.icon-bar {
+   background-color:#fff;
+   width:30px;
+   height:2px;
+   margin-bottom:5px;
+}
+
+.scroll-down a, .scroll-top a {
+   color:#ffffff;
+}
+
+.scroll-down {
+   position:fixed;
+   bottom:20%;
+   right:0%;
+   color:#f9f9f9;
+}
+
+.scroll-top {
+  background-color:#dbdbdb;
+}
+
+.vert {
+  vertical-align: middle;
+  width:100%;
+  max-height:100%;
+  padding-top:4%;
+  text-align:center;
+}
+.blurb {
+  padding: 120px 0;
+  background-color:#fefefe;
+}
+.blurb * {
+    position:relative;
+}
+.blurb > .container, .blurb .vert {
+    height:100%;
+    overflow:hidden;
+}
+.blurb .col-md-12 {
+    float:none;
+    display:inline-block;
+}
+.blurb .panel {
+  background-color:transparent;
+}
+
+.bright {
+  background: url('http://projectlever.com/images/books.png') repeat center center fixed; 
+  color:#777;
+}
+
+.featurette {
+  background: #222334;
+  padding: 50px 0;
+  color: #ffffff;
+}
+
+.featurette-item {
+  margin-bottom: 15px;
+}
+.featurette * {
+    color:#fff;
+}
+.featurette .glyphicon {
+    margin-bottom:20px;
+}
+.featurette-item > span {
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  font-size: 54px;
+  width: 130px;
+  height: 130px;
+  line-height: 130px;
+  vertical-align: middle; 
+  text-align: center;
+}
+.callout {
+  color: #ffffff;
+  padding-top:7%;
+  height: 100%;
+  width: 100%;
+  background: url('http://www.bootply.com/assets/example/bg_suburb.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.gallery {
+  padding: 50px 0;
+}
+
+.call-to-action {
+  background: #eeeeee;
+  padding: 50px 0;
+}
+
+.call-to-action .btn {
+  margin: 10px;
+}
+
+footer {
+  padding: 100px 0;
+}
+.speech-bubble{
+    width: 100%;
+    padding: 10px;
+    background: #CC763E;
+    color: #fff;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    margin-bottom:10px;
+}
+.speech-bubble:after{
+    content: "";
+    border: solid 10px transparent; /* set all borders to 10 pixels width */
+    border-top-color: #CC763E; /* the callout */
+    border-bottom: 0; /* we do not need the bottom border in this case */
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    display: block;
+    position: relative;
+    bottom: -20px; /* border-width of the :after element + padding of the root element */
+    margin: auto;
+}
+.quote1 {
+    background-color:#7D0000;   
+}
+.quote1:after {
+    border-top-color: #7D0000;       
+}
+.quote3 {
+    background-color:#222334;
+}
+.quote3:after {
+    border-top-color: #222334;       
+}
+/* -- end custom css for Bootstrap 3.x --*/
+
+
+/* added to override bootply styles */
+.blurb {
+    padding: 20px 0px;
+}
+
+.footer-list {
+    list-style-type: none;
+    font-size: 24px;
+}
+/****** Custom Definitions **********/
+
+/*** Define the navbar which will be used throughout the website ***/
+.header .btn-lg {
+   font-size:28px;
+   border-color:#eeeeee;
+   padding:15px;
+   background-color:transparent;
+   color:#ffffff;
+}
+
+.header .btn-lg:hover {
+   background-color:#eeeeee;
+   color:#777777;
+}
+
+.navbar a {
+  color:#fff;
+  font-size:14px;
+  font-weight:400;
+}
+
+.navbar-bold.affix {
+  background-color:#d46054;
+}
+
+.navbar-bold {
+  background-color:#f68076;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+
+.navbar-bold li a:hover, .navbar-bold li.active {
+  background-color:#800000;
+}
+.navbar-header a {
+    cursor:pointer;
+}    
+.header h1 {
+  font-size:56px;
+  -webkit-text-stroke: 1px rgba(f,f,f,0.1);
+  color:#fff;
+  padding-top:75px;
+  margin-bottom:5px;
+  text-transform:uppercase;
+}
+
+.header .lead {
+  font-size:25px;
+}
+
+.header {
+  background: url('http://projectlever.com/images/books.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* use alt in navbar and header for different color */
+
+.alt {
+  background-color: rgb(50,50,50);
+  box-shadow:inset 0px 40px 40px rgba(255,255,255,.1);
+}
+.alt .lead {
+  color: #fff;
+}
+.alt li a:hover, .alt li.active {
+  background-color:#800000;
+}
+.pl-navbar .navbar-nav > li {
+    padding:0;
+    cursor :pointer;
+}
+/*** Vertically center a DIV if CSS3 is supported ***/
+.center {
+    position:relative;
+    top:50%;
+    transform:translateY(-50%);
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    -o-transform:translateY(-50%);
+}
+#intro {
+    text-shadow:1px 1px 4px #000;
+    transform:translateY(-50%);
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    -o-transform:translateY(-50%);
+}
+/*** Define special styling for the front page ***/
+.pl-home #small_features {
+    display:none;
+}
+.pl-home .container {
+    height:100%;
+}
+.pl-home #frame_4 .col-md-3 {
+    text-align:left;
+}
+.pl-home .center > .lead {
+    color:#fff !important;
+    text-rendering:optimizelegibility;
+}
+.pl-home-top-frame, .pl-home-top-frame .row, .pl-home-top-frame .col-sm-12, .pl-home-top-frame .container {
+    height:100%;
+}
+.pl-home-top-frame .container {
+    text-align:center;
+}
+.pl-frame {
+    width:100%;
+    height:80%;
+    position:relative;
+}
+.pl-frame:first-child {
+    padding-top:60px;
+}
+/*** Down arrow ***/
+.pl-home .down_arrow {
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:40px;
+    height:40px;
+    cursor:pointer;
+    z-index:2;
+}
+.pl-home #frame_4 .featurette-item {
+    text-align:center;
+}
+.pl-home #frame_4 h2 {
+    font-size:30px;
+    padding-bottom:20px;
+}
+.pl-home a {
+    cursor:pointer;
+}
+.pl-home .logo-bar {
+    height:40px;
+    position:fixed;
+    top:4px;
+    left:60px;
+}
+/******************************************************************************************
+ * For small screens and medium screens:                                                 *
+ * 1. Display the menu icon                                                              *
+ * 2. Extend the heights of certain elements so that all of the information is displayed *
+ * 3. Display the featurettes using the small formate                                    *
+ * 4. Hide the large formate featurettes                                                 *
+*******************************************************************************************/
+
+/* Small Screens */
+@media screen and (max-width: 768px) {
+    .icon-bar {
+	display:block;
+    }
+    .pl-home #frame_2 h2 {
+	font-size: 20px;
+    }
+    .pl-home #frame_2 h3 {
+	font-size: 13px;
+    }
+    .pl-home #frame_2 h4 {
+	font-size: 10px;
+    }
+    .pl-home .logo-bar {
+	left: auto;
+	right: 15px;
+    }
+}
+/* Medium Screens */
+@media screen and (max-width: 992px) {
+    .pl-home #frame_3 *, .pl-home #frame_3, .pl-home #frame_4, .pl-home #frame_4 *,.pl-home #frame_5 *, .pl-home #frame_5 {
+	max-height:300%;
+	height:auto;
+    }
+    .pl-home #frame_3 .center, .pl-home #frame_4 .center, #frame_5 .center {
+	transform: none;
+	-webkit-transform: none;
+	-moz-transform: none;
+	-ms-transform: none;
+	-o-transform: none;
+	top:0;
+    }
+    .pl-home #small_features {
+	display:block;
+    }
+    .pl-home #large_features {
+	display:none;
+    }
+    .pl-home #frame_2 h3 {
+	font-size: 16px;
+	text-align: justify;
+    }
+    .pl-home #frame_2 h4 {
+	font-size: 12px;
+    }
+    .pl-home #frame_2 img {
+	padding-bottom: 20px;
+    }
+    .pl-home #small_features .featurette-item, .pl-home #frame_4 .center {
+	text-align:center;
+    }
+    .pl-home #small_features .featurette-item p {
+	text-align:left;
+    }
+    .pl-home #small_features .featurette-item img {
+	padding-bottom:10px;
+    }
+}
+/* Large Screens */
+@media screen and (min-width: 992px) {
+    .pl-home #large_features {
+	display:block;
+    }
+    .pl-home #small_features {
+	display:none;
+    }
+    .icon-bar {
+	display:none;
+    }
+    .redfont {
+	font-size:17px;
+    }
+    .pl-home #frame_2 h2 {
+	font-size:22px;
+    }
+}
+.social-icon {
+    width: 40px;
+    height:40px;
+}
+.footer {
+    width:100%;
+    color:#F5F5F5;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+.footer ul > li {
+    float:left;
+}
+.footer a {
+    line-height:52px;
+    color:#F5F5F5;
+}
+.footer a:hover {
+    color:#800000;
+    text-decoration:none;
+}
+.youtube-player {
+    position:relative;
+    z-index:1;
+}
+#youtube_vid_thumbnail {
+    display:none;
+}
+/*** Search bar styling ***/
+#search_bar_container {
+    height:100px;
+    position:fixed;
+    top:50px;
+    z-index:2;
+}
+#search_bar_container td {
+    vertical-align:top;
+    padding-top:29px;
+}
+.search-bar {
+    resize: none;
+    word-wrap: break-word;
+    transition: height 0.05s linear;
+    -moz-transition: height 0.1s linear;
+    -webkit-transition: height 0.1s linear;
+    -o-transition: height 0.1s linear;
+    focus:none;
+    outline:none;
+    width:100%;
+    font-size:1.5em;
+    overflow:hidden;
+    height:1.75em;
+    line-height:1.75em;
+    padding-left:0.5em;
+    padding-right:40px;
+    font-weight:500;
+    font-size:1.5em;
+    border:1px solid #888;
+    border-right:none;
+    background-color:#fff;
+}
+.search-button {
+    background-color: #222334;
+    border-color: 1px solid #222334;
+    padding:6px;
+    color:#f5f5f5;
+    top:0;
+    cursor:pointer;
+}
+/**************************** END HOME PAGE STYLING **********************************/
+
+/*************** RESULT STYLING *****************/
+#results_container {
+    margin-top:100px;
+    display:none;
+}
+.result-header {
+    position:relative;
+    background-color: #fff;
+    border-top: 1px solid #7D0000;
+    padding: 10px 0;
+}
+.result-header > span {
+    position:absolute;
+    top:0;
+    right:0;
+    height:100%;
+    line-height:1em;
+}
+.result-body {
+    max-height: 350px;
+    background-color: #F0F0FB;
+    margin-left: 25px; (roughly - we want the edge of the box to line up with where the names start above)
+    margin-bottom: 10px;
+}
+.half {
+    display:inline-block;
+    max-width:24%;
+    float:left;
+}
+.half:last-child {
+    max-width:74%;
+}
+.test-image {
+    width:100px;
+    height:100px;
+}
+.nested {
+    width:100%;
+    max-width:100%;
+}
+.float-right {
+    position:absolute;
+    top:0;
+    right:0;
+    z-index:3;
+    padding-right:5px;
+}
+.pl-hover {
+    cursor:pointer;
+    margin-left:0.75em;
+}
+.pl-hover:hover {
+    color:#800000;
+}
+.full-width {
+    width:100%;
+    min-width:600px;
+}
+.full-height {
+    height:100%;
+}
+.pl-logo {
+    float:left;
+    height:100%;
+    display:inline-block;
+    background-color:#800000;
+    border-radius:0;
+}
+.pl-logo a {
+    font-weight:600;
+}
+.pl-content {
+    width:100%;
+    position:relative;
+    top:50px;
+    left:0;
+    padding:0;
+    margin:0;
+    border:none;
+}
+.pl-zebra:nth-child(even) {
+    background-color: #d3d3d3;
+}
+.pl-zebra:nth-child(odd){
+    background-color: #fff;
+}
+.match-parent {
+    height:100%;
+    width:100%;
+    padding:0;
+    margin:0;
+    border:none;
+}
+.layer {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+}
+.pl-home .layer td {
+    padding:0 !important;
+    width:auto !important;
+    text-align:left !important;
+}
+.pl-home .layer td > h5 {
+    text-align:center;
+}
+#results_counter {
+    list-style: none;
+    margin:0;
+    padding:0;
+    background-color:#f5f5f5;
+    border:0.1em solid #bbb;
+    min-width:190px;
+}
+#results_counter > li {
+    padding-top:0.5em;
+    padding-bottom:0.5em;
+    padding-left:2em;
+    font-weight:400;
+    cursor:pointer;
+}
+#results_counter > li > span {
+    float: right;
+    padding-right: 1em;
+    background-color: #DADAF7;
+    border-radius: 10px;
+    padding: 1px 5px;
+    margin-right: 5px;
+}
+#results_counter img {
+    margin-right:1em;
+}
+#results_counter > li:hover {
+    font-weight:600;
+}
+.result-type {
+    border-left:0.5em solid #f5f5f5;
+}
+.selected-result-type {
+    border-left:0.5em solid #800000;
+}
+.hide {
+    display:none;
+}
+.show {
+    display:block;
+}
+.starred {
+    color:#800000;
+}
+[name="description_box"] {
+    max-height:10em;
+    text-align:center;
+    font-family: Raleway,sans-serif;
+    padding:0 2em;
+    font-weight:300;
+}
+.result-name {
+    padding-top:10px;
+}
+.result-name > a > h4 {
+    display:inline;
+}
+.result-name > h6:first-child {
+    margin-top:10px;
+}
+.result-name > a {
+    text-decoration: underline;
+    color:#000;
+}
+.result-name > a:hover {
+    color:#000;
+    text-decoration: underline;
+}
+.button-selected {
+    background-color:#888;
+    color:#fff;
+}
+.page-button {
+    border:1px solid #000;
+    cursor:pointer;
+}
+.loading-gif {
+    position:fixed;
+    top:45%;
+    left:49%;
+    z-index:2;
+    display:none;
+}
+/****** DEPARTMENT DELIMITERS FOR MATCH PAGE  ***********/
+#department_delims {
+    margin-top: 25px;
+    padding-left: 0;
+    width:100%;
+}
+#department_delims label {
+    font-weight:300;
+    cursor:pointer;
+    font-size:0.8em;
+    line-height:1.6em;
+}
+#department_delims td {
+    vertical-align:top;
+}
+#department_delims > span {
+    padding-left:5px;
+}
+/********** MATCH PAGE INTRO ******************/
+#match_page_intro {
+    text-transform:capitalize;
+    text-align:center;
+    position:absolute;
+    left:0;
+    width:100%;
+    top:175px;
+}
+/************** PAGE BUTTONS *****************/
+.page-button {
+    padding:7px;
+    margin-left:5px;
+}
+#pagination_buttons {
+    padding-top:35px;
+    margin-top:10px;
+    border-top:1px solid #800000;
+}

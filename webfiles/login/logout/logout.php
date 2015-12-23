@@ -8,10 +8,9 @@
  */
  	session_start();
 	session_destroy();
-if ( isset($_GET["new"]) )
-  header("Location: http://projectlever.com/beta-code/home.php");
-else
-  header("Location: http://projectlever.com/webfiles/login/login");
+if ( isset($_GET["new"]) ):
+  {header("Location: http://projectlever.com/beta-code2/home.php");}
+else:
+  {header("Location: http://projectlever.com/beta-code2/webfiles/login/login");}
 exit();
-
 ?>

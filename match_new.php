@@ -42,17 +42,16 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.map"></script>
     <script>
      var ignore = true;
-     var logggedIn = false;
+     var loggedIn = false;
     </script>
 </head>
 
 <body class="pl-body" ng-app="plMatch" ng-controller="MatchController as controller">
     <!-- Loading gif -->
     <img src="http://upload.wikimedia.org/wikipedia/commons/2/27/Throbber_allbackgrounds_eightbar.gif" class="loading-gif" />
-    <h3 id="match_page_intro">Let Us Match You to Advisors.</h3>
+    <h3 id="match_page_intro">Let Us Match You to Advisors!</h3>
     <!-- NAVBAR -->
-    <!-- <lever-navbar></lever-navbar> -->
-<?php include("html/views/navbar.html");?>
+    <lever-navbar></lever-navbar>
     <!-- END NAVBAR, START BODY -->
     <div class="pl-content pl-zebra" id="search_bar_container">
         <div class="container full-width full-height">
@@ -61,7 +60,7 @@
                     <table class="match-parent">
                         <tr>
                             <td>
-                                <textarea class="search-bar" id="search_box" placeholder="Tell us about your research interests!" auto-grow="5"></textarea>
+                                <textarea class="search-bar" id="search_box" placeholder="Tell us about your interests!" auto-grow="5"></textarea>
                             </td>
                             <td>
                                 <span class="glyphicon glyphicon-search search-button" ng-click="search()"></span>
@@ -80,8 +79,6 @@
     </div>
     <!-- RESULTS SECTION -->
     <?php include( "html/results_section_match_page.php"); ?>
-
-
     <!-- LOG IN OVERLAY -->
     <?php include( "html/login_overlay.php"); ?>
     <script type="text/javascript">

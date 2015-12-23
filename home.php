@@ -1,6 +1,12 @@
+<?php
+  session_start();
+  if ( (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]==true) ){
+      header("Location: http://projectlever.com/beta-code2/match.php");}
+?>
+<!DOCTYPE HTML>
 <?php 
-$config = include("api/config.php");
-include("html/_header.php"); ?>
+include("html/_header.php");
+$config = include("api/config.php"); ?>
 
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
@@ -10,7 +16,7 @@ include("html/_header.php"); ?>
 
 
   <img src="images/resources/infographics/down_arrow.png" class="down_arrow"></div>
-  <lever-navbar></lever-navbar>
+  <?php include"html/views/navbar.html"?>
   <div class="header pl-frame pl-home-top-frame" id="frame_1">
     <div class="container">
       <div class="row">
@@ -24,7 +30,7 @@ include("html/_header.php"); ?>
     <table class="match-parent">
       <tr>
         <td valign="middle" align="right" style="width:100%;padding-right:0;padding-left:0;">
-          <form action="match.php?test_drive" method="post" id="test_drive">
+          <form action="\beta-code2\match.php?test_drive" method="post" id="test_drive">
       <textarea class="search-bar" name="search-query" id="search_box" placeholder="Tell us about your research interests!" auto-grow="5"></textarea>
           </form>
         </td>

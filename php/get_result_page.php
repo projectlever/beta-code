@@ -1,5 +1,5 @@
 <?php 
-require("/home/svetlana/www/beta-code/php/get_info.php");
+require("/home/svetlana/www/beta-code2/php/get_info.php");
 if ( !isset($_SESSION["data"]) )
   die("No results stored");
 else {

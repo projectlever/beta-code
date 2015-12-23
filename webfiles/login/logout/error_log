@@ -1,0 +1,5 @@
+[03-Dec-2015 16:43:44 America/Chicago] PHP Parse error:  syntax error, unexpected T_STRING, expecting ':' in /home2/svetlana/public_html/beta-code2/webfiles/login/logout/logout.php on line 15
+[03-Dec-2015 16:56:45 America/Chicago] PHP Parse error:  syntax error, unexpected T_STRING, expecting ':' in /home2/svetlana/public_html/beta-code2/webfiles/login/logout/logout.php on line 14
+[03-Dec-2015 16:57:46 America/Chicago] PHP Parse error:  syntax error, unexpected $end in /home2/svetlana/public_html/beta-code2/webfiles/login/logout/logout.php on line 18
+[03-Dec-2015 16:57:54 America/Chicago] PHP Parse error:  syntax error, unexpected $end in /home2/svetlana/public_html/beta-code2/webfiles/login/logout/logout.php on line 18
+[07-Dec-2015 01:00:34 America/Chicago] PHP Parse error:  syntax error, unexpected $end in /home2/svetlana/public_html/beta-code2/webfiles/login/logout/logout.php on line 17

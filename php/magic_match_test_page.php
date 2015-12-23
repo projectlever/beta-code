@@ -1,6 +1,4 @@
 <?php
-$config = include("config.php");
-require("libs/functions.php");
 session_start();
 $test = false;
 if ( !(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true )){
@@ -8,6 +6,7 @@ if ( !isset($_POST["test_drive"]) || $_POST["test_drive"] == false ){
 		# echo "Not logged in. " . session_id()." != ".$_POST["session"] . " test_drive=".$_POST["test_drive"];
 		$class = 4;
 		$test = true;
+		$sessionUniversity = "Boston College";
 	}
 	else {
 		$test  = true;
@@ -25,9 +24,8 @@ else {
 header('Content-Type:text/html; charset=UTF-8');
 
 // Useful algorithms
-require("libs/algorithm.php");
+require("algorithm.php");
 // Set up categories
-
 
 $categories = array(
 	"Advisor" => array("Advisor_ID","Tags","Picture","Department","School","Name","Header","Email"),
@@ -51,10 +49,7 @@ $page = $_POST["page"];
 $display = 10;
 $input = $_POST["input"];
 $input = simplePrep($input);
-
-$con = mysqli_connect("localhost", $config["DB_USER"] ,$config["DB_PASSWORD"] , $config["DB_NAME"]);
-
-
+$con = mysqli_connect("localhost","svetlana","vH8ymo=nhwM6","svetlana_Total");
 if (mysqli_connect_errno($con))
 	echo "Failed to connect to MySQL: " . mysqli_connect_error($con);
 switch($class){
@@ -297,6 +292,6 @@ foreach ($json as $type=>$results){
 }
 mysqli_close($con);
 header('Content-Type: application/json');
-echo json_encode(utf8_encode_all($limitedJSON));
+echo json_encode($limitedJSON);
 # echo (microtime(true)-$startTime);
 ?>
